@@ -6,7 +6,7 @@ metadata:
   labels:
     f5type: virtual-server
 data:
-  schema: "f5schemadb://bigip-virtual-server_v0.1.2.json"
+  schema: "f5schemadb://bigip-virtual-server_v0.1.3.json"
   data: |-
     {
       "virtualServer": {
@@ -15,7 +15,6 @@ data:
           "mode": "http",
           "partition": "kubernetes",
           "virtualAddress": {
-            "bindAddr": "10.1.10.80",
             "port": 80
           }
         },

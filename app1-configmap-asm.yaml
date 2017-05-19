@@ -38,7 +38,7 @@ data:
             "pool__Pools": {
               "columns": ["Index", "Name", "Description", "LbMethod",
                           "Monitor", "AdvOptions"],
-              "rows": [["0", "", "app1.svc.k8s.chen23.com", "round-robin", "0", "none"]]
+              "rows": [["0", "", "app1.f5demo.com", "round-robin", "0", "none"]]
             },
             "monitor__Monitors": {
               "columns": ["Index", "Name", "Type", "Options"],
@@ -47,7 +47,7 @@ data:
         "l7policy__rulesMatch": {
           "columns": ["Group", "Operand", "Negate", "Condition", "Value",
                       "CaseSensitive", "Missing"],
-          "rows": [["0","http-host/request/all","no","equals","app1.svc.k8s.chen23.com","yes","yes"],["default", "", "no", "", "", "no", "no"]]
+          "rows": [["0","http-host/request/all","no","equals","app1.f5demo.com","yes","yes"],["default", "", "no", "", "", "no", "no"]]
         },
         "l7policy__rulesAction": {
           "columns": ["Group", "Target", "Parameter"],

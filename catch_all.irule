@@ -1,0 +1,17 @@
+when HTTP_REQUEST {  
+      set host_hdr [getfield [HTTP::host] ":" 1]  
+      set hostpool [class match -value [string tolower $host_hdr] equals host_to_pool]  
+        # Show us what the client sent in the host header - Turn this OFF in production  
+        log local0. "pool is $hostpool"  
+        # Use if/then with "Catch" to account for any bad host headers - otherwise TCL will throw an error to the client  
+        if { [catch {pool $hostpool} exc] } {  
+            # If a client sends a host header that does not match a pool, send to default pool  
+            
+            set hostvirtual [class match -value [string tolower $host_hdr] equals host_to_virtual]  
+            log local0. "virtual is $hostvirtual"
+            if { [catch {virtual $hostvirtual} exc] }{
+              HTTP::respond 200
+            }
+        }  
+         
+    }

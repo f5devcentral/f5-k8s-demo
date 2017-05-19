@@ -33,7 +33,7 @@ data:
             "pool__Pools": {
               "columns": ["Index", "Name", "Description", "LbMethod",
                           "Monitor", "AdvOptions"],
-              "rows": [["0", "", "app1.svc.k8s.chen23.com", "round-robin", "0", "none"]]
+              "rows": [["0", "", "app1.f5demo.com", "round-robin", "0", "none"]]
             },
             "monitor__Monitors": {
               "columns": ["Index", "Name", "Type", "Options"],
@@ -45,7 +45,7 @@ data:
             }
           },
           "iappOptions": {
-            "description": "app1.svc.k8s.chen23.com"
+            "description": "app1.f5demo.com"
           },
           "iappVariables": {
             "iapp__strictUpdates":"enabled",
@@ -57,7 +57,7 @@ data:
             "vs__ProfileServerProtocol": "/Common/tcp-lan-optimized",
             "vs__ProfileHTTP": "/Common/http",
             "vs__SNATConfig": "automap",
-            "vs__Description": "app1.svc.k8s.chen23.com",
+            "vs__Description": "app1.f5demo.com",
             "iapp__logLevel": "7",
             "iapp__routeDomain": "auto",
             "iapp__mode": "auto",

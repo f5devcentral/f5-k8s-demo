@@ -43,7 +43,7 @@
          "name":"vs__BundledItems",
          "columnNames": ["Resource"],
          "rows" : [
-            { "row": [ "irule:url=http://cloud.chen23.com/catch_all.irule" ] }
+            { "row": [ "irule:url=http://10.1.10.100/catch_all.irule" ] }
          ]
       }
 	

@@ -6,7 +6,7 @@ metadata:
   labels:
     f5type: virtual-server
 data:
-  schema: "f5schemadb://bigip-virtual-server_v0.1.2.json"
+  schema: "f5schemadb://bigip-virtual-server_v0.1.3.json"
   data: |-
     {
       "virtualServer": {
@@ -33,7 +33,7 @@ data:
             "pool__Pools": {
               "columns": ["Index", "Name", "Description", "LbMethod",
                           "Monitor", "AdvOptions"],
-              "rows": [["0", "", "app1.svc.k8s.chen23.com", "round-robin", "0", "none"]]
+              "rows": [["0", "", "app1.f5demo.com", "round-robin", "0", "none"]]
             },
             "monitor__Monitors": {
               "columns": ["Index", "Name", "Type", "Options"],
@@ -41,10 +41,10 @@ data:
             }
           },
           "iappOptions": {
-            "description": "app1.svc.k8s.chen23.com"
+            "description": "app1.f5demo.com"
           },
           "iappVariables": {
-            "pool__addr": "10.1.10.80",
+            "pool__addr": "10.98.63.77",
             "pool__port": "80",
             "pool__mask": "255.255.255.255",
             "vs__Name": "default_app1_vs",
@@ -52,7 +52,7 @@ data:
             "vs__ProfileServerProtocol": "/Common/tcp-lan-optimized",
             "vs__ProfileHTTP": "/Common/http",
             "vs__SNATConfig": "automap",
-            "vs__Description": "app1.svc.k8s.chen23.com",
+            "vs__Description": "app1.f5demo.com",
             "iapp__logLevel": "7",
             "iapp__routeDomain": "auto",
             "iapp__mode": "auto",
