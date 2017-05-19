@@ -25,15 +25,24 @@ def get_services_policies(config_file="%s/.kube/config" %(homedir)):
     my_policies = {}
     my_backends = {}
     for cm in configmaps:
-        if 'f5type' not in  cm.obj['metadata']['labels']:
+        if 'labels' in cm.obj['metadata'] and 'f5type' not in  cm.obj['metadata']['labels']:
             continue
-
+        if 'data' not in cm.obj:
+            continue
         d = json.loads(cm.obj['data']['data'])
         iapp = False
+        addr = None
         if 'iapp' in  d["virtualServer"]["frontend"]:
             iapp = True
-
-        my_backends[d['virtualServer']['backend']['serviceName']] = iapp
+            print d['virtualServer']['frontend']['iappVariables']
+            addr = d['virtualServer']['frontend']['iappVariables']['pool__addr']
+        else:
+            print d['virtualServer']['frontend']
+        if 'virtualAddress' in d['virtualServer']['frontend'] and 'bindAddr' in d['virtualServer']['frontend']['virtualAddress']:
+            addr = d['virtualServer']['frontend']['virtualAddress']['bindAddr']
+        if 'annotations' in cm.obj['metadata'] and  'virtual-server.f5.com/ip' in cm.obj['metadata']['annotations']:
+            addr = cm.obj['metadata']['annotations']['virtual-server.f5.com/ip']
+        my_backends[d['virtualServer']['backend']['serviceName']] = (iapp,addr)
 
     #
     # Grab L7 ingress
@@ -173,11 +182,12 @@ if __name__ == "__main__":
                 continue
             svc =  rule['backend']
             hostname = "%s" %(rule['hostname'])
-            iapp = backends.get(svc,False)
+            (iapp,addr) = backends.get(svc,(False,None))
             if iapp:
                 data_group_virtual[hostname] = "/kubernetes/%s_%s.app/%s_%s_vs" %(ing_namespace,svc,ing_namespace,svc)
             else:
                 data_group_pool[hostname] = "/kubernetes/%s_%s" %(ing_namespace,svc)
+            print svc,addr
     for hostname in hostname_to_skip:
         if hostname in data_group_virtual:
             del data_group_virtual[hostname]
