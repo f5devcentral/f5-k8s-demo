@@ -9,6 +9,13 @@ data:
       "global": {
         "console-log-level": "info"
       },
+        "stats": {
+          "url": "https://10.1.10.100:8088",
+          "token": "D62E9FC7-2FE4-4F25-B9E2-63A2D5949E74",
+          "backend":"splunk",
+          "rejectUnauthorized": false
+         },
+
       "orchestration": {
         "kubernetes": {
           "config-file": "/var/run/kubernetes/proxy-plugin/service-ports.json",
