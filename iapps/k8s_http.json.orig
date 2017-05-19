@@ -1,0 +1,46 @@
+{
+	"parent":"iapps/sample_defaults.json",
+	"strings":[
+		{ "pool__port":"80" },
+                { "pool__mask":"any"},
+	        { "vs__AdvOptions":"translate-address=enabled"},
+		{ "vs__ProfileHTTP":"/Common/http" },
+	        { "vs__Irules":"/Common/catch_all_irule" },
+		{ "feature__insertXForwardedFor":"enabled" },
+		{ "feature__redirectToHTTPS":"disabled" },
+                { "vs__ProfileClientProtocol":"create:type=tcp;idle-timeout=60;defaults-from=/Common/tcp-mobile-optimized" }
+	],
+	"tables":[
+		{
+			"name":"pool__Pools",
+			"columnNames": [ "Index", "Name", "Description", "LbMethod", "Monitor", "AdvOptions" ],
+			"rows" : [
+				{ "row": [ "0", "", "", "round-robin", "", "none"]  }
+			]
+		},
+		{
+                        "name":"pool__Members",
+                        "columnNames": [ "Index" ,"IPAddress", "Port", "ConnectionLimit", "Ratio", "PriorityGroup", "State", "AdvOptions" ],
+                        "rows" : [ ]
+        	},
+		{
+			"name":"monitor__Monitors",
+			"columnNames": ["Index", "Name", "Type", "Options"],
+			"rows" : [ 
+				{ "row": [ "0", "/Common/tcp", "none", "none" ] }
+			]
+		},
+		{
+			"name":"l7policy__rulesMatch",
+			"columnNames": ["Index","Operand","Negate","Condition","Value","CaseSensitive","Missing"],
+			"rows" : [ ]
+		},
+		{
+			"name":"l7policy__rulesAction",
+			"columnNames": ["Index","Target","Parameter"],
+			"rows" : [ ]
+		}	
+	]
+}
+
+

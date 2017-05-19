@@ -1,0 +1,62 @@
+{
+	"parent":"iapps/sample_defaults.json",
+        "partition":"kubernetes",
+	"strings":[
+		{ "pool__port":"8090" },
+                { "pool__mask":"any"},
+	        { "vs__AdvOptions":"translate-address=enabled"},
+		{ "vs__ProfileHTTP":"create:type=http;defaults-from=/Common/http/;insert-xforwarded-for=enabled;accept-xff=enabled" },
+		{ "feature__insertXForwardedFor":"enabled" },
+		{ "feature__redirectToHTTPS":"disabled" },
+	    { "vs__ProfileSecurityLogProfiles":"/Common/log_all" },
+                { "vs__ProfileClientProtocol":"create:type=tcp;idle-timeout=60;defaults-from=/Common/tcp-mobile-optimized" }
+	],
+	"tables":[
+		{
+			"name":"pool__Pools",
+			"columnNames": [ "Index", "Name", "Description", "LbMethod", "Monitor", "AdvOptions" ],
+			"rows" : [
+				{ "row": [ "0", "", "", "round-robin", "", "none"]  }
+			]
+		},
+		{
+                        "name":"pool__Members",
+                        "columnNames": [ "Index" ,"IPAddress", "Port", "ConnectionLimit", "Ratio", "PriorityGroup", "State", "AdvOptions" ],
+                        "rows" : [ ]
+        	},
+		{
+			"name":"monitor__Monitors",
+			"columnNames": ["Index", "Name", "Type", "Options"],
+			"rows" : [ 
+				{ "row": [ "0", "/Common/tcp", "none", "none" ] }
+			]
+		},
+      {
+         "name":"l7policy__rulesMatch",
+         "columnNames": ["Group","Operand","Negate","Condition","Value","CaseSensitive","Missing"],
+         "rows" : [
+            { "row": ["0","http-host/request/all","no","equals","app1.svc.k8s.chen23.com","yes","yes"] },
+            { "row": ["default","","no","","","no","no"]}
+         ]
+      },
+      {
+         "name":"l7policy__rulesAction",
+         "columnNames": ["Group","Target","Parameter"],
+         "rows" : [
+            { "row": ["0","asm/request/enable/policy","bundled:linux_low"] },
+            { "row": ["default","asm/request/enable/policy","bundled:linux_low"]}
+         ]
+       },
+      {
+         "name":"vs__BundledItems",
+         "columnNames": ["Resource"],
+         "rows" : [
+            
+            { "row": [ "asm:url=http://13.90.250.250/appsvcs/linux_low.xml" ] }
+         ]
+      }
+	
+	]
+}
+
+

@@ -1,0 +1,47 @@
+{
+	"parent":"iapps/sample_defaults.json",
+	"strings":[
+		{ "pool__port":"80" },
+		{ "vs__ProfileHTTP":"/Common/http" },
+		{ "vs__ProfileOneConnect":"/Common/oneconnect" },
+		{ "vs__ProfileCompression":"/Common/httpcompression" },
+		{ "vs__ProfileDefaultPersist":"/Common/cookie" },
+		{ "vs__ProfileFallbackPersist":"/Common/source_addr" },
+		{ "feature__insertXForwardedFor":"enabled" },
+		{ "feature__redirectToHTTPS":"disabled" }
+	],
+	"tables":[
+		{
+			"name":"pool__Pools",
+			"columnNames": [ "Index", "Name", "Description", "LbMethod", "Monitor", "AdvOptions" ],
+			"rows" : [
+				{ "row": [ "0", "", "", "round-robin", "0,1", "min-active-members=1"]  }
+			]
+		},
+		{
+                        "name":"pool__Members",
+                        "columnNames": [ "Index" ,"IPAddress", "Port", "ConnectionLimit", "Ratio", "PriorityGroup", "State", "AdvOptions" ],
+                        "rows" : [ ]
+        	},
+		{
+			"name":"monitor__Monitors",
+			"columnNames": ["Index", "Name", "Type", "Options"],
+			"rows" : [ 
+				{ "row": [ "0", "/Common/http", "none", "none" ] },
+				{ "row": [ "1", "/Common/tcp", "none", "none" ] }
+			]
+		},
+		{
+			"name":"l7policy__rulesMatch",
+			"columnNames": ["Index","Operand","Negate","Condition","Value","CaseSensitive","Missing"],
+			"rows" : [ ]
+		},
+		{
+			"name":"l7policy__rulesAction",
+			"columnNames": ["Index","Target","Parameter"],
+			"rows" : [ ]
+		}	
+	]
+}
+
+
