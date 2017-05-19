@@ -44,7 +44,7 @@ data:
             "description": "app1.svc.k8s.chen23.com"
           },
           "iappVariables": {
-            "pool__addr": "10.1.10.81",
+            "pool__addr": "10.1.10.80",
             "pool__port": "80",
             "pool__mask": "255.255.255.255",
             "vs__Name": "default_app1_vs",

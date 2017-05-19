@@ -6,7 +6,7 @@ metadata:
   labels:
     f5type: virtual-server
 data:
-  schema: "f5schemadb://bigip-virtual-server_v0.1.2.json"
+  schema: "f5schemadb://bigip-virtual-server_v0.1.3.json"
   data: |-
     {
       "virtualServer": {
@@ -41,7 +41,7 @@ data:
             },
             "vs__BundledItems": {
               "columns": ["Resource"],
-              "rows": [["irule:url=http://cloud.chen23.com/all_good.irule"]]
+              "rows": [["irule:url=http://10.1.10.100/all_good.irule"]]
             }
           },
           "iappOptions": {
@@ -49,8 +49,7 @@ data:
           },
           "iappVariables": {
             "iapp__strictUpdates":"enabled",
-            "feature__easyL4Firewall":"auto",
-            "pool__addr": "100.71.246.62",
+            "pool__addr": "10.1.10.80",
             "pool__port": "80",
             "pool__mask": "255.255.255.255",
             "vs__Name": "default_app1_vs",

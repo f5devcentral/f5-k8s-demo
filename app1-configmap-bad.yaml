@@ -41,14 +41,14 @@ data:
             },
             "vs__BundledItems": {
               "columns": ["Resource"],
-              "rows": [["irule:url=http://cloud.chen23.com/block_bad.irule"]]
+              "rows": [["irule:url=http://10.1.10.100/block_bad.irule"]]
             }
           },
           "iappOptions": {
             "description": "app1.svc.k8s.chen23.com"
           },
           "iappVariables": {
-            "pool__addr": "100.71.246.62",
+            "pool__addr": "10.1.10.80",
             "pool__port": "80",
             "pool__mask": "255.255.255.255",
             "vs__Name": "default_app1_vs",

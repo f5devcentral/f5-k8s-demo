@@ -51,11 +51,11 @@ data:
         },
         "l7policy__rulesAction": {
           "columns": ["Group", "Target", "Parameter"],
-          "rows": [["0","forward/request/reset","none"],["default", "forward/request/reset", "none"]]
+          "rows": [["0","forward/request/reset","none"],["default","asm/request/enable/policy","bundled:linux_low"]]
         },
             "vs__BundledItems": {
               "columns": ["Resource"],
-              "rows": [["asm:url=http://13.90.250.250/appsvcs/linux_low.xml"], ["irule:url=http://cloud.chen23.com/all_good.irule"]]
+              "rows": [["asm:url=http://10.1.10.100/appsvcs/linux_low.xml"]]
             }
           },
           "iappOptions": {
@@ -63,8 +63,7 @@ data:
           },
           "iappVariables": {
             "iapp__strictUpdates":"enabled",
-            "feature__easyL4Firewall":"auto",
-            "pool__addr": "100.71.246.62",
+            "pool__addr": "10.1.10.80",
             "pool__port": "80",
             "pool__mask": "255.255.255.255",
             "vs__Name": "default_app1_vs",
