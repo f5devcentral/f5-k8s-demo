@@ -1,0 +1,84 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: app1
+  namespace: default
+  labels:
+    f5type: virtual-server
+data:
+  schema: "f5schemadb://bigip-virtual-server_v0.1.2.json"
+  data: |-
+    {
+      "virtualServer": {
+        "backend": {
+          "serviceName": "app1",
+          "servicePort": 80
+        },
+        "frontend": {
+          "partition": "kubernetes",
+          "iapp": "/Common/appsvcs_integration_v2.0.002",
+          "iappPoolMemberTable": {
+            "name": "pool__Members",
+            "columns": [
+                {"name": "Index", "value": "0"},
+                {"name": "IPAddress", "kind": "IPAddress"},
+                {"name": "Port", "kind": "Port"},
+                {"name": "ConnectionLimit", "value": "0"},
+                {"name": "Ratio", "value": "1"},
+                {"name": "PriorityGroup", "value": "0"},
+                {"name": "State", "value": "enabled"}
+            ]
+          },
+          "iappTables": {
+        "pool__Pools": {
+          "columns": ["Index", "Name", "Description", "LbMethod",
+                      "Monitor", "AdvOptions"],
+          "rows": [["0", "", "", "round-robin", "0", "none"]]
+        },
+            "pool__Pools": {
+              "columns": ["Index", "Name", "Description", "LbMethod",
+                          "Monitor", "AdvOptions"],
+              "rows": [["0", "", "app1.svc.k8s.chen23.com", "round-robin", "0", "none"]]
+            },
+            "monitor__Monitors": {
+              "columns": ["Index", "Name", "Type", "Options"],
+              "rows": [["0", "/Common/http", "none", "none"]]
+            },
+        "l7policy__rulesMatch": {
+          "columns": ["Group", "Operand", "Negate", "Condition", "Value",
+                      "CaseSensitive", "Missing"],
+          "rows": [["0","http-host/request/all","no","equals","app1.svc.k8s.chen23.com","yes","yes"],["default", "", "no", "", "", "no", "no"]]
+        },
+        "l7policy__rulesAction": {
+          "columns": ["Group", "Target", "Parameter"],
+          "rows": [["0","forward/request/reset","none"],["default", "forward/request/reset", "none"]]
+        },
+            "vs__BundledItems": {
+              "columns": ["Resource"],
+              "rows": [["asm:url=http://13.90.250.250/appsvcs/linux_low.xml"], ["irule:url=http://cloud.chen23.com/all_good.irule"]]
+            }
+          },
+          "iappOptions": {
+            "description": "app"
+          },
+          "iappVariables": {
+            "iapp__strictUpdates":"enabled",
+            "feature__easyL4Firewall":"auto",
+            "pool__addr": "100.71.246.62",
+            "pool__port": "80",
+            "pool__mask": "255.255.255.255",
+            "vs__Name": "default_app1_vs",
+            "vs__ProfileClientProtocol": "/Common/tcp-wan-optimized",
+            "vs__ProfileServerProtocol": "/Common/tcp-lan-optimized",
+            "vs__ProfileHTTP": "/Common/http",
+            "vs__SNATConfig": "automap",
+            "iapp__logLevel": "7",
+            "iapp__routeDomain": "auto",
+            "iapp__mode": "auto",
+            "pool__DefaultPoolIndex": "0",
+            "l7policy__strategy": "/Common/first-match"
+          }
+        }
+      }
+    }
+

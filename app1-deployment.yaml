@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: app1
+spec:
+  replicas: 6
+  template:
+    metadata:
+      labels:
+        run: app1
+    spec:
+      containers:
+      - image: chen23/f5-demo-php:latest
+        env:
+        - name: F5DEMO_APP
+          value: "website"
+        - name: F5DEMO_NODENAME
+          value: "UDF: App #1"
+        imagePullPolicy: IfNotPresent
+        name: my-website
+        ports:
+        - containerPort: 80
+          protocol: TCP
+

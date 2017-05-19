@@ -1,0 +1,70 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  creationTimestamp: 2017-05-18T13:35:20Z
+  generation: 1
+  labels:
+    component: kube-proxy
+    k8s-app: kube-proxy
+    kubernetes.io/cluster-service: "true"
+    name: kube-proxy
+    tier: node
+  name: kube-proxy
+  namespace: kube-system
+  resourceVersion: "1377"
+  selfLink: /apis/extensions/v1beta1/namespaces/kube-system/daemonsets/kube-proxy
+  uid: d674db78-3bce-11e7-9101-02dc7d7c6310
+spec:
+  selector:
+    matchLabels:
+      component: kube-proxy
+      k8s-app: kube-proxy
+      kubernetes.io/cluster-service: "true"
+      name: kube-proxy
+      tier: node
+  template:
+    metadata:
+      annotations:
+        scheduler.alpha.kubernetes.io/affinity: '{"nodeAffinity":{"requiredDuringSchedulingIgnoredDuringExecution":{"nodeSelectorTerms":[{"matchExpressions":[{"key":"beta.kubernetes.io/arch","operator":"In","values":["amd64"]}]}]}}}'
+        scheduler.alpha.kubernetes.io/tolerations: '[{"key":"dedicated","value":"master","effect":"NoSchedule"}]'
+      creationTimestamp: null
+      labels:
+        component: kube-proxy
+        k8s-app: kube-proxy
+        kubernetes.io/cluster-service: "true"
+        name: kube-proxy
+        tier: node
+    spec:
+      containers:
+      - command:
+        - kube-proxy
+        - --kubeconfig=/run/kubeconfig
+        image: gcr.io/google_containers/kube-proxy-amd64:v1.5.7
+        imagePullPolicy: IfNotPresent
+        name: kube-proxy
+        resources: {}
+        securityContext:
+          privileged: true
+        terminationMessagePath: /dev/termination-log
+        volumeMounts:
+        - mountPath: /var/run/dbus
+          name: dbus
+        - mountPath: /run/kubeconfig
+          name: kubeconfig
+      dnsPolicy: ClusterFirst
+      hostNetwork: true
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - hostPath:
+          path: /etc/kubernetes/kubelet.conf
+        name: kubeconfig
+      - hostPath:
+          path: /var/run/dbus
+        name: dbus
+status:
+  currentNumberScheduled: 3
+  desiredNumberScheduled: 3
+  numberMisscheduled: 0
+  numberReady: 3

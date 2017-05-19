@@ -1,0 +1,33 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: my-frontend
+  namespace: default
+  labels:
+    f5type: virtual-server
+data:
+  schema: "f5schemadb://bigip-virtual-server_v0.1.2.json"
+  data: |-
+    {
+      "virtualServer": {
+        "frontend": {
+          "balance": "round-robin",
+          "mode": "http",
+          "partition": "kubernetes",
+          "virtualAddress": {
+            "bindAddr": "10.1.10.81",
+            "port": 80
+          }
+        },
+        "backend": {
+          "serviceName": "my-frontend",
+          "servicePort": 80,
+          "healthMonitors": [{
+          "interval": 30,
+          "protocol": "http",
+          "send": "HEAD / HTTP/1.0\r\n\r\n",
+          "timeout": 91
+          }]
+        }
+      }
+    }
