@@ -2,6 +2,8 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: f5-ingress
+  annotations:
+    custom_ip: "10.1.10.80"
 spec:
   rules:
   - host: www.f5demo.com
@@ -15,10 +17,4 @@ spec:
       paths:
       - backend:
           serviceName: app1
-          servicePort: 80
-  - host: my-frontend.f5demo.com
-    http:
-      paths:
-      - backend:
-          serviceName: my-frontend
           servicePort: 80

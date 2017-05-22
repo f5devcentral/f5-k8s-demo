@@ -1,14 +1,14 @@
 import pykube
 import json
-
-# Monkey-patch match_hostname with backports's match_hostname, allowing for IP addresses
-# XXX: the exception that this might raise is backports.ssl_match_hostname.CertificateError
-
+from bigip_dns_helper import DnsHelper
 
 import operator
 from six import iteritems
 from os.path import expanduser
 homedir = expanduser("~")
+
+
+
 def get_services_policies(config_file="%s/.kube/config" %(homedir)):
     api = pykube.http.HTTPClient(pykube.config.KubeConfig.from_file(config_file))
 
@@ -32,17 +32,30 @@ def get_services_policies(config_file="%s/.kube/config" %(homedir)):
         d = json.loads(cm.obj['data']['data'])
         iapp = False
         addr = None
+        port = None
+        custom_dns = None
+        custom_translate_ip = None
         if 'iapp' in  d["virtualServer"]["frontend"]:
             iapp = True
-            print d['virtualServer']['frontend']['iappVariables']
+#            print d['virtualServer']['frontend']['iappVariables']
             addr = d['virtualServer']['frontend']['iappVariables']['pool__addr']
+            port = d['virtualServer']['frontend']['iappVariables']['pool__port']
         else:
-            print d['virtualServer']['frontend']
+            pass
+#            print d['virtualServer']['frontend']
         if 'virtualAddress' in d['virtualServer']['frontend'] and 'bindAddr' in d['virtualServer']['frontend']['virtualAddress']:
             addr = d['virtualServer']['frontend']['virtualAddress']['bindAddr']
+        if 'virtualAddress' in d['virtualServer']['frontend'] and 'port' in d['virtualServer']['frontend']['virtualAddress']:            
+            port = d['virtualServer']['frontend']['virtualAddress']['port']
         if 'annotations' in cm.obj['metadata'] and  'virtual-server.f5.com/ip' in cm.obj['metadata']['annotations']:
             addr = cm.obj['metadata']['annotations']['virtual-server.f5.com/ip']
-        my_backends[d['virtualServer']['backend']['serviceName']] = (iapp,addr)
+        if 'annotations' in cm.obj['metadata'] and  'custom_dns' in cm.obj['metadata']['annotations']:
+            custom_dns = cm.obj['metadata']['annotations']['custom_dns']
+        if 'annotations' in cm.obj['metadata'] and  'custom_dns' in cm.obj['metadata']['annotations']:
+            custom_translate_ip = cm.obj['metadata']['annotations']['custom_translate_ip']
+            
+            
+        my_backends[d['virtualServer']['backend']['serviceName']] = (iapp,addr,port,custom_dns,custom_translate_ip)
 
     #
     # Grab L7 ingress
@@ -71,8 +84,8 @@ def get_services_policies(config_file="%s/.kube/config" %(homedir)):
                                  'port':port})
         my_policies[ing_name] = {'rules': my_rules, 'name':ing_name, 'namespace':ing_namespace}
         if 'annotations' in ing.obj['metadata']:
-            if 'f5.destination' in ing.obj['metadata']['annotations']:
-                my_policies[ing_name]['dest'] =  ing.obj['metadata']['annotations']['f5.destination']
+            if 'custom_ip' in ing.obj['metadata']['annotations']:
+                my_policies[ing_name]['dest'] =  ing.obj['metadata']['annotations']['custom_ip']
 
 
                 # foo.bar.com /foo echoheadersx 80
@@ -160,6 +173,7 @@ if __name__ == "__main__":
     host = options.host
 
     username = options.user
+    
 
     if options.password_file:
         password = open(options.password_file).readline().strip()
@@ -168,26 +182,42 @@ if __name__ == "__main__":
 
     (services, policies, backends) = get_services_policies()
 
+    dns_helper = DnsHelper(host, username, password)    
+
     hostname_to_skip = {}
     data_group_virtual = {}
     data_group_pool = {}
+    dns_records = {}
     for ing_name in policies:
         # {u'host': u'www.f5demo.com', u'http': {u'paths': [{u'backend': {u'serviceName': u'my-website', u'servicePort': 80}}]}}
         pol = policies[ing_name]
         ing_namespace = pol['namespace']
+        print pol
+        translate_ip = None
         for rule in pol['rules']:
+            if 'dest' in pol:
+                translate_ip = pol['dest']
+
             if rule['uri'] != '/':
                 print 'skipping (can only process hostname)',rule
                 hostname_to_skip[rule['hostname']] = True
                 continue
             svc =  rule['backend']
             hostname = "%s" %(rule['hostname'])
-            (iapp,addr) = backends.get(svc,(False,None))
+            
+            (iapp,addr,port,custom_dns,custom_translate_ip) = backends.get(svc,(False,None,None,None,None))
+            if custom_translate_ip:
+                translate_ip  = custom_translate_ip
             if iapp:
                 data_group_virtual[hostname] = "/kubernetes/%s_%s.app/%s_%s_vs" %(ing_namespace,svc,ing_namespace,svc)
             else:
                 data_group_pool[hostname] = "/kubernetes/%s_%s" %(ing_namespace,svc)
-            print svc,addr
+            if custom_dns:
+                wideip = custom_dns
+            else:
+                wideip = "%s.f5demo.com" %(svc)
+            print svc,addr,port,wideip,translate_ip
+            dns_records[svc] = (addr,translate_ip,port,wideip)
     for hostname in hostname_to_skip:
         if hostname in data_group_virtual:
             del data_group_virtual[hostname]
@@ -195,6 +225,7 @@ if __name__ == "__main__":
             del data_group_pool[hostname]
             
     print data_group_virtual
+    
     mgmt = ManagementRoot(host, username, password, port=options.port)
     records = [{'data':b,'name':a} for (a,b) in iteritems(data_group_virtual)]
     dg = mgmt.tm.ltm.data_group.internals.internal.load(name='host_to_virtual',partition='Common')
@@ -205,4 +236,28 @@ if __name__ == "__main__":
     dg = mgmt.tm.ltm.data_group.internals.internal.load(name='host_to_pool',partition='Common')
     print records
     dg.records = records
-    dg.update()    
+    dg.update()
+    for svc in backends:
+        if svc in dns_records:
+            print svc,dns_records[svc]
+            (addr,translate_ip,port,wideip) = dns_records[svc]
+        else:
+            (iapp,addr,port,custom_dns,custom_translate_ip) = backends[svc]
+            if custom_dns:
+                wideip = custom_dns
+            else:
+                wideip = "%s.f5demo.com" %(svc)
+            translate_ip = addr
+            print svc,(addr,translate_ip,port,wideip)
+        try:
+            # note that that variable names are reversed.  translate_ip is addr and addr is translate_ip
+            dns_helper.create_vs("bigip", "%s_vs" %(svc), "%s:%s" %(translate_ip,port), "%s:%s" %(addr,port))
+            dns_helper.create_pool("%s_pool" %(svc))
+            dns_helper.create_pool_members("%s_pool" %(svc),["bigip:%s_vs" %(svc)])
+            dns_helper.create_wideip(wideip, ["%s_pool" %(svc)],poolLbMode='round-robin')
+        except Exception,e:
+            print 'failed, moving on...',e
+                
+
+        
+#    print dns_records
