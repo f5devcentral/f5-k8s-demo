@@ -49,7 +49,7 @@ data:
           },
           "iappVariables": {
             "iapp__strictUpdates":"enabled",
-            "pool__addr": "10.98.63.77",
+            "pool__addr": "%IPADDR%",
             "pool__port": "80",
             "pool__mask": "255.255.255.255",
             "vs__Name": "default_app1_vs",
