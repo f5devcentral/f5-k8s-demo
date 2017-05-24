@@ -23,7 +23,7 @@ stage('Deploy FRONTEND App') {
 }
 stage('Verify FRONTEND') {
     node {
-        sh 'sleep 10'
+        sh 'sleep 30'
         sh 'curl 10.1.10.81 | grep "Welcome to Demo App"'
     }    
 }
@@ -48,7 +48,7 @@ stage('Deploy BACKEND') {
 }
 stage('Verify BACKEND') {
     node {
-        sh 'sleep 10'
+        sh 'sleep 30'
         sh 'curl 10.1.10.81/backend/ |grep "Backend App"'
     }    
 }
