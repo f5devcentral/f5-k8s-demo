@@ -16,7 +16,7 @@ data:
         },
         "frontend": {
           "partition": "kubernetes",
-          "iapp": "/Common/appsvcs_integration_v2.0.002",
+          "iapp": "/Common/appsvcs_integration_v2.0.004",
           "iappPoolMemberTable": {
             "name": "pool__Members",
             "columns": [
