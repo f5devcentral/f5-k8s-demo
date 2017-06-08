@@ -11,6 +11,7 @@ curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.
 curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/gtm/server/~Common~bigip/virtual-servers/my-frontend_vs
 curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/gtm/server/~Common~bigip/virtual-servers/my-website_vs
 curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/gtm/server/~Common~bigip/virtual-servers/app1_vs
+curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/sys/application/service/~Common~k8s_demo.app~k8s_demo
 
 kubectl delete -f app1-configmap.yaml
 kubectl delete -f app1-service.yaml
