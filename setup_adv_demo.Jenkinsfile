@@ -8,6 +8,11 @@ stage('deploy Ingress iRule') {
      sh 'python iapps/deploy_iapp_bigip.py -r --iapp_name k8s_demo --strings=pool__addr=0.0.0.0 --pool_members 192.168.1.1:80 10.1.1.8 iapps/k8s_http.json'
    }
 }
+stage('update F5 Container Connector to use Cluster IP') {
+    node {
+        sh 'kubectl create -f f5-cc-deployment-cluster.yaml'
+    }
+}
 stage('deploy website') {
     node {
         sh 'kubectl create -f my-website-deployment.yaml'
