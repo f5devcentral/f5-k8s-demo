@@ -10,7 +10,7 @@ stage('deploy Ingress iRule') {
 }
 stage('update F5 Container Connector to use Cluster IP') {
     node {
-        sh 'kubectl create -f f5-cc-deployment-cluster.yaml'
+        sh 'kubectl replace -f f5-cc-deployment-cluster.yaml'
     }
 }
 stage('deploy website') {
