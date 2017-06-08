@@ -1,8 +1,0 @@
-when HTTP_REQUEST {
-    if { [HTTP::header exists "X-GOOD"] } {
-        log local0. "All Good"
-    } else {
-        log local0. "Not good"
-        reject
-    }
-}

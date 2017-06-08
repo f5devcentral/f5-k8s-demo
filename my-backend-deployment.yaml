@@ -10,7 +10,7 @@ spec:
        run: my-backend
     spec:
       containers:
-      - image: 10.1.10.11:5000/f5-demo-app
+      - image: chen23/f5-demo-app
         imagePullPolicy: IfNotPresent
         env:
         - name: F5DEMO_APP
