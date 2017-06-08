@@ -32,5 +32,6 @@ spec:
             "--bigip-password=$(BIGIP_PASSWORD)",
             "--bigip-url=10.1.10.60",
             "--bigip-partition=kubernetes",
-            "--namespace=default"
+            "--namespace=default",
+	    "--pool-member-type=cluster",
           ]
