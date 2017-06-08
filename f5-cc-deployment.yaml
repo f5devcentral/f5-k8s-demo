@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: k8s-bigip-ctlr
-          image: "f5networks/k8s-bigip-ctlr:1.1.0-beta.1"
+          image: "f5networks/k8s-bigip-ctlr:1.0.0"
           imagePullPolicy: IfNotPresent
           env:
             - name: BIGIP_USERNAME
@@ -32,6 +32,5 @@ spec:
             "--bigip-password=$(BIGIP_PASSWORD)",
             "--bigip-url=10.1.10.60",
             "--bigip-partition=kubernetes",
-            "--namespace=default",
-	    "--pool-member-type=cluster",
+            "--namespace=default"
           ]
