@@ -9,6 +9,7 @@ kubectl create -f my-website-configmap.yaml
 kubectl create -f app1-deployment.yaml
 kubectl create -f app1-service.yaml
 kubectl create -f app1-configmap-bad.yaml
+./annotate-app1.sh app1-configmap-bad.yaml
 
 python custom_automation.py  --host 10.1.10.60
 
