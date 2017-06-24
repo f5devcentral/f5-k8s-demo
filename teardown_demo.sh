@@ -82,7 +82,7 @@ kubectl delete secret bigip-login -n kube-system
 ## Delete F5 kubernetes partition
 ##
 
-curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/sys/folder/~kubernetes
+curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/sys/folder/~kubernetes
 
 
 printf "##############################################\n"
