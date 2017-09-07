@@ -89,6 +89,14 @@ printf "Connect to Frontend APP with http://10.1.10.80\n"
 printf "##############################################\n\n\n"
 
 printf "##############################################\n"
+printf "Deploy INGRESS\n"
+printf "##############################################\n\n\n"
+
+kubectl create -f node-blue.yaml
+kubectl create -f node-green.yaml
+kubectl create -f blue-green-ingress.yaml
+
+printf "##############################################\n"
 printf "Using command: kubectl get pods --all-namespaces to check containers status\n"
 printf "Make sure that everything is up and running\n"
 printf "Wait for all containers related to the demo to be in running mode\n"
