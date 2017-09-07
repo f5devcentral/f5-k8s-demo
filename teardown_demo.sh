@@ -74,7 +74,7 @@ kubectl delete -f node-green.yaml
 printf "##############################################\n"
 printf "Delete BIG-IP CC\n"
 printf "##############################################\n\n\n"
-
+sleep 30
 kubectl delete -f f5-cc-deployment.yaml
 
 ##
