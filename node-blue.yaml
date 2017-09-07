@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: node-blue
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: node-blue
+    spec:
+      containers:
+      - image: "chen23/f5-demo-app"
+        env:
+        - name: F5DEMO_APP
+          value: "website"
+        - name: F5DEMO_NODENAME
+          value: "Node Blue"
+        - name: F5DEMO_COLOR
+          value: 0000FF	
+        imagePullPolicy: IfNotPresent
+        name: node-blue
+        ports:
+        - containerPort: 80
+          protocol: TCP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-blue
+  labels:
+    run: node-blue
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  type: NodePort
+  selector:
+    run: node-blue

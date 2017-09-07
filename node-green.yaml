@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: node-green
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: node-green
+    spec:
+      containers:
+      - image: "chen23/f5-demo-app"
+        env:
+        - name: F5DEMO_APP
+          value: "website"
+        - name: F5DEMO_NODENAME
+          value: "Node Green"
+        - name: F5DEMO_COLOR
+          value: 00FF00
+        imagePullPolicy: IfNotPresent
+        name: node-green
+        ports:
+        - containerPort: 80
+          protocol: TCP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-green
+  labels:
+    run: node-green
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  type: NodePort
+  selector:
+    run: node-green
