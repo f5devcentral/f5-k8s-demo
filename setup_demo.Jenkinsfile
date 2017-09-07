@@ -37,8 +37,8 @@ stage('Deploy INGRESS') {
 stage('Verify INGRESS') {
    node {
         sh 'sleep 30'
-        sh 'curl -H host: blue.f5demo.com 10.1.10.82|grep Blue'
-        sh 'curl -H host: green.f5demo.com 10.1.10.82|grep Green'
+        sh 'curl -H host:blue.f5demo.com 10.1.10.82|grep Blue'
+        sh 'curl -H host:green.f5demo.com 10.1.10.82|grep Green'
    }
 }
 stage('Deploy ASP') {
