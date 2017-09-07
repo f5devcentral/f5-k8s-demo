@@ -1,6 +1,6 @@
 stage('clone git repo') {
    node {
-     git url: 'https://github.com/f5devcentral/f5-k8s-demo.git', branch:'1.1.0'
+     git url: 'https://github.com/f5devcentral/f5-k8s-demo.git', branch:'1.1.0-GA'
    }
 }
 stage('create kubernetes partition') {
@@ -26,6 +26,20 @@ stage('Verify FRONTEND') {
         sh 'sleep 30'
         sh 'curl 10.1.10.81 | grep "Welcome to Demo App"'
     }    
+}
+stage('Deploy INGRESS') {
+    node {
+        sh 'kubectl create -f node-blue.yaml'
+        sh 'kubectl create -f node-green.yaml'
+        sh 'kubectl create -f blue-green-ingress.yaml'
+    }
+}
+stage('Verify INGRESS') {
+   node {
+        sh 'sleep 30'
+        sh 'curl -H host: blue.f5demo.com 10.1.10.82|grep Blue'
+        sh 'curl -H host: green.f5demo.com 10.1.10.82|grep Green'
+   }
 }
 stage('Deploy ASP') {
     node {
