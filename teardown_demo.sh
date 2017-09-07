@@ -49,7 +49,7 @@ kubectl delete -f f5-asp-daemonset.yaml
 ## 
 
 printf "##############################################\n"
-printf "Deploy FRONTEND APP\n"
+printf "Delete FRONTEND APP\n"
 printf "##############################################\n\n\n"
 
 kubectl delete -f my-frontend-configmap.yaml
@@ -57,6 +57,15 @@ kubectl delete -f my-frontend-configmap.yaml
 kubectl delete -f my-frontend-service.yaml
 
 kubectl delete -f my-frontend-deployment.yaml
+
+printf "##############################################\n"
+printf "Delete Ingress\n"
+printf "##############################################\n\n\n"
+
+kubectl delete -f blue-green-ingress.yaml
+kubectl delete -f node-blue.yaml
+kubectl delete -f node-green.yaml
+
 
 ##
 ## Delete F5 BIG-IP CC
