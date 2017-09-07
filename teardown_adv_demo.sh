@@ -33,7 +33,7 @@ echo curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https:
 curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/sys/application/service/~Common~k8s_demo.app~k8s_demo
 sleep 3
 
-kubectl delete -f app1-configmap.yaml
+kubectl delete -f app1-configmap-bad.yaml
 kubectl delete -f app1-service.yaml
 kubectl delete -f app1-deployment.yaml
 kubectl delete -f my-website-configmap.yaml
