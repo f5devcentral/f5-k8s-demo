@@ -31,6 +31,13 @@ stage('Delete FRONTEND App') {
         sh 'kubectl delete -f my-frontend-deployment.yaml'
         }
 }
+stage('Delete Ingress') {
+    node {
+        sh 'kubectl delete -f blue-green-ingress.yaml'
+        sh 'kubectl delete -f node-blue.yaml'
+        sh 'kubectl delete -f node-green.yaml'
+        }
+}
 
 stage('Delete F5 Container Connector') {
     node {
