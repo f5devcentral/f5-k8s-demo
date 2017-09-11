@@ -1,6 +1,6 @@
 stage('clone git repo') {
    node {
-     git url: 'https://github.com/f5devcentral/f5-k8s-demo.git', branch:'1.1.0'
+     git url: 'https://github.com/f5devcentral/f5-k8s-demo.git', branch:'1.1.1'
    }
 }
 stage('delete DNS') {
@@ -40,6 +40,7 @@ stage ('delete content routing / DNS') {
 }
 stage ('delete Ingress iRule') {
   node {
+    sh 'kubectl delete -f f5-ingress.yaml'
     sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/sys/application/service/~Common~k8s_demo.app~k8s_demo'
   }
 }

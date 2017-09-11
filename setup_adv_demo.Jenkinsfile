@@ -1,6 +1,6 @@
 stage('clone git repo') {
    node {
-     git url: 'https://github.com/f5devcentral/f5-k8s-demo.git', branch:'1.1.0-GA'
+     git url: 'https://github.com/f5devcentral/f5-k8s-demo.git', branch:'1.1.1'
    }
 }
 stage('deploy Ingress iRule') {
@@ -11,6 +11,7 @@ stage('deploy Ingress iRule') {
 stage('update F5 Container Connector to use Cluster IP') {
     node {
         sh 'kubectl replace -f f5-cc-deployment-cluster.yaml'
+	sh 'kubectl apply -f f5-ingress.yaml'
     }
 }
 stage('deploy website') {

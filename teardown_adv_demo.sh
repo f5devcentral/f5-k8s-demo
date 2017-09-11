@@ -39,5 +39,6 @@ kubectl delete -f app1-deployment.yaml
 kubectl delete -f my-website-configmap.yaml
 kubectl delete -f my-website-service.yaml
 kubectl delete -f my-website-deployment.yaml
+kubectl delete -f f5-ingress.yaml
 
 python custom_automation.py  --host 10.1.10.60
