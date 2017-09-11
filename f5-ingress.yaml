@@ -4,6 +4,7 @@ metadata:
   name: f5-ingress
   annotations:
     custom_ip: "10.1.10.80"
+    kubernetes.io/ingress.class: "custom"
 spec:
   rules:
   - host: www.f5demo.com
