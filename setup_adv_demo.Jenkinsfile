@@ -45,6 +45,7 @@ stage ('verify content routing') {
 
 stage ('verify DNS') {
  node {
+     sh 'sleep 30'
      sh 'dig @10.1.10.60 +short www.f5demo.com|grep 10.1.10.80'
      sh 'dig @10.1.10.60 +short app1.f5demo.com|grep 10.1.10.80'
      sh 'dig @10.1.10.60 +short my-frontend.f5demo.com|grep 10.1.10.81'
