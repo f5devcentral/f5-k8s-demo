@@ -1,6 +1,6 @@
 stage('clone git repo') {
    node {
-     git url: 'https://github.com/f5devcentral/f5-k8s-demo.git', branch:'1.1.0'
+     git url: 'https://github.com/f5devcentral/f5-k8s-demo.git', branch:'1.1.1'
    }
 }
 
