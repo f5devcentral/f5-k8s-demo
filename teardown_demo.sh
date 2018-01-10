@@ -87,6 +87,9 @@ printf "##############################################\n\n\n"
 
 kubectl delete secret bigip-login -n kube-system
 
+kubectl delete serviceaccount bigip-ctlr -n kube-system
+kubectl delete -f  f5-k8s-sample-rbac.yaml
+
 ##
 ## Delete F5 kubernetes partition
 ##
