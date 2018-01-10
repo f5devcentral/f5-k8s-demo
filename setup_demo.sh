@@ -14,6 +14,13 @@
 ##
 curl -k -u admin:admin -H "Content-Type: application/json" -X POST -d '{"name":"kubernetes", "fullPath": "/kubernetes", "subPath": "/"}' https://10.1.1.8/mgmt/tm/sys/folder |python -m json.tool
 
+#
+# Create serviceaccount
+#
+
+kubectl create serviceaccount bigip-ctlr -n kube-system
+kubectl create -f f5-k8s-sample-rbac.yaml
+
 ##
 ## Create BIG-IP kubectl secret
 ##
@@ -52,25 +59,25 @@ kubectl create -f my-frontend-service.yaml
 ## Deploy ASP and the relevant configmap
 ##
 
-printf "##############################################\n"
-printf "Deploy ASP\n"
-printf "##############################################\n\n\n"
-
-kubectl create -f f5-asp-configmap.yaml
-
-kubectl create -f f5-asp-daemonset.yaml
+#printf "##############################################\n"
+#printf "Deploy ASP\n"
+#printf "##############################################\n\n\n"
+#
+#kubectl create -f f5-asp-configmap.yaml
+#
+#kubectl create -f f5-asp-daemonset.yaml
 
 ##
 ## Replace kube-proxy with our kube-proxy
 ##
-printf "##############################################\n"
-printf "Deploy F5 KUBE PROXY\n"
-printf "##############################################\n\n\n"
+#printf "##############################################\n"
+#printf "Deploy F5 KUBE PROXY\n"
+#printf "##############################################\n\n\n"
 
 
-kubectl delete -f kube-proxy-origin.yaml
+#kubectl delete -f kube-proxy-origin.yaml
 
-kubectl create -f f5-kube-proxy-ds.yaml
+#kubectl create -f f5-kube-proxy-ds.yaml
 
 ##
 ## Deploy backend application leveraging ASP
