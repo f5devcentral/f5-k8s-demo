@@ -36,6 +36,6 @@ stage('Delete F5 Container Connector') {
 
 stage('delete kubernetes partition') {
     node {
-        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/sys/folder/~kubernetes'
+        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/sys/folder/~kubernetes'
     }
 }

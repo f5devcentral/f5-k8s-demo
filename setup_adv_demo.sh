@@ -1,5 +1,5 @@
 #!/bin/sh
-python iapps/deploy_iapp_bigip.py -r --iapp_name k8s_demo --strings=pool__addr=0.0.0.0 --pool_members 192.168.1.1:80 10.1.1.8 iapps/k8s_http.json
+python iapps/deploy_iapp_bigip.py -r --iapp_name k8s_demo --strings=pool__addr=0.0.0.0 --pool_members 192.168.1.1:80 10.1.10.60 iapps/k8s_http.json
 kubectl replace -f f5-cc-deployment-cluster.yaml
 kubectl apply -f f5-ingress.yaml
 kubectl create -f my-website-deployment.yaml
