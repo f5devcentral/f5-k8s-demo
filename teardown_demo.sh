@@ -24,25 +24,25 @@ kubectl delete -f my-backend-service.yaml
 ##
 ## Replace kube-proxy with original kube-proxy
 ##
-printf "##############################################\n"
-printf "Restore KUBE PROXY\n"
-printf "##############################################\n\n\n"
-
-kubectl delete -f f5-kube-proxy-ds.yaml
-
-kubectl create -f kube-proxy-origin.yaml
+#printf "##############################################\n"
+#printf "Restore KUBE PROXY\n"
+#printf "##############################################\n\n\n"
+#
+#kubectl delete -f f5-kube-proxy-ds.yaml
+#
+#kubectl create -f kube-proxy-origin.yaml
 
 ##
 ## Deploy ASP and the relevant configmap
 ##
 
-printf "##############################################\n"
-printf "Delete ASP\n"
-printf "##############################################\n\n\n"
+#printf "##############################################\n"
+#printf "Delete ASP\n"
+#printf "##############################################\n\n\n"
 
-kubectl delete -f f5-asp-configmap.yaml
-
-kubectl delete -f f5-asp-daemonset.yaml
+#kubectl delete -f f5-asp-configmap.yaml
+#
+#kubectl delete -f f5-asp-daemonset.yaml
 
 ##
 ## Deploy our frontend application and associate the relevant service/configmap to setup the BIG-IP
