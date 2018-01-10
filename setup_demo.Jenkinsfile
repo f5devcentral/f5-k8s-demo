@@ -1,11 +1,11 @@
 stage('clone git repo') {
    node {
-     git url: 'https://github.com/f5devcentral/f5-k8s-demo.git', branch:'1.1.1'
+     git url: 'https://github.com/f5devcentral/f5-k8s-demo.git', branch:'1.3.0'
    }
 }
 stage('create kubernetes partition') {
     node {
-        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X POST -d \'{"name":"kubernetes", "fullPath": "/kubernetes", "subPath": "/"}\' https://10.1.1.8/mgmt/tm/sys/folder |python -m json.tool'
+        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X POST -d \'{"name":"kubernetes", "fullPath": "/kubernetes", "subPath": "/"}\' https://10.1.10.60/mgmt/tm/sys/folder |python -m json.tool'
     }
 }
 stage('deploy F5 Container Connector') {
@@ -41,19 +41,6 @@ stage('Verify INGRESS') {
         sh 'curl -H host:green.f5demo.com 10.1.10.82|grep Green'
    }
 }
-stage('Deploy ASP') {
-    node {
-        sh 'kubectl create -f f5-asp-configmap.yaml'
-        sh 'kubectl create -f f5-asp-daemonset.yaml'
-    }
-}
-stage('Deploy F5 Kube Proxy') {
-    node {
-        sh 'kubectl delete -f kube-proxy-origin.yaml'
-        sh 'kubectl create -f f5-kube-proxy-ds.yaml'
-    }
-}
-
 stage('Deploy BACKEND') {
     node {
         sh 'kubectl create -f my-backend-deployment.yaml'

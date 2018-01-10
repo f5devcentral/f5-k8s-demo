@@ -1,21 +1,21 @@
 stage('clone git repo') {
    node {
-     git url: 'https://github.com/f5devcentral/f5-k8s-demo.git', branch:'1.1.1'
+     git url: 'https://github.com/f5devcentral/f5-k8s-demo.git', branch:'1.3.0'
    }
 }
 stage('delete DNS') {
     node {
-        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/gtm/wideip/a/~Common~my-frontend.f5demo.com'
-        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/gtm/wideip/a/~Common~www.f5demo.com'
-        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/gtm/wideip/a/~Common~app1.f5demo.com'
+        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/gtm/wideip/a/~Common~my-frontend.f5demo.com'
+        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/gtm/wideip/a/~Common~www.f5demo.com'
+        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/gtm/wideip/a/~Common~app1.f5demo.com'
 
-        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/gtm/pool/a/~Common~my-frontend_pool'
-        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/gtm/pool/a/~Common~my-website_pool'
-        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/gtm/pool/a/~Common~app1_pool'
+        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/gtm/pool/a/~Common~my-frontend_pool'
+        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/gtm/pool/a/~Common~my-website_pool'
+        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/gtm/pool/a/~Common~app1_pool'
 
-        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/gtm/server/~Common~bigip/virtual-servers/my-frontend_vs'
-        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/gtm/server/~Common~bigip/virtual-servers/my-website_vs'
-        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/gtm/server/~Common~bigip/virtual-servers/app1_vs'
+        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/gtm/server/~Common~bigip/virtual-servers/my-frontend_vs'
+        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/gtm/server/~Common~bigip/virtual-servers/my-website_vs'
+        sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/gtm/server/~Common~bigip/virtual-servers/app1_vs'
     }
     
 }
@@ -41,6 +41,6 @@ stage ('delete content routing / DNS') {
 stage ('delete Ingress iRule') {
   node {
     sh 'kubectl delete -f f5-ingress.yaml'
-    sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.1.8/mgmt/tm/sys/application/service/~Common~k8s_demo.app~k8s_demo'
+    sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/sys/application/service/~Common~k8s_demo.app~k8s_demo'
   }
 }

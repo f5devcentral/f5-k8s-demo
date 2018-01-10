@@ -1,6 +1,6 @@
 stage('clone git repo') {
    node {
-     git url: 'https://github.com/f5devcentral/f5-k8s-demo.git', branch:'1.1.1'
+     git url: 'https://github.com/f5devcentral/f5-k8s-demo.git', branch:'1.3.0'
    }
 }
 
@@ -11,19 +11,6 @@ stage('Delete BACKEND') {
     }
 }
 
-stage('Restore Kube Proxy') {
-    node {
-        sh 'kubectl delete -f f5-kube-proxy-ds.yaml'
-        sh 'kubectl create -f kube-proxy-origin.yaml'
-    }
-}
-
-stage('Delete ASP') {
-    node {
-        sh 'kubectl delete -f f5-asp-configmap.yaml'
-        sh 'kubectl delete -f f5-asp-daemonset.yaml'
-    }
-}
 stage('Delete FRONTEND App') {
     node {
         sh 'kubectl delete -f my-frontend-configmap.yaml'
