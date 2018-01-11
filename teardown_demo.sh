@@ -94,6 +94,7 @@ kubectl delete -f  f5-k8s-sample-rbac.yaml
 ## Delete F5 kubernetes partition
 ##
 
+sleep 30
 curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/sys/folder/~kubernetes
 
 

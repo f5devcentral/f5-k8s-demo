@@ -8,6 +8,12 @@ stage('create kubernetes partition') {
         sh 'curl -k -u admin:admin -H "Content-Type: application/json" -X POST -d \'{"name":"kubernetes", "fullPath": "/kubernetes", "subPath": "/"}\' https://10.1.10.60/mgmt/tm/sys/folder |python -m json.tool'
     }
 }
+stage('create service accounts') {
+    node {
+       sh 'kubectl create serviceaccount bigip-ctlr -n kube-system'
+       sh 'kubectl create -f f5-k8s-sample-rbac.yaml'
+    }
+}
 stage('deploy F5 Container Connector') {
     node {
         sh 'kubectl create secret generic bigip-login --namespace kube-system --from-literal=username=admin --from-literal=password=admin'
