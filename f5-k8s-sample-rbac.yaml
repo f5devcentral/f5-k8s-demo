@@ -1,4 +1,5 @@
 # for use in k8s clusters using RBAC
+# for Openshift use the openshift specific examples
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
@@ -14,6 +15,7 @@ rules:
   - namespaces
   - ingresses
   - secrets
+  - pods
   verbs:
   - get
   - list
