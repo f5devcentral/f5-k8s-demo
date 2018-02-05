@@ -1,19 +1,19 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: k8s-bigip-ctlr-deployment
+  name: k8s-bigip2-ctlr-deployment
   namespace: kube-system
 spec:
   replicas: 1
   template:
     metadata:
-      name: k8s-bigip-ctlr
+      name: k8s-bigip2-ctlr
       labels:
-        app: k8s-bigip-ctlr
+        app: k8s-bigip2-ctlr
     spec:
       serviceAccountName: bigip-ctlr
       containers:
-        - name: k8s-bigip-ctlr
+        - name: k8s-bigip2-ctlr
           # replace the version as needed
           image: "f5networks/k8s-bigip-ctlr:1.4.0"
           env:
@@ -31,7 +31,7 @@ spec:
           args: [
             "--bigip-username=$(BIGIP_USERNAME)",
             "--bigip-password=$(BIGIP_PASSWORD)",
-            "--bigip-url=10.1.10.60",
+            "--bigip-url=10.1.10.61",
             "--bigip-partition=kubernetes",
             # The Controller can use local DNS to resolve hostnames;
             # defaults to LOOKUP; can be replaced with custom DNS server IP

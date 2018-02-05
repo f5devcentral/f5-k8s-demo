@@ -13,6 +13,40 @@
 ## Create F5 kubernetes partition
 ##
 curl -k -u admin:admin -H "Content-Type: application/json" -X POST -d '{"name":"kubernetes", "fullPath": "/kubernetes", "subPath": "/"}' https://10.1.10.60/mgmt/tm/sys/folder |python -m json.tool
+#
+# Setup Flannel
+#
+
+# disable vxlan configsync on each device
+curl -k -u admin:admin -H "Content-Type: application/json" -X PUT -d '{"value":"disable"}' https://10.1.10.60/mgmt/tm/sys/db/iptunnel.configsync 
+curl -k -u admin:admin -H "Content-Type: application/json" -X PUT -d '{"value":"disable"}' https://10.1.10.61/mgmt/tm/sys/db/iptunnel.configsync 
+curl -k -u admin:admin -H "Content-Type: application/json" -X POST -d '{"name": "fl-vxlan","partition": "Common","defaultsFrom": "/Common/vxlan", "floodingType": "none","port": 8472 }' https://10.1.10.60/mgmt/tm/net/tunnels/vxlan
+# sync
+curl -k -u admin:admin -H 'Content-Type: application/json' -X POST -d '{"command":"run","options":[{"force-full-load-push to-group":"Sync"}]}' "https://10.1.10.60/mgmt/tm/cm/config-sync"
+sleep 3
+curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "flannel_vxlan","partition": "Common","key": 1,"localAddress": "10.1.10.60","profile": "/Common/fl-vxlan" }' https://10.1.10.60/mgmt/tm/net/tunnels/tunnel
+
+curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "flannel_vxlan","partition": "Common","key": 1,"localAddress": "10.1.10.61","profile": "/Common/fl-vxlan" }' https://10.1.10.61/mgmt/tm/net/tunnels/tunnel
+sleep 10
+macAddr1=$(curl --stderr /dev/null -k -u admin:admin -H "Content-Type: application/json"  "https://10.1.10.60/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/stats?options=all-properties"|jq '.entries."https://localhost/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/~Common~flannel_vxlan/stats"."nestedStats".entries.macAddr.description' -r)
+macAddr2=$(curl --stderr /dev/null -k -u admin:admin -H "Content-Type: application/json"  "https://10.1.10.61/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/stats?options=all-properties"|jq '.entries."https://localhost/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/~Common~flannel_vxlan/stats"."nestedStats".entries.macAddr.description' -r)
+
+#
+# Create bigip node (vxlan)
+#
+
+sed -e "s/MAC_ADDR/$macAddr1/g" bigip1-node.yaml |kubectl create -f -
+sed -e "s/MAC_ADDR/$macAddr2/g" bigip2-node.yaml |kubectl create -f -
+
+# Create self-ip
+
+curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-local","partition": "Common","address": "10.244.30.15/16", "floating": "disabled","vlan": "/Common/flannel_vxlan"}' https://10.1.10.60/mgmt/tm/net/self
+curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-floating","partition": "Common","address": "10.244.30.16/16", "floating": "enabled","vlan": "/Common/flannel_vxlan","trafficGroup":"/Common/traffic-group-1"}' https://10.1.10.60/mgmt/tm/net/self
+
+curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-local","partition": "Common","address": "10.244.31.15/16", "floating": "disabled","vlan": "/Common/flannel_vxlan"}' https://10.1.10.61/mgmt/tm/net/self
+curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-floating","partition": "Common","address": "10.244.31.16/16", "floating": "enabled","vlan": "/Common/flannel_vxlan","trafficGroup":"/Common/traffic-group-1"}' https://10.1.10.61/mgmt/tm/net/self
+
+
 
 #
 # Create serviceaccount
@@ -40,6 +74,7 @@ printf "Deploy BIG-IP CC\n"
 printf "##############################################\n\n\n"
 
 kubectl create -f f5-cc-deployment.yaml
+kubectl create -f f5-cc-deployment2.yaml
 
 ##
 ## Deploy our frontend application and associate the relevant service/configmap to setup the BIG-IP
@@ -90,6 +125,10 @@ printf "##############################################\n\n\n"
 kubectl create -f my-backend-deployment.yaml
 
 kubectl create -f my-backend-service.yaml
+
+curl -k -u admin:admin -H 'Content-Type: application/json' -X POST -d '{"command":"run","options":[{"to-group":"Sync"}]}' "https://10.1.10.60/mgmt/tm/cm/config-sync"
+sleep 3
+curl -k -u admin:admin -H "Content-Type: application/json" -d '{"command":"save"}' https://10.1.10.60/mgmt/tm/sys/config
 
 printf "##############################################\n"
 printf "Connect to Frontend APP with http://10.1.10.80\n"

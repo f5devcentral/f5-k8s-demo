@@ -15,7 +15,7 @@ spec:
       containers:
         - name: k8s-bigip-ctlr
           # replace the version as needed
-          image: "f5networks/k8s-bigip-ctlr:1.3.0"
+          image: "f5networks/k8s-bigip-ctlr:1.4.0"
           env:
             - name: BIGIP_USERNAME
               valueFrom:
@@ -36,7 +36,9 @@ spec:
             # The Controller can use local DNS to resolve hostnames;
             # defaults to LOOKUP; can be replaced with custom DNS server IP
             # or left blank (introduced in v1.3.0)
-            "--resolve-ingress-names=LOOKUP"
+            "--resolve-ingress-names=LOOKUP",
+            "--pool-member-type=cluster",
+            "--flannel-name=flannel_vxlan"
             # The Controller can access Secrets by default;
             # set to "false" if you only want to use preconfigured
             # BIG-IP SSL profiles
