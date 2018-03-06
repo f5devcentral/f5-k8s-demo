@@ -41,10 +41,10 @@ sed -e "s/MAC_ADDR/$macAddr2/g" bigip2-node.yaml |kubectl create -f -
 # Create self-ip
 
 curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-local","partition": "Common","address": "10.244.30.15/16", "floating": "disabled","vlan": "/Common/flannel_vxlan"}' https://10.1.10.60/mgmt/tm/net/self
-curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-floating","partition": "Common","address": "10.244.30.16/16", "floating": "enabled","vlan": "/Common/flannel_vxlan","trafficGroup":"/Common/traffic-group-1"}' https://10.1.10.60/mgmt/tm/net/self
+#curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-floating","partition": "Common","address": "10.244.30.16/16", "floating": "enabled","vlan": "/Common/flannel_vxlan","trafficGroup":"/Common/traffic-group-1"}' https://10.1.10.60/mgmt/tm/net/self
 
 curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-local","partition": "Common","address": "10.244.31.15/16", "floating": "disabled","vlan": "/Common/flannel_vxlan"}' https://10.1.10.61/mgmt/tm/net/self
-curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-floating","partition": "Common","address": "10.244.31.16/16", "floating": "enabled","vlan": "/Common/flannel_vxlan","trafficGroup":"/Common/traffic-group-1"}' https://10.1.10.61/mgmt/tm/net/self
+#curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-floating","partition": "Common","address": "10.244.31.16/16", "floating": "enabled","vlan": "/Common/flannel_vxlan","trafficGroup":"/Common/traffic-group-1"}' https://10.1.10.61/mgmt/tm/net/self
 
 
 
