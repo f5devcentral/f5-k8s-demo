@@ -21,6 +21,7 @@ curl -k -u admin:admin -H "Content-Type: application/json" -X POST -d '{"name":"
 curl -k -u admin:admin -H "Content-Type: application/json" -X PUT -d '{"value":"disable"}' https://10.1.10.60/mgmt/tm/sys/db/iptunnel.configsync 
 curl -k -u admin:admin -H "Content-Type: application/json" -X PUT -d '{"value":"disable"}' https://10.1.10.61/mgmt/tm/sys/db/iptunnel.configsync 
 curl -k -u admin:admin -H "Content-Type: application/json" -X POST -d '{"name": "fl-vxlan","partition": "Common","defaultsFrom": "/Common/vxlan", "floodingType": "none","port": 8472 }' https://10.1.10.60/mgmt/tm/net/tunnels/vxlan
+sleep 3
 # sync
 curl -k -u admin:admin -H 'Content-Type: application/json' -X POST -d '{"command":"run","options":[{"force-full-load-push to-group":"Sync"}]}' "https://10.1.10.60/mgmt/tm/cm/config-sync"
 sleep 3
