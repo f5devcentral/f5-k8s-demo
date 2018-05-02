@@ -15,7 +15,7 @@ spec:
       containers:
         - name: k8s-bigip-ctlr
           # replace the version as needed
-          image: "f5networks/k8s-bigip-ctlr:1.4.2"
+          image: "f5networks/k8s-bigip-ctlr:1.5.1"
           env:
             - name: BIGIP_USERNAME
               valueFrom:
