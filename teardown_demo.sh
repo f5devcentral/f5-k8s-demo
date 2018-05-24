@@ -95,41 +95,42 @@ kubectl delete -f  f5-k8s-sample-rbac.yaml
 ## Delete F5 kubernetes partition
 ##
 
-curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/ltm/rule/~kubernetes~http_redirect_irule
-curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/ltm/data-group/internal/~kubernetes~https_redirect_dg
+curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/ltm/rule/~kubernetes~http_redirect_irule
+curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/ltm/data-group/internal/~kubernetes~https_redirect_dg
 sleep 30
-curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/sys/folder/~kubernetes
+curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/sys/folder/~kubernetes
 
 
 # delete vxlan profile
 
-curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/net/self/~Common~vxlan-floating
-curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/net/self/~Common~vxlan-local
+curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/net/self/~Common~vxlan-floating
+curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/net/self/~Common~vxlan-local
 
-curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.61/mgmt/tm/net/self/~Common~vxlan-floating
-curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.61/mgmt/tm/net/self/~Common~vxlan-local
+curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.241/mgmt/tm/net/self/~Common~vxlan-floating
+curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.241/mgmt/tm/net/self/~Common~vxlan-local
 
- curl -k -u admin:admin -H "Content-Type: application/json" -X PATCH -d '{"records":{}}' https://10.1.10.60/mgmt/tm/net/fdb/tunnel/~Common~flannel_vxlan
- curl -k -u admin:admin -H "Content-Type: application/json" -X PATCH -d '{"records":{}}' https://10.1.10.61/mgmt/tm/net/fdb/tunnel/~Common~flannel_vxlan
+ curl -k -u admin:admin -H "Content-Type: application/json" -X PATCH -d '{"records":{}}' https://10.1.10.240/mgmt/tm/net/fdb/tunnel/~Common~flannel_vxlan
+ curl -k -u admin:admin -H "Content-Type: application/json" -X PATCH -d '{"records":{}}' https://10.1.10.241/mgmt/tm/net/fdb/tunnel/~Common~flannel_vxlan
 
-curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan
-curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.61/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan
-curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.60/mgmt/tm/net/tunnels/vxlan/~Common~fl-vxlan
+curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan
+curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.241/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan
+curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/net/tunnels/vxlan/~Common~fl-vxlan
 
 
 # enable vxlan configsync on each device
-curl -k -u admin:admin -H "Content-Type: application/json" -X PUT -d '{"value":"enable"}' https://10.1.10.60/mgmt/tm/sys/db/iptunnel.configsync 
-curl -k -u admin:admin -H "Content-Type: application/json" -X PUT -d '{"value":"enable"}' https://10.1.10.61/mgmt/tm/sys/db/iptunnel.configsync 
+curl -k -u admin:admin -H "Content-Type: application/json" -X PUT -d '{"value":"enable"}' https://10.1.10.240/mgmt/tm/sys/db/iptunnel.configsync 
+curl -k -u admin:admin -H "Content-Type: application/json" -X PUT -d '{"value":"enable"}' https://10.1.10.241/mgmt/tm/sys/db/iptunnel.configsync 
 
-curl -k -u admin:admin -H 'Content-Type: application/json' -X POST -d '{"command":"run","options":[{"force-full-load-push to-group":"Sync"}]}' "https://10.1.10.60/mgmt/tm/cm/config-sync"
+curl -k -u admin:admin -H 'Content-Type: application/json' -X POST -d '{"command":"run","options":[{"force-full-load-push to-group":"Sync"}]}' "https://10.1.10.240/mgmt/tm/cm/config-sync"
 sleep 3
-curl -k -u admin:admin -H "Content-Type: application/json" -d '{"command":"save"}' https://10.1.10.60/mgmt/tm/sys/config
+curl -k -u admin:admin -H "Content-Type: application/json" -d '{"command":"save"}' https://10.1.10.240/mgmt/tm/sys/config
 
 #
 # Delete bigip node (vxlan)
 #
 kubectl delete -f bigip1-node.yaml
 kubectl delete -f bigip2-node.yaml
+kubectl delete -f bigip-float-node.yaml
 
 printf "##############################################\n"
 printf "Connect to Frontend APP with http://10.1.10.80\n"
