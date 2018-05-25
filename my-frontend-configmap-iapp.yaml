@@ -41,7 +41,8 @@ data:
             "pool__port": "80",
             "asm__use_asm": "/Common/linuxlowpolicy",
             "asm__security_logging":"logall",
-            "asm__language": "utf-8"
+            "asm__language": "utf-8",
+            "pool__fallback_persist":"/#do_not_use#"
           }
         }
       }
