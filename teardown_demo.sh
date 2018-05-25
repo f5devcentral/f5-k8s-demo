@@ -96,6 +96,8 @@ kubectl delete -f  f5-k8s-sample-rbac.yaml
 ##
 
 curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/ltm/rule/~kubernetes~http_redirect_irule
+curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/ltm/rule/~kubernetes~http_redirect_irule_443
+
 curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/ltm/data-group/internal/~kubernetes~https_redirect_dg
 sleep 30
 curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/sys/folder/~kubernetes
