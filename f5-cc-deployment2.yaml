@@ -15,7 +15,7 @@ spec:
       containers:
         - name: k8s-bigip2-ctlr
           # replace the version as needed
-          image: "f5networks/k8s-bigip-ctlr:1.4.2"
+          image: "f5networks/k8s-bigip-ctlr:1.5.1"
           env:
             - name: BIGIP_USERNAME
               valueFrom:
@@ -31,7 +31,7 @@ spec:
           args: [
             "--bigip-username=$(BIGIP_USERNAME)",
             "--bigip-password=$(BIGIP_PASSWORD)",
-            "--bigip-url=10.1.10.61",
+            "--bigip-url=10.1.10.241",
             "--bigip-partition=kubernetes",
             # The Controller can use local DNS to resolve hostnames;
             # defaults to LOOKUP; can be replaced with custom DNS server IP
