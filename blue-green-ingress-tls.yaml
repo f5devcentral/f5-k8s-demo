@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: blue-green-ingress-tls
+  annotations:
+    virtual-server.f5.com/ip: "10.1.10.82"
+    virtual-server.f5.com/https-port: "443"
+    virtual-server.f5.com/http-port: "8080"
+    virtual-server.f5.com/ssl-redirect: "false"
+    ingress.kubernetes.io/allow-http: "true"
+    virtual-server.f5.com/clientssl: "/Common/_wildcard_.f5demo.com_clientssl"
+    virtual-server.f5.com/serverssl: "/Common/serverssl"
+    virtual-server.f5.com/secure-serverssl: "false"
+    virtual-server.f5.com/partition: "kubernetes"
+    virtual-server.f5.com/health: |
+      [
+        {
+          "path":     "blue.f5demo.com/",
+          "send":     "GET / HTTP/1.0",
+          "interval": 5,
+          "timeout":  15
+        }, {
+          "path":     "green.f5demo.com/",
+          "send":     "GET / HTTP/1.0",
+          "interval": 5,
+          "timeout":  15
+        }
+      ]    
+    kubernetes.io/ingress.class: "f5"
+spec:
+  tls:
+  - secretName: /Common/_wildcard_.f5demo.com_clientssl
+ 
+  rules:
+  - host: blue.f5demo.com
+    http:
+      paths:
+      - backend:
+          serviceName: node-blue-tls
+          servicePort: 443
+  - host: green.f5demo.com
+    http:
+      paths:
+      - backend:
+          serviceName: node-green-tls
+          servicePort: 443

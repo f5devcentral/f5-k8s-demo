@@ -15,13 +15,18 @@ spec:
         - name: F5DEMO_APP
           value: "website"
         - name: F5DEMO_NODENAME
-          value: "Node Green"
+          value: "Node Green (No SSL)"
         - name: F5DEMO_COLOR
-          value: 00FF00
+          value: "99FF99"
+        - name: F5DEMO_NODENAME_SSL
+          value: "Node Green (SSL)"
+        - name: F5DEMO_COLOR_SSL
+          value: "00FF00"
         imagePullPolicy: IfNotPresent
         name: node-green
         ports:
         - containerPort: 80
+        - containerPort: 443
           protocol: TCP
 
 ---
@@ -36,6 +41,24 @@ spec:
   - port: 80
     protocol: TCP
     targetPort: 80
+    name: http
+  type: NodePort
+  selector:
+    run: node-green
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-green-tls
+  labels:
+    run: node-green-tls
+spec:
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 443
+    name: https
   type: NodePort
   selector:
     run: node-green
