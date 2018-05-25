@@ -62,6 +62,7 @@ printf "##############################################\n"
 printf "Delete Ingress\n"
 printf "##############################################\n\n\n"
 
+kubectl delete -f blue-green-ingress-tls.yaml
 kubectl delete -f blue-green-ingress.yaml
 kubectl delete -f node-blue.yaml
 kubectl delete -f node-green.yaml
