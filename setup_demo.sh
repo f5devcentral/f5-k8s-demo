@@ -12,7 +12,49 @@
 ##
 ## Create F5 kubernetes partition
 ##
-curl -k -u admin:admin -H "Content-Type: application/json" -X POST -d '{"name":"kubernetes", "fullPath": "/kubernetes", "subPath": "/"}' https://10.1.1.8/mgmt/tm/sys/folder |python -m json.tool
+curl -k -u admin:admin -H "Content-Type: application/json" -X POST -d '{"name":"kubernetes", "fullPath": "/kubernetes", "subPath": "/"}' https://10.1.10.240/mgmt/tm/sys/folder |python -m json.tool
+#
+# Setup Flannel
+#
+
+# disable vxlan configsync on each device
+curl -k -u admin:admin -H "Content-Type: application/json" -X PUT -d '{"value":"disable"}' https://10.1.10.240/mgmt/tm/sys/db/iptunnel.configsync 
+curl -k -u admin:admin -H "Content-Type: application/json" -X PUT -d '{"value":"disable"}' https://10.1.10.241/mgmt/tm/sys/db/iptunnel.configsync 
+curl -k -u admin:admin -H "Content-Type: application/json" -X POST -d '{"name": "fl-vxlan","partition": "Common","defaultsFrom": "/Common/vxlan", "floodingType": "none","port": 8472 }' https://10.1.10.240/mgmt/tm/net/tunnels/vxlan
+sleep 3
+# sync
+curl -k -u admin:admin -H 'Content-Type: application/json' -X POST -d '{"command":"run","options":[{"force-full-load-push to-group":"Sync"}]}' "https://10.1.10.240/mgmt/tm/cm/config-sync"
+sleep 3
+curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "flannel_vxlan","partition": "Common","key": 1,"localAddress": "10.1.10.240","profile": "/Common/fl-vxlan" }' https://10.1.10.240/mgmt/tm/net/tunnels/tunnel
+
+curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "flannel_vxlan","partition": "Common","key": 1,"localAddress": "10.1.10.241","profile": "/Common/fl-vxlan" }' https://10.1.10.241/mgmt/tm/net/tunnels/tunnel
+sleep 10
+macAddr1=$(curl --stderr /dev/null -k -u admin:admin -H "Content-Type: application/json"  "https://10.1.10.240/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/stats?options=all-properties"|jq '.entries."https://localhost/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/~Common~flannel_vxlan/stats"."nestedStats".entries.macAddr.description' -r)
+macAddr2=$(curl --stderr /dev/null -k -u admin:admin -H "Content-Type: application/json"  "https://10.1.10.241/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/stats?options=all-properties"|jq '.entries."https://localhost/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/~Common~flannel_vxlan/stats"."nestedStats".entries.macAddr.description' -r)
+
+#
+# Create bigip node (vxlan)
+#
+
+sed -e "s/MAC_ADDR/$macAddr1/g" bigip1-node.yaml |kubectl create -f -
+sed -e "s/MAC_ADDR/$macAddr2/g" bigip2-node.yaml |kubectl create -f -
+
+# Create self-ip
+
+curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-local","partition": "Common","address": "10.244.30.15/16", "floating": "disabled","vlan": "/Common/flannel_vxlan"}' https://10.1.10.240/mgmt/tm/net/self
+#curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-floating","partition": "Common","address": "10.244.30.16/16", "floating": "enabled","vlan": "/Common/flannel_vxlan","trafficGroup":"/Common/traffic-group-1"}' https://10.1.10.240/mgmt/tm/net/self
+
+curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-local","partition": "Common","address": "10.244.31.15/16", "floating": "disabled","vlan": "/Common/flannel_vxlan"}' https://10.1.10.241/mgmt/tm/net/self
+#curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-floating","partition": "Common","address": "10.244.31.16/16", "floating": "enabled","vlan": "/Common/flannel_vxlan","trafficGroup":"/Common/traffic-group-1"}' https://10.1.10.241/mgmt/tm/net/self
+
+
+
+#
+# Create serviceaccount
+#
+
+kubectl create serviceaccount bigip-ctlr -n kube-system
+kubectl create -f f5-k8s-sample-rbac.yaml
 
 ##
 ## Create BIG-IP kubectl secret
@@ -33,6 +75,7 @@ printf "Deploy BIG-IP CC\n"
 printf "##############################################\n\n\n"
 
 kubectl create -f f5-cc-deployment.yaml
+kubectl create -f f5-cc-deployment2.yaml
 
 ##
 ## Deploy our frontend application and associate the relevant service/configmap to setup the BIG-IP
@@ -52,25 +95,25 @@ kubectl create -f my-frontend-service.yaml
 ## Deploy ASP and the relevant configmap
 ##
 
-printf "##############################################\n"
-printf "Deploy ASP\n"
-printf "##############################################\n\n\n"
-
-kubectl create -f f5-asp-configmap.yaml
-
-kubectl create -f f5-asp-daemonset.yaml
+#printf "##############################################\n"
+#printf "Deploy ASP\n"
+#printf "##############################################\n\n\n"
+#
+#kubectl create -f f5-asp-configmap.yaml
+#
+#kubectl create -f f5-asp-daemonset.yaml
 
 ##
 ## Replace kube-proxy with our kube-proxy
 ##
-printf "##############################################\n"
-printf "Deploy F5 KUBE PROXY\n"
-printf "##############################################\n\n\n"
+#printf "##############################################\n"
+#printf "Deploy F5 KUBE PROXY\n"
+#printf "##############################################\n\n\n"
 
 
-kubectl delete -f kube-proxy-origin.yaml
+#kubectl delete -f kube-proxy-origin.yaml
 
-kubectl create -f f5-kube-proxy-ds.yaml
+#kubectl create -f f5-kube-proxy-ds.yaml
 
 ##
 ## Deploy backend application leveraging ASP
@@ -84,6 +127,10 @@ kubectl create -f my-backend-deployment.yaml
 
 kubectl create -f my-backend-service.yaml
 
+curl -k -u admin:admin -H 'Content-Type: application/json' -X POST -d '{"command":"run","options":[{"to-group":"Sync"}]}' "https://10.1.10.240/mgmt/tm/cm/config-sync"
+sleep 3
+curl -k -u admin:admin -H "Content-Type: application/json" -d '{"command":"save"}' https://10.1.10.240/mgmt/tm/sys/config
+
 printf "##############################################\n"
 printf "Connect to Frontend APP with http://10.1.10.80\n"
 printf "##############################################\n\n\n"
@@ -95,6 +142,7 @@ printf "##############################################\n\n\n"
 kubectl create -f node-blue.yaml
 kubectl create -f node-green.yaml
 kubectl create -f blue-green-ingress.yaml
+kubectl create -f blue-green-ingress-tls.yaml
 
 printf "##############################################\n"
 printf "Using command: kubectl get pods --all-namespaces to check containers status\n"
