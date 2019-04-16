@@ -84,7 +84,7 @@ data:
               "virtualAddresses": [
                 {"use": "/AS3/Shared/serviceAddress0"}
               ],
-              "pool": {"bigip":"/AS3/Shared/web_pool"}
+              "pool": "/@/Shared/web_pool"
             },
             "web_pool": {
               "class": "Pool",
@@ -107,7 +107,7 @@ data:
               "virtualAddresses": [
                 {"use": "/AS3/Shared/serviceAddress0"}
               ],
-              "pool": {"bigip":"/AS3/Shared/web_pool"},
+              "pool": "/@/Shared/web_pool",
               "serverTLS": "webtls",
               "redirect80":false,
               "policyWAF":{"bigip":"/Common/linux-low"},
