@@ -10,7 +10,7 @@ spec:
         run: my-website
     spec:
       containers:
-      - image: chen23/f5-demo-app:latest
+      - image: f5devcentral/f5-demo-httpd:latest
         env:
         - name: F5DEMO_APP
           value: "website"
