@@ -10,7 +10,7 @@ spec:
         run: node-blue
     spec:
       containers:
-      - image: "chen23/f5-demo-app"
+      - image: "f5devcentral/f5-demo-httpd"
         env:
         - name: F5DEMO_APP
           value: "website"

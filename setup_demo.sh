@@ -87,9 +87,11 @@ printf "##############################################\n\n\n"
 
 kubectl create -f my-frontend-deployment.yaml
 
-kubectl create -f my-frontend-configmap.yaml
+#kubectl create -f my-frontend-configmap.yaml
 
-kubectl create -f my-frontend-service.yaml
+kubectl create -f as3-configmap.yaml
+
+kubectl create -f my-frontend-service-as3.yaml
 
 ##
 ## Deploy ASP and the relevant configmap

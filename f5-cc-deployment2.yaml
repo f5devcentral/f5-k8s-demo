@@ -15,7 +15,7 @@ spec:
       containers:
         - name: k8s-bigip2-ctlr
           # replace the version as needed
-          image: "f5networks/k8s-bigip-ctlr:1.7.1"
+          image: "f5networks/k8s-bigip-ctlr:1.9.0"
           env:
             - name: BIGIP_USERNAME
               valueFrom:
@@ -38,7 +38,9 @@ spec:
             # or left blank (introduced in v1.3.0)
             "--resolve-ingress-names=LOOKUP",
             "--pool-member-type=cluster",
-            "--flannel-name=flannel_vxlan"
+            "--flannel-name=flannel_vxlan",
+	    # allow self-signed cert for AS3
+            "--insecure=true"
             # The Controller can access Secrets by default;
             # set to "false" if you only want to use preconfigured
             # BIG-IP SSL profiles

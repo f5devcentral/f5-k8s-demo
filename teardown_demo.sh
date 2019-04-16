@@ -52,9 +52,11 @@ printf "##############################################\n"
 printf "Delete FRONTEND APP\n"
 printf "##############################################\n\n\n"
 
-kubectl delete -f my-frontend-configmap.yaml
+#kubectl delete -f my-frontend-configmap.yaml
 
-kubectl delete -f my-frontend-service.yaml
+kubectl delete -f as3-configmap.yaml
+
+kubectl delete -f my-frontend-service-as3.yaml
 
 kubectl delete -f my-frontend-deployment.yaml
 
@@ -96,13 +98,17 @@ kubectl delete -f  f5-k8s-sample-rbac.yaml
 ## Delete F5 kubernetes partition
 ##
 
-curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/ltm/rule/~kubernetes~http_redirect_irule
-curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/ltm/rule/~kubernetes~http_redirect_irule_443
+#curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/ltm/rule/~kubernetes~http_redirect_irule
+#curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/ltm/rule/~kubernetes~http_redirect_irule_443
 
-curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/ltm/data-group/internal/~kubernetes~https_redirect_dg
+#curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/ltm/data-group/internal/~kubernetes~https_redirect_dg
 sleep 30
 curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/sys/folder/~kubernetes
 
+##
+## Delete AS3 declaration
+##
+curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/shared/appsvcs/declare
 
 # delete vxlan profile
 
