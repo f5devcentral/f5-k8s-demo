@@ -5,6 +5,7 @@
                 "virtualAddresses": [
                    "{{- .virtualAddress }}"
                 ],
+               "remark":"{{ .name}}: f5demo.tcp.v1",
                "virtualPort": {{- .virtualPort }},
                 "pool": "{{- .name}}_pool"
              },
@@ -39,5 +40,48 @@
                    "servicePort": 80,
                    "serverAddresses": []
                 }]
+             }
+{{- end }}
+{{- define "f5demo.snirouter.tcp.v1" }}
+             "{{- .name }}": {
+                "class": "Service_TCP",
+                "virtualAddresses": [
+                   "{{- .virtualAddress }}"
+                ],
+               "remark":"{{ .name}}: f5demo.snirouter.tcp.v1",
+               "virtualPort": {{- .virtualPort }},
+               "persistenceMethods": ["tls-session-id"],
+               "policyEndpoint": "{{- .name}}_policy_endpoint"
+             },
+             "{{- .name }}_policy_endpoint": {
+                "class": "Endpoint_Policy",
+        "rules": [
+           {{- $local := dict "first" true  }}       
+           {{- range .targets }}
+           {{- range $key, $val :=. }}
+           {{- if not $local.first }},{{- end }}
+           {{- $_ := set $local "first" false  }}
+           {
+          "name": "forward_to_{{$val}}",
+          "conditions": [{
+            "type": "sslExtension",
+            "serverName": {
+              "operand": "{{ if hasPrefix "*" $key }}ends-with{{ else }}equals{{end}}",
+              "values": ["{{ trimPrefix "*" $key }}"]
+            }
+          }
+           ],
+          "actions": [
+            {
+            "type": "forward",
+            "event": "ssl-client-hello",
+            "select": {
+              "service": {"use":"{{ $val }}"}
+            }
+          }]
+        }
+           {{- end }}
+           {{- end }}
+         ]
              }
 {{- end }}
