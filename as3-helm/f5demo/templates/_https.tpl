@@ -9,7 +9,7 @@
                 "pool": "{{ .name }}_pool",
                "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"},
                "redirect80": {{ .redirect80 | default false }},            
-               "serverTLS": {"bigip":"/Common/clientssl"},
+               "serverTLS": {{ .serverTLS | default "{\"bigip\":\"/Common/clientssl\"}"}},
                "clientTLS": {"bigip":"/Common/serverssl"}
              },
              "{{ .name }}_pool": {
@@ -34,9 +34,9 @@
                "pool": "{{ .name }}_pool",
                "redirect80": {{ .redirect80 | default false }},
                "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"},
-               "serverTLS": {"bigip":"/Common/clientssl"},
-               "clientTLS": {"bigip":"/Common/serverssl"},
-               "policyWAF":{"bigip":"/Common/linux-low"},
+               "serverTLS": {{ .serverTLS | default "{\"bigip\":\"/Common/clientssl\"}"}},
+               "clientTLS": {{ .clientTLS | default "{\"bigip\":\"/Common/serverssl\"}"}},
+               "policyWAF": {{ .policyWAF | default "{\"bigip\":\"/Common/linux-low\"}"}},
                "securityLogProfiles": [
                  {
                    "bigip": "/Common/Log all requests"
