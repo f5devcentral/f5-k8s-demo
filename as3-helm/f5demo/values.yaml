@@ -1,10 +1,6 @@
 # Default values for f5-as3.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-dns: false
-http: false
-waf: false
-http: false
 common:
   template: f5demo.common.dns.v1
   irules:
@@ -26,45 +22,66 @@ common:
      addressTranslation: 10.1.10.82
      addressTranslationPort: 80
     2:
+     address: 10.1.10.80
+     port: 80
+     addressTranslation: 10.1.10.80
+     addressTranslationPort: 80
+    3:
      address: 10.1.10.240
      port: 6443
      addressTranslation: 10.1.10.240
      addressTranslationPort: 6443
 
 applications:
-   #app name
-     # IP
-     # PORT
-     # PROTOCOL
-     # FQDN
-     # clientssl
-     # serverssl
-     # WAF
-  app01:
-    name: app01
-    template: f5demo.proxyprotocol.tcp.v1
+  frontend:
+    name: frontend
+    template: f5demo.tcp.v1
     virtualAddress: "10.1.10.81"
     virtualPort: 80
-  app02:
-    name: app02
+  ingress:
+    name: ingress
+    template: f5demo.proxyprotocol.tcp.v1
+    virtualAddress: "10.1.10.82"
+    virtualPort: 80
+  ingresstls:
+    name: ingresstls
+    template: f5demo.proxyprotocol.tcp.v1
+    virtualAddress: "10.1.10.82"
+    virtualPort: 8443
+  snirouter:
+    name: snirouter
+    template: f5demo.snirouter.tcp.v1
+    virtualAddress: "10.1.10.82"
+    virtualPort: 443
+    targets:
+      - website.f5demo.com: websitetls
+      - "*.f5demo.com": ingresstls
+  website:
+    name: website
     template: f5demo.http.v1
     virtualAddress: "10.1.10.80"
-  app03:
-    name: app03
+  websitetls:
+    name: websitetls
     template: f5demo.waf.https.v1
     virtualAddress: "10.1.10.80"
+    serverTLS: '{"bigip":"/Common/_wildcard_.f5demo.com_clientssl"}'
   dns01:
     name: dns01
     template: f5demo.dns.v1
     fqdn: my-frontend.f5demo.com
     virtualServer: 0
-   
-#  app02:
-#  - https
-#  - 10.1.10.81
-#  - 443
-#  - clientssl
-#  - 
-#  - linux-low
-
-   
+  dns02:
+    name: dns02
+    template: f5demo.dns.v1
+    fqdn: "*.f5demo.com"
+    virtualServer: 1
+  dns03:
+    name: dns03
+    template: f5demo.dns.v1
+    fqdn: www.f5demo.com
+    virtualServer: 2
+  dns04:
+    name: dns04
+    template: f5demo.dns.v1
+    fqdn: k8s.f5demo.com
+    virtualServer: 3
