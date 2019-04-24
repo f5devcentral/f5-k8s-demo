@@ -14,6 +14,6 @@ spec:
     port: 80
     protocol: TCP
     targetPort: 80
-  type: NodePort
+  type: LoadBalancer
   selector:
     run: my-frontend
