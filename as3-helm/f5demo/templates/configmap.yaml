@@ -15,10 +15,10 @@ data:
         "schemaVersion": "3.1.0",
         "id": "{{ .Release.Name }}",
         "label": "CIS AS3 Example",
-        "remark": "Example of using CIS",{{- if not .Values.delete }}
-      {{- include .Values.common.template .  }}
+        "remark": "Example of using CIS",{{ if .Values.common }}
+      {{- include .Values.common.template .  }}{{ end }}
         "AS3": {
-          "class": "Tenant"{{- if not .Values.delete }},
+          "class": "Tenant"{{- if .Values.applications }},
           "MyApps": {
              "class": "Application",
              "template": "generic",
@@ -28,9 +28,8 @@ data:
       {{- $_ := set $local "first" false  }}
       {{- include $val.template $val }}
     {{- end }}
-    {{- end }}
-    {{- end }}
        }
+    {{- end }}
        }
     }
     }

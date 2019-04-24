@@ -6,7 +6,8 @@
                    {{ .virtualAddress | quote }}
                 ],
                "virtualPort": {{ .virtualPort | default 80 }},
-                "pool": "{{ .name }}_pool",
+               "remark":"{{ .name}}: f5demo.http.v1",
+               "pool": "{{ .name }}_pool",
                "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"}
              },
              "{{ .name }}_pool": {
@@ -28,6 +29,7 @@
                    {{ .virtualAddress | quote }}
                 ],
                "virtualPort": {{ .virtualPort | default 80 }},           
+               "remark":"{{ .name}}: f5demo.waf.http.v1",
                "pool": "{{ .name }}_pool",
                "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"},
                "policyWAF":{"bigip":"/Common/linux-low"},

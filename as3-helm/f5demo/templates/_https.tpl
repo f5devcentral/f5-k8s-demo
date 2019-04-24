@@ -6,7 +6,8 @@
                    {{ .virtualAddress | quote }}
                 ],
                "virtualPort": {{ .virtualPort | default 443 }},
-                "pool": "{{ .name }}_pool",
+               "remark":"{{ .name}}: f5demo.https.v1",
+               "pool": "{{ .name }}_pool",
                "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"},
                "redirect80": {{ .redirect80 | default false }},            
                "serverTLS": {{ .serverTLS | default "{\"bigip\":\"/Common/clientssl\"}"}},
@@ -31,6 +32,7 @@
                    {{ .virtualAddress | quote }}
                 ],
                "virtualPort": {{ .virtualPort | default 443 }},
+               "remark":"{{ .name}}: f5demo.waf.https.v1",
                "pool": "{{ .name }}_pool",
                "redirect80": {{ .redirect80 | default false }},
                "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"},

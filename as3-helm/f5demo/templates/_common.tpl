@@ -1,4 +1,6 @@
 {{/* Shared Objects */}}
+{{- define "f5demo.common.empty.v1" }}
+{{- end }}
 {{- define "f5demo.common.basic.v1" }}
        "Common": {
           "class": "Tenant",
