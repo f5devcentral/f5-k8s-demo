@@ -1,0 +1,19 @@
+apiVersion: charts.helm.k8s.io/v1alpha1
+kind: F5Demo
+metadata:
+  name: example-f5demo
+spec:
+  # Default values copied from <project_dir>/helm-charts/F5Demo/values.yaml
+  
+  # Default values for f5-as3.
+  # This is a YAML-formatted file.
+  # Declare variables to be passed into your templates.
+  common:
+    template: "f5demo.common.basic.v1"
+  
+  applications:
+    frontend:
+      name: frontend
+      template: f5demo.tcp.v1
+      virtualAddress: "10.1.10.81"
+      virtualPort: 80
