@@ -11,6 +11,16 @@
               "class": "HTTP_Profile",
                 "xForwardedFor": true
                }
+                {{- $local := dict "first" true  }}       
+                {{ range $key, $val := .Values.common.irules }},
+                {{- if not $local.first }},{{- end }}
+                {{- $_ := set $local "first" false  }}
+                "{{ $key }}": {
+                  "class":"iRule",
+                  "iRule": {"base64": "{{ $.Files.Get $val | b64enc }}"}
+                }
+                {{ end }}
+
        }
        },
 {{- end }}
