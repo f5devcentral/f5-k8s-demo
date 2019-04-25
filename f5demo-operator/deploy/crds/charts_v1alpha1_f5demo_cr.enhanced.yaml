@@ -1,0 +1,95 @@
+apiVersion: charts.helm.k8s.io/v1alpha1
+kind: F5Demo
+metadata:
+  name: example-f5demo
+spec:
+  # Default values copied from <project_dir>/helm-charts/F5Demo/values.yaml
+  
+  # Default values for f5-as3.
+  # This is a YAML-formatted file.
+  # Declare variables to be passed into your templates.
+  common:
+    template: f5demo.common.dns.v1
+    irules:
+      Proxy_Protocol_Send: "iRules/proxy_protocol_send.irule"
+      Proxy_Protocol_Receive: "iRules/proxy_protocol_receive.irule"
+  
+    device0:
+        address: "10.1.10.240"
+        addressTranslation: "10.1.10.240"
+    virtualServers:
+      0:
+       address: 10.1.10.81
+       port: 80
+       addressTranslation: 10.1.10.81
+       addressTranslationPort: 80
+      1:
+       address: 10.1.10.82
+       port: 80
+       addressTranslation: 10.1.10.82
+       addressTranslationPort: 80
+      2:
+       address: 10.1.10.80
+       port: 80
+       addressTranslation: 10.1.10.80
+       addressTranslationPort: 80
+      3:
+       address: 10.1.10.240
+       port: 6443
+       addressTranslation: 10.1.10.240
+       addressTranslationPort: 6443
+  
+  applications:
+    frontend:
+      name: frontend
+      template: f5demo.tcp.v1
+      virtualAddress: "10.1.10.81"
+      virtualPort: 80
+    ingress:
+      name: ingress
+      template: f5demo.proxyprotocol.tcp.v1
+      virtualAddress: "10.1.10.82"
+      virtualPort: 80
+    ingresstls:
+      name: ingresstls
+      template: f5demo.proxyprotocol.tcp.v1
+      virtualAddress: "10.1.10.82"
+      virtualPort: 8443
+    snirouter:
+      name: snirouter
+      template: f5demo.snirouter.tcp.v1
+      virtualAddress: "10.1.10.82"
+      virtualPort: 443
+      targets:
+        - website.f5demo.com: websitetls
+        - "*.f5demo.com": ingresstls
+    website:
+      name: website
+      template: f5demo.http.v1
+      virtualAddress: "10.1.10.80"
+    websitetls:
+      name: websitetls
+      template: f5demo.waf.https.v1
+      virtualAddress: "10.1.10.80"
+      serverTLS: '{"bigip":"/Common/_wildcard_.f5demo.com_clientssl"}'
+    dns01:
+      name: dns01
+      template: f5demo.dns.v1
+      fqdn: my-frontend.f5demo.com
+      virtualServer: 0
+    dns02:
+      name: dns02
+      template: f5demo.dns.v1
+      fqdn: "*.f5demo.com"
+      virtualServer: 1
+    dns03:
+      name: dns03
+      template: f5demo.dns.v1
+      fqdn: www.f5demo.com
+      virtualServer: 2
+    dns04:
+      name: dns04
+      template: f5demo.dns.v1
+      fqdn: k8s.f5demo.com
+      virtualServer: 3
+  
