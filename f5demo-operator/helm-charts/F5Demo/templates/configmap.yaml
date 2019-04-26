@@ -20,12 +20,17 @@ data:
           "class": "Tenant"{{- if .Values.applications }},
           "MyApps": {
              "class": "Application",
-             "template": "generic",
+             "template": "generic"
     {{- $local := dict "first" true }}
-    {{- range $app, $val := .Values.applications }}      
+    {{- $local := dict "cnt" 8000 }}
+    {{- range $items := .Values.applications }}
+    {{- range $app, $val := $items }}
+      {{- $_ := set $val "cnt" $local.cnt }}      
       {{- if not $local.first }},{{- end }}
       {{- $_ := set $local "first" false  }}
+      {{- $_ := set $local "cnt" ($local.cnt |add1)  }}
       {{- include $val.template $val }}
+    {{- end }}
     {{- end }}
        }
     {{- end }}

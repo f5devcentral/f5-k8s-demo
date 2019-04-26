@@ -101,6 +101,54 @@
         }
            {{- end }}
            {{- end }}
+           {{- $local := dict "first" true  }}       
+           {{- $local := dict "cnt" 0 }}
+           {{- range .redirects }}
+           {{- range $key, $val :=. }}
+           {{- $_ := set $local "cnt" ($local.cnt |add1)  }}
+           {{- if not $local.first }},{{else}}{{ if $.targets }},{{end}}{{- end }}
+           {{- $_ := set $local "first" false  }}
+           {{- $parts := split "/" $key }}
+           {{- $partslist := splitList "/" $key }}
+            {
+          "name": "redirect_{{$local.cnt}}",
+          "conditions": [{
+            "type": "httpHeader",
+            "all": {
+              "operand": "{{ if hasPrefix "*" $parts._0 }}ends-with{{ else }}equals{{end}}",
+              "values": ["{{ trimPrefix "*" $parts._0 }}"],
+              "caseSensitive": false
+            },
+            "name":"host"
+          }{{ if $parts._1 }},
+          {{ $myuri := rest $partslist | join "/" }}
+          {
+            "type": "httpUri",
+            "path": {
+              "operand": "starts-with",
+              "values": ["/{{ $myuri }}"]
+            }
+          }{{- end}}],
+          "actions": [{
+            "type": "httpRedirect",
+            "event": "request",            
+            "location": {{ if eq $val  "https" }}"tcl:https://[getfield [HTTP::host] \":\" 1][HTTP::uri]"
+            {{- else }}
+            {{- if hasSuffix "$" $val }}
+            {{- trimSuffix "$" $val | quote}}
+            {{- else }}
+            {{- if not $parts._1 }}
+              "tcl:{{- $val }}[HTTP::uri]"
+            {{- else }}
+              {{ $myuri := rest $partslist | join "/" }}
+              "tcl:{{- $val }}[string range [HTTP::uri] {{ len $myuri | add1}} end]"
+            {{- end }}
+            {{- end }}
+            {{- end }}
+          }]
+        }
+           {{- end }}
+           {{- end }}
          ]
              }
 {{- end }}

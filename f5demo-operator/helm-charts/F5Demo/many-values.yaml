@@ -56,7 +56,12 @@ applications:
      virtualPort: 80
      targets:
        - website.f5demo.com: website
-       - "*.f5demo.com": ingress
+       - "green.f5demo.com": ingress
+     redirects:
+       - www.blue.f5demo.com: http://blue.f5demo.com
+       - green.f5demo.com/old/site/: http://www.blue.f5demo.com/newsite/
+       - nomore.f5demo.com: http://blue.f5demo.com/txt$
+       - "*.f5demo.com": https
   - snirouter:
      name: snirouter
      template: f5demo.snirouter.tcp.v1
