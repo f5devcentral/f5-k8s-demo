@@ -3,10 +3,13 @@
              "{{- .name }}": {
                 "class": "Service_TCP",
                 "virtualAddresses": [
-                   "{{- .virtualAddress }}"
+                   {{- if .virtualAddress }}{{ .virtualAddress | quote }}{{ else }}
+                     {"use":"/Common/Shared/VIP_TARGET"}
+                   {{- end }}
                 ],
                "remark":"{{ .name}}: f5demo.tcp.v1",
-               "virtualPort": {{- .virtualPort }},
+               {{ if not .virtualAddress }}"virtualPort": {{ .cnt }},{{ else }}
+               {{ if .virtualPort }}"virtualPort": {{ .virtualPort }},{{- end }}{{- end}}
                 "pool": "{{- .name}}_pool"
              },
              "{{- .name }}_pool": {
@@ -24,9 +27,12 @@
              "{{- .name }}": {
                 "class": "Service_TCP",
                 "virtualAddresses": [
-                   "{{- .virtualAddress }}"
+                   {{- if .virtualAddress }}{{ .virtualAddress | quote }}{{ else }}
+                     {"use":"/Common/Shared/VIP_TARGET"}
+                   {{- end }}
                 ],
-               "virtualPort": {{- .virtualPort }},
+               {{ if not .virtualAddress }}"virtualPort": {{ .cnt }},{{ else }}
+               {{ if .virtualPort }}"virtualPort": {{ .virtualPort }},{{- end }}{{- end}}
                "remark":"{{ .name}}: f5demo.proxyprotocol.tcp.v1",
                "pool": "{{- .name}}_pool",
                "iRules": ["/Common/Shared/Proxy_Protocol_Send"]
@@ -46,10 +52,13 @@
              "{{- .name }}": {
                 "class": "Service_TCP",
                 "virtualAddresses": [
-                   "{{- .virtualAddress }}"
+                   {{- if .virtualAddress }}{{ .virtualAddress | quote }}{{ else }}
+                     {"use":"/Common/Shared/VIP_TARGET"}
+                   {{- end }}
                 ],
                "remark":"{{ .name}}: f5demo.snirouter.tcp.v1",
-               "virtualPort": {{- .virtualPort }},
+               {{ if not .virtualAddress }}"virtualPort": {{ .cnt }},{{ else }}
+               {{ if .virtualPort }}"virtualPort": {{ .virtualPort }},{{- end }}{{- end}}
                "persistenceMethods": ["tls-session-id"],
                "policyEndpoint": "{{- .name}}_policy_endpoint"
              },
