@@ -1,7 +1,7 @@
 apiVersion: charts.helm.k8s.io/v1alpha1
 kind: F5Demo
 metadata:
-  name: f5demo
+  name: example-f5demo
 spec:
   # Default values copied from <project_dir>/helm-charts/F5Demo/values.yaml
   
