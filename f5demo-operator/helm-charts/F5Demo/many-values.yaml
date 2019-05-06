@@ -9,9 +9,14 @@ common:
     Proxy_Protocol_Receive: "iRules/proxy_protocol_receive.irule"
     Host_Header_To_Sni: "iRules/host_header_to_sni.irule"
 
-  device0:
-      address: "10.1.10.60"
-      addressTranslation: "10.1.10.60"
+  devices:
+    0:
+      address: "10.1.10.240"
+      addressTranslation: "10.1.10.240"
+#    1:
+#      address: "10.1.10.241"
+#      addressTranslation: "10.1.10.241"
+
   virtualServers:
     0:
      address: 10.1.10.81

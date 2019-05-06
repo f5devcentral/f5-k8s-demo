@@ -16,9 +16,12 @@ spec:
           value: "website"
         - name: F5DEMO_NODENAME
           value: "WWW Kubernetes"
+        - name: F5DEMO_NODENAME_SSL
+          value: "WWW Kubernetes (SSL)"
         imagePullPolicy: IfNotPresent
         name: my-website
         ports:
+        - containerPort: 443
         - containerPort: 80
           protocol: TCP
 

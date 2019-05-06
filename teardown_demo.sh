@@ -78,8 +78,8 @@ printf "##############################################\n"
 printf "Delete BIG-IP CC\n"
 printf "##############################################\n\n\n"
 sleep 30
-kubectl delete -f f5-cc-deployment.yaml
-kubectl delete -f f5-cc-deployment2.yaml
+kubectl delete -f f5-cc-deployment.yaml -n kube-system
+kubectl delete -f f5-cc-deployment2.yaml -n kube-system
 
 ##
 ## Delete BIG-IP kubectl secret
@@ -91,8 +91,8 @@ printf "##############################################\n\n\n"
 
 kubectl delete secret bigip-login -n kube-system
 
-kubectl delete serviceaccount bigip-ctlr -n kube-system
-kubectl delete -f  f5-k8s-sample-rbac.yaml
+#kubectl delete serviceaccount bigip-ctlr -n kube-system
+#kubectl delete -f  f5-k8s-sample-rbac.yaml
 
 ##
 ## Delete F5 kubernetes partition

@@ -87,15 +87,22 @@
                   "iRule": {"base64": "{{ $.Files.Get $val | b64enc }}"}
                 }
                 {{ end }}
-             ,"AS3Server": {
+              ,"AS3DataCenter": {
+                      "class": "GSLB_Data_Center"
+              }
+              ,"AS3Server": {
                                 "class": "GSLB_Server",
                                 "dataCenter": 
-                                         {"bigip":"/Common/UDF"}
+                                         {"use":"AS3DataCenter"}
                                 ,
-                                "devices": [{
-                                                "address": "{{ .Values.common.device0.address }}",
-                                                "addressTranslation": "{{ .Values.common.device0.addressTranslation }}"
-                                        }
+                                "devices": [ {{- $local := dict "first" true  }}       
+                                             {{- range $device := .Values.common.devices }}
+                                             {{- if not $local.first }},{{- end }}
+                                             {{- $_ := set $local "first" false  }}
+                                            {
+                                                "address": "{{ $device.address }}",
+                                                "addressTranslation": "{{ $device.addressTranslation }}"
+                                            }{{- end }}
                                 ]
                                 ,
                                 "virtualServers": [
