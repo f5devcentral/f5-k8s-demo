@@ -123,3 +123,31 @@
           }
        },
 {{- end }}
+{{- define "f5demo.common.dns.v2" }}
+       "Common": {
+          "class": "Tenant",
+          "Shared": {
+            "class": "Application",
+            "template": "shared",
+            {{- if .Values.common.vipTarget }}
+            "VIP_TARGET": {
+              "class": "Service_Address",
+              "virtualAddress": "{{ .Values.common.vipTarget }}"
+            },
+            {{- end }}
+            "XFF_HTTP_Profile": {
+              "class": "HTTP_Profile",
+                "xForwardedFor": true
+             },
+                {{- $local := dict "first" true  }}       
+                {{ range $key, $val := .Values.common.irules }}
+                {{- if not $local.first }},{{- end }}
+                {{- $_ := set $local "first" false  }}
+                "{{ $key }}": {
+                  "class":"iRule",
+                  "iRule": {"base64": "{{ $.Files.Get $val | b64enc }}"}
+                }
+                {{ end }}
+          }
+       },
+{{- end }}
