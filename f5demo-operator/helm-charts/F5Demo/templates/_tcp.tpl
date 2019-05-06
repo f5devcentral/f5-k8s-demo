@@ -3,10 +3,9 @@
              "{{- .name }}": {
                 "class": "Service_TCP",
                 "virtualAddresses": [
-                   {{- if .virtualAddress }}{{ .virtualAddress | quote }}{{ else }}
+                   {{- if .virtualAddress }}{{ .virtualAddress | quote }}{{- else }}
                      {"use":"/Common/Shared/VIP_TARGET"}
-                   {{- end }}
-                ],
+                   {{- end }}],
                "remark":"{{ .name}}: f5demo.tcp.v1",
                {{ if not .virtualAddress }}"virtualPort": {{ .cnt }},{{ else }}
                {{ if .virtualPort }}"virtualPort": {{ .virtualPort }},{{- end }}{{- end}}
@@ -14,9 +13,7 @@
              },
              "{{- .name }}_pool": {
                 "class": "Pool",
-                "monitors": [
-                   "tcp"
-                ],
+                "monitors": [ "tcp" ],
                 "members": [{
                    "servicePort": 80,
                    "serverAddresses": []
@@ -57,7 +54,7 @@
                    {{- end }}
                 ],
                "remark":"{{ .name}}: f5demo.snirouter.tcp.v1",
-               {{ if not .virtualAddress }}"virtualPort": {{ .cnt }},{{ else }}
+               {{ if not .virtualPort }}"virtualPort": {{ .cnt }},{{ else }}
                {{ if .virtualPort }}"virtualPort": {{ .virtualPort }},{{- end }}{{- end}}
                "persistenceMethods": ["tls-session-id"],
                "policyEndpoint": "{{- .name}}_policy_endpoint"
