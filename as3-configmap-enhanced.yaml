@@ -1,0 +1,531 @@
+---
+# Source: F5Demo/templates/configmap.yaml
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: f5demo-as3-configmap
+  labels:
+    f5type: virtual-server
+    as3: "true"
+data:
+  template: |
+    {
+      "class": "AS3",
+      "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.1.0",
+        "id": "f5demo",
+        "label": "CIS AS3 Example",
+        "remark": "Example of using CIS",
+       "Common": {
+          "class": "Tenant",
+          "Shared": {
+            "class": "Application",
+            "template": "shared",
+            "VIP_TARGET": {
+              "class": "Service_Address",
+              "virtualAddress": "255.255.255.254"
+            },
+            "XFF_HTTP_Profile": {
+              "class": "HTTP_Profile",
+                "xForwardedFor": true
+             },       
+                
+                "Host_Header_To_Sni": {
+                  "class":"iRule",
+                  "iRule": {"base64": "d2hlbiBIVFRQX1JFUVVFU1QgewoJI1NldCB0aGUgU05JIHZhbHVlIChlLmcuIEhUVFA6Omhvc3QpCglzZXQgc25pX3ZhbHVlIFtnZXRmaWVsZCBbSFRUUDo6aG9zdF0gIjoiIDFdCn0Kd2hlbiBTRVJWRVJTU0xfQ0xJRU5USEVMTE9fU0VORCB7CiAKCSMgU05JIGV4dGVuc2lvbiByZWNvcmQgYXMgZGVmaW5lZCBpbiBSRkMgMzU0Ni8zLjEKCSMKCSMgLSBUTFMgRXh0ZW5zaW9uIFR5cGUgICAgICAgICAgICAgICAgPSAgaW50MTYoIDAgPSBTTkkgKSAKCSMgLSBUTFMgRXh0ZW5zaW9uIExlbmd0aCAgICAgICAgICAgICAgPSAgaW50MTYoICRzbmlfbGVuZ3RoICsgNSBieXRlICkKCSMgICAgLSBTTkkgUmVjb3JkIExlbmd0aCAgICAgICAgICAgICAgPSAgaW50MTYoICRzbmlfbGVuZ3RoICsgMyBieXRlKQoJIyAgICAgICAtIFNOSSBSZWNvcmQgVHlwZSAgICAgICAgICAgICA9ICAgaW50OCggMCA9IEhPU1QgKQoJIyAgICAgICAgICAtIFNOSSBSZWNvcmQgVmFsdWUgTGVuZ3RoICA9ICBpbnQxNiggJHNuaV9sZW5ndGggKQoJIyAgICAgICAgICAtIFNOSSBSZWNvcmQgVmFsdWUgICAgICAgICA9ICAgIHN0ciggJHNuaV92YWx1ZSApCgkjCiAKCSMgQ2FsY3VsYXRlIHRoZSBsZW5ndGggb2YgdGhlIFNOSSB2YWx1ZSwgQ29tcHV0ZSB0aGUgU05JIFJlY29yZCAvIFRMUyBleHRlbnNpb24gZmllbGRzIGFuZCBhZGQgdGhlIHJlc3VsdCB0byB0aGUgU0VSVkVSU1NMX0NMSUVOVEhFTExPIAogCglTU0w6OmV4dGVuc2lvbnMgaW5zZXJ0IFtiaW5hcnkgZm9ybWF0IFNTU2NTYSogMCBbZXhwciB7IFtzZXQgc25pX2xlbmd0aCBbc3RyaW5nIGxlbmd0aCAkc25pX3ZhbHVlXV0gKyA1IH1dIFtleHByIHsgJHNuaV9sZW5ndGggKyAzIH1dIDAgJHNuaV9sZW5ndGggJHNuaV92YWx1ZV0KIAp9Cg=="}
+                }
+                ,
+                "Proxy_Protocol_Receive": {
+                  "class":"iRule",
+                  "iRule": {"base64": "I1BST1hZIFByb3RvY29sIFJlY2VpdmVyIGlSdWxlCiMgYy5qZW5pc29uIGF0IGY1LmNvbSAoQ2hhZCBKZW5pc29uKQojIHYyLjAgLSBBZGRlZCBzdXBwb3J0IGZvciBQUk9YWSBQcm90b2NvbCB2MiwgY29udHJvbCBmb3IgdjEsdjIgb3IgbGFjayBvZiBwcm94eSB2aWEgc3RhdGljOjogdmFyaWFibGVzIHNldCBpbiBSVUxFX0lOSVQKd2hlbiBSVUxFX0lOSVQgewogICAgc2V0IHN0YXRpYzo6YWxsb3dQcm94eVYxIDEKICAgIHNldCBzdGF0aWM6OmFsbG93UHJveHlWMiAxCiAgICBzZXQgc3RhdGljOjphbGxvd05vUHJveHkgMAp9CiAKd2hlbiBDTElFTlRfQUNDRVBURUQgewogICAgVENQOjpjb2xsZWN0Cn0KIAp3aGVuIENMSUVOVF9EQVRBIHsKICAgIGJpbmFyeSBzY2FuIFtUQ1A6OnBheWxvYWQgMTJdIEgqIHYyX3Byb3RvY29sX3NpZwogICAgaWYgeyRzdGF0aWM6OmFsbG93UHJveHlWMSAmJiBbVENQOjpwYXlsb2FkIDAgNV0gZXEgIlBST1hZIn0gewogICAgICAgIHNldCBwcm94eV9zdHJpbmcgW1RDUDo6cGF5bG9hZF0KICAgICAgICBzZXQgcHJveHlfc3RyaW5nX2xlbmd0aCBbZXhwciB7W3N0cmluZyBmaXJzdCAiXHIiIFtUQ1A6OnBheWxvYWRdXSArIDJ9XQogICAgICAgIHNjYW4gJHByb3h5X3N0cmluZyB7UFJPWFkgVENQJXMlcyVzJXMlc30gdGNwdmVyIHNyY2FkZHIgZHN0YWRkciBzcmNwb3J0IGRzdHBvcnQKICAgICAgICBsb2cgIlByb3h5IFByb3RvY29sIHYxIGNvbm4gZnJvbSBbSVA6OmNsaWVudF9hZGRyXTpbVENQOjpjbGllbnRfcG9ydF0gZm9yIGFuIElQdiR0Y3B2ZXIgc3RyZWFtIGZyb20gU3JjOiAkc3JjYWRkcjokc3JjcG9ydCB0byBEc3Q6ICRkc3RhZGRyOiRkc3Rwb3J0IgogICAgICAgIFRDUDo6cGF5bG9hZCByZXBsYWNlIDAgJHByb3h5X3N0cmluZ19sZW5ndGggIiIKICAgIH0gZWxzZWlmIHskc3RhdGljOjphbGxvd1Byb3h5VjIgJiYgJHYyX3Byb3RvY29sX3NpZyBlcSAiMGQwYTBkMGEwMDBkMGE1MTU1NDk1NDBhIn17CiAgICAgICAgYmluYXJ5IHNjYW4gW1RDUDo6cGF5bG9hZF0gQDEySCogdjJfcHJveHloZWFkZXJyZW1haW5kZXIKICAgICAgICBiaW5hcnkgc2NhbiBbVENQOjpwYXlsb2FkXSBAMTJIMkgqIHYyX3ZlckNvbW1hbmQgdjJfcmVtYWluZGVyCiAgICAgICAgaWYgeyR2Ml92ZXJDb21tYW5kID09IDIxfXsKICAgICAgICAgICAgYmluYXJ5IHNjYW4gW1RDUDo6cGF5bG9hZF0gQDEzSDIgdjJfYWRkcmVzc0ZhbWlseVRyYW5zcG9ydFByb3RvY29sCiAgICAgICAgICAgIGlmIHskdjJfYWRkcmVzc0ZhbWlseVRyYW5zcG9ydFByb3RvY29sID09IDExfSB7CiAgICAgICAgICAgICAgICBiaW5hcnkgc2NhbiBbVENQOjpwYXlsb2FkXSBAMTZjY2NjY2NjY1NTIHYyX3NvdXJjZUFkZHJlc3MxIHYyX3NvdXJjZUFkZHJlc3MyIHYyX3NvdXJjZUFkZHJlc3MzIHYyX3NvdXJjZUFkZHJlc3M0IHYyX2Rlc3RBZGRyZXNzMSB2Ml9kZXN0QWRkcmVzczIgdjJfZGVzdEFkZHJlc3MzIHYyX2Rlc3RBZGRyZXNzNCB2Ml9zb3VyY2VQb3J0MSB2Ml9kZXN0UG9ydDEKICAgICAgICAgICAgICAgIHNldCB2Ml9zb3VyY2VBZGRyZXNzICJbZXhwciB7JHYyX3NvdXJjZUFkZHJlc3MxICYgMHhmZn1dLltleHByIHskdjJfc291cmNlQWRkcmVzczIgJiAweGZmfV0uW2V4cHIgeyR2Ml9zb3VyY2VBZGRyZXNzMyAmIDB4ZmZ9XS5bZXhwciB7JHYyX3NvdXJjZUFkZHJlc3M0ICYgMHhmZn1dIgogICAgICAgICAgICAgICAgc2V0IHYyX2Rlc3RBZGRyZXNzICJbZXhwciB7JHYyX2Rlc3RBZGRyZXNzMSAmIDB4ZmZ9XS5bZXhwciB7JHYyX2Rlc3RBZGRyZXNzMiAmIDB4ZmZ9XS5bZXhwciB7JHYyX2Rlc3RBZGRyZXNzMyAmIDB4ZmZ9XS5bZXhwciB7JHYyX2Rlc3RBZGRyZXNzNCAmIDB4ZmZ9XSIKICAgICAgICAgICAgICAgIHNldCB2Ml9zb3VyY2VQb3J0IFtleHByIHskdjJfc291cmNlUG9ydDEgJiAweGZmZmZ9XQogICAgICAgICAgICAgICAgc2V0IHYyX2Rlc3RQb3J0IFtleHByIHskdjJfZGVzdFBvcnQxICYgMHhmZmZmfV0KICAgICAgICAgICAgICAgIGxvZyAiUHJveHkgUHJvdG9jb2wgdjIgY29ubiBmcm9tIFtJUDo6Y2xpZW50X2FkZHJdOltUQ1A6OmNsaWVudF9wb3J0XSBmb3IgYW4gSVB2NCBTdHJlYW0gZnJvbSBTcmM6ICR2Ml9zb3VyY2VBZGRyZXNzOiR2Ml9zb3VyY2VQb3J0IHRvIERzdDogJHYyX2Rlc3RBZGRyZXNzOiR2Ml9kZXN0UG9ydCIKICAgICAgICAgICAgICAgIFRDUDo6cGF5bG9hZCByZXBsYWNlIDAgMjggIiIKICAgICAgICAgICAgfSBlbHNlaWYgeyR2Ml9hZGRyZXNzRmFtaWx5VHJhbnNwb3J0UHJvdG9jb2wgPT0gMjF9IHsKICAgICAgICAgICAgICAgIGJpbmFyeSBzY2FuIFtUQ1A6OnBheWxvYWRdIEAxNkg0SDRINEg0SDRINEg0SCB2Ml92NnNvdXJjZUFkZHJlc3MxIHYyX3Y2c291cmNlQWRkcmVzczIgdjJfdjZzb3VyY2VBZGRyZXNzMyB2Ml92NnNvdXJjZUFkZHJlc3M0IHYyX3Y2c291cmNlQWRkcmVzczUgdjJfdjZzb3VyY2VBZGRyZXNzNiB2Ml92NnNvdXJjZUFkZHJlc3M3IHYyX3Y2c291cmNlQWRkcmVzczgKICAgICAgICAgICAgICAgIGJpbmFyeSBzY2FuIFtUQ1A6OnBheWxvYWRdIEAzMkg0SDRINEg0SDRINEg0SCB2Ml92NmRlc3RBZGRyZXNzMSB2Ml92NmRlc3RBZGRyZXNzMiB2Ml92NmRlc3RBZGRyZXNzMyB2Ml92NmRlc3RBZGRyZXNzNCB2Ml92NmRlc3RBZGRyZXNzNSB2Ml92NmRlc3RBZGRyZXNzNiB2Ml92NmRlc3RBZGRyZXNzNyB2Ml92NmRlc3RBZGRyZXNzOAogICAgICAgICAgICAgICAgYmluYXJ5IHNjYW4gW1RDUDo6cGF5bG9hZF0gQDQ4U1MgdjJfdjZzb3VyY2VQb3J0MSB2Ml92NmRlc3RQb3J0MQogICAgICAgICAgICAgICAgc2V0IHYyX3Y2c291cmNlUG9ydCBbZXhwciB7JHYyX3Y2c291cmNlUG9ydDEgJiAweGZmZmZ9XQogICAgICAgICAgICAgICAgc2V0IHYyX3Y2ZGVzdFBvcnQgW2V4cHIgeyR2Ml92NmRlc3RQb3J0MSAmIDB4ZmZmZn1dCiAgICAgICAgICAgICAgICBzZXQgdjJfdjZzb3VyY2VBZGRyZXNzICIkdjJfdjZzb3VyY2VBZGRyZXNzMTokdjJfdjZzb3VyY2VBZGRyZXNzMjokdjJfdjZzb3VyY2VBZGRyZXNzMzokdjJfdjZzb3VyY2VBZGRyZXNzNDokdjJfdjZzb3VyY2VBZGRyZXNzNTokdjJfdjZzb3VyY2VBZGRyZXNzNjokdjJfdjZzb3VyY2VBZGRyZXNzNzokdjJfdjZzb3VyY2VBZGRyZXNzOCIKICAgICAgICAgICAgICAgIHNldCB2Ml92NmRlc3RBZGRyZXNzICIkdjJfdjZkZXN0QWRkcmVzczE6JHYyX3Y2ZGVzdEFkZHJlc3MyOiR2Ml92NmRlc3RBZGRyZXNzMzokdjJfdjZkZXN0QWRkcmVzczQ6JHYyX3Y2ZGVzdEFkZHJlc3M1OiR2Ml92NmRlc3RBZGRyZXNzNjokdjJfdjZkZXN0QWRkcmVzczc6JHYyX3Y2ZGVzdEFkZHJlc3M4IgogICAgICAgICAgICAgICAgbG9nICJQcm94eSBQcm90b2NvbCB2MiBjb25uIGZyb20gZnJvbSBbSVA6OmNsaWVudF9hZGRyXTpbVENQOjpjbGllbnRfcG9ydF0gZm9yIGFuIElQdjYgU3RyZWFtIGZyb20gU3JjOiAkdjJfdjZzb3VyY2VBZGRyZXNzOiR2Ml92NnNvdXJjZVBvcnQgdG8gRHN0OiAkdjJfdjZkZXN0QWRkcmVzczokdjJfdjZkZXN0UG9ydCIKICAgICAgICAgICAgICAgIFRDUDo6cGF5bG9hZCByZXBsYWNlIDAgNTIgIiIKICAgICAgICAgICAgfSBlbHNlIHsKICAgICAgICAgICAgICAgIGxvZyAidjJfcHJveHkgY29ubiBmcm9tIFtJUDo6Y2xpZW50X2FkZHJdOltUQ1A6OmNsaWVudF9wb3J0XSAtIHBvc3NpYmxlIHVua25vd24vbWFsZm9ybWVkIHRyYW5zcG9ydFByb3RvY29sIG9yIGFkZHJlc3NGYW1pbHkiCiAgICAgICAgICAgICAgICByZWplY3QKICAgICAgICAgICAgfQogICAgICAgIH0gZWxzZWlmIHskdjJfdmVyQ29tbWFuZCA9PSAyMH17CiAgICAgICAgICAgIGxvZyAiUHJveHkgUHJvdG9jb2wgdjIgYW5kIExPQ0FMIGNvbW1hbmQgZnJvbSBbSVA6OmNsaWVudF9hZGRyXTpbVENQOjpjbGllbnRfcG9ydF07IGN1cnJlbnRseSB1bmhhbmRsZWQ7IGNvbm5lY3Rpb24gcmVzZXQiCiAgICAgICAgICAgIHJlamVjdAogICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgIGxvZyAiUHJveHkgUHJvdG9jb2wgUHJvdG9jb2wgU2lnbmF0dXJlIERldGVjdGVkIGZyb20gW0lQOjpjbGllbnRfYWRkcl06W1RDUDo6Y2xpZW50X3BvcnRdIGJ1dCBwcm90b2NvbCB2ZXJzaW9uIGFuZCBjb21tYW5kIG5vdCBsZWdhbDsgY29ubmVjdGlvbiByZXNldCIKICAgICAgICAgICAgcmVqZWN0CiAgICAgICAgfQogICAgfSBlbHNlaWYgeyRzdGF0aWM6OmFsbG93Tm9Qcm94eX0gewogICAgICAgIGxvZyAiQ29ubmVjdGlvbiBmcm9tIFtJUDo6Y2xpZW50X2FkZHJdOltUQ1A6OmNsaWVudF9wb3J0XSBhbGxvd2VkIGRlc3BpdGUgbGFjayBvZiBQUk9YWSBwcm90b2NvbCBoZWFkZXIiCiAgICB9IGVsc2UgewogICAgICAgIHJlamVjdAogICAgICAgIGxvZyAiQ29ubmVjdGlvbiByZWplY3RlZCBmcm9tIFtJUDo6Y2xpZW50X2FkZHJdOltUQ1A6OmNsaWVudF9wb3J0XSBkdWUgdG8gbGFjayBvZiBQUk9YWSBwcm90b2NvbCBoZWFkZXIiCiAgICB9CiAgICBUQ1A6OnJlbGVhc2UKfQo="}
+                }
+                ,
+                "Proxy_Protocol_Send": {
+                  "class":"iRule",
+                  "iRule": {"base64": "d2hlbiBTRVJWRVJfQ09OTkVDVEVEIHsKICAgICAgVENQOjpyZXNwb25kICJQUk9YWSBUQ1BbSVA6OnZlcnNpb25dIFtJUDo6Y2xpZW50X2FkZHJdIFtjbGllbnRzaWRlIHtJUDo6bG9jYWxfYWRkcn1dIFtUQ1A6OmNsaWVudF9wb3J0XSBbY2xpZW50c2lkZSB7VENQOjpsb2NhbF9wb3J0fV1cclxuIgp9Cg=="}
+                }
+                
+              ,"AS3DataCenter": {
+                      "class": "GSLB_Data_Center"
+              }
+              ,"AS3Server": {
+                                "class": "GSLB_Server",
+                                "dataCenter": 
+                                         {"use":"AS3DataCenter"}
+                                ,
+                                "devices": [
+                                            {
+                                                "address": "10.1.10.240",
+                                                "addressTranslation": "10.1.10.240"
+                                            }
+                                ]
+                                ,
+                                "virtualServers": [
+                                       {
+                                             "address":"10.1.10.81",
+                                             "addressTranslation":"10.1.10.81",
+                                             "addressTranslationPort":80,
+                                             "port":80 
+                                       },
+                                       {
+                                             "address":"10.1.10.82",
+                                             "addressTranslation":"10.1.10.82",
+                                             "addressTranslationPort":80,
+                                             "port":80 
+                                       },
+                                       {
+                                             "address":"10.1.10.80",
+                                             "addressTranslation":"10.1.10.80",
+                                             "addressTranslationPort":80,
+                                             "port":80 
+                                       },
+                                       {
+                                             "address":"10.1.10.240",
+                                             "addressTranslation":"10.1.10.240",
+                                             "addressTranslationPort":6443,
+                                             "port":6443 
+                                       },
+                                       {
+                                             "address":"10.1.10.82",
+                                             "addressTranslation":"10.1.10.82",
+                                             "addressTranslationPort":7999,
+                                             "port":7999 
+                                       }]
+                        }
+          }
+       },
+        "AS3": {
+          "class": "Tenant",
+          "MyApps": {
+             "class": "Application",
+             "template": "generic",
+             "frontend": {
+                "class": "Service_TCP",
+                "virtualAddresses": ["10.1.10.81"],
+               "remark":"frontend: f5demo.tcp.v1",
+               
+               "virtualPort": 80,
+                "pool": "frontend_pool"
+             },
+             "frontend_pool": {
+                "class": "Pool",
+                "monitors": [ "tcp" ],
+                "members": [{
+                   "servicePort": 80,
+                   "serverAddresses": []
+                }]
+             },
+             "ingress": {
+                "class": "Service_TCP",
+                "virtualAddresses": [
+                     {"use":"/Common/Shared/VIP_TARGET"}
+                ],
+               "virtualPort": 8001,
+               "remark":"ingress: f5demo.proxyprotocol.tcp.v1",
+               "pool": "ingress_pool",
+               "iRules": ["/Common/Shared/Proxy_Protocol_Send"]
+             },
+             "ingress_pool": {
+                "class": "Pool",
+                "monitors": [
+                   "tcp"
+                ],
+                "members": [{
+                   "servicePort": 80,
+                   "serverAddresses": []
+                }]
+             },
+             "ingresstls": {
+                "class": "Service_TCP",
+                "virtualAddresses": [
+                     {"use":"/Common/Shared/VIP_TARGET"}
+                ],
+               "virtualPort": 8002,
+               "remark":"ingresstls: f5demo.proxyprotocol.tcp.v1",
+               "pool": "ingresstls_pool",
+               "iRules": ["/Common/Shared/Proxy_Protocol_Send"]
+             },
+             "ingresstls_pool": {
+                "class": "Pool",
+                "monitors": [
+                   "tcp"
+                ],
+                "members": [{
+                   "servicePort": 80,
+                   "serverAddresses": []
+                }]
+             },
+             "hostnamerouter": {
+                "class": "Service_HTTP",
+                "virtualAddresses": ["10.1.10.82"
+                ],
+               
+               "virtualPort": 80,
+               "remark":"hostnamerouter: f5demo.hostnamerouter.http.v1",
+               "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"},
+               "policyEndpoint": "hostnamerouter_policy_endpoint"
+             },
+             "hostnamerouter_policy_endpoint": {
+                "class": "Endpoint_Policy",
+        "rules": [
+           {
+          "name": "forward_to_website",
+          "conditions": [{
+            "type": "httpHeader",
+            "all": {
+              "operand": "equals",
+              "values": ["website.f5demo.com"],
+              "caseSensitive": false
+            },
+            "name":"host"
+          }
+           ],
+          "actions": [
+            {
+            "type": "forward",
+            "event": "request",
+            "select": {
+              "service": {"use":"website"}
+            }
+          }]
+        },
+           {
+          "name": "forward_to_ingress",
+          "conditions": [{
+            "type": "httpHeader",
+            "all": {
+              "operand": "equals",
+              "values": ["green.f5demo.com"],
+              "caseSensitive": false
+            },
+            "name":"host"
+          }
+           ],
+          "actions": [
+            {
+            "type": "forward",
+            "event": "request",
+            "select": {
+              "service": {"use":"ingress"}
+            }
+          }]
+        },
+            {
+          "name": "redirect_1",
+          "conditions": [{
+            "type": "httpHeader",
+            "all": {
+              "operand": "equals",
+              "values": ["www.blue.f5demo.com"],
+              "caseSensitive": false
+            },
+            "name":"host"
+          }],
+          "actions": [{
+            "type": "httpRedirect",
+            "event": "request",            
+            "location": 
+              "tcl:http://blue.f5demo.com[HTTP::uri]"
+          }]
+        },
+            {
+          "name": "redirect_2",
+          "conditions": [{
+            "type": "httpHeader",
+            "all": {
+              "operand": "equals",
+              "values": ["green.f5demo.com"],
+              "caseSensitive": false
+            },
+            "name":"host"
+          },
+          
+          {
+            "type": "httpUri",
+            "path": {
+              "operand": "starts-with",
+              "values": ["/old/site/"]
+            }
+          }],
+          "actions": [{
+            "type": "httpRedirect",
+            "event": "request",            
+            "location": 
+              
+              "tcl:http://www.blue.f5demo.com/newsite/[string range [HTTP::uri] 10 end]"
+          }]
+        },
+            {
+          "name": "redirect_3",
+          "conditions": [{
+            "type": "httpHeader",
+            "all": {
+              "operand": "equals",
+              "values": ["nomore.f5demo.com"],
+              "caseSensitive": false
+            },
+            "name":"host"
+          }],
+          "actions": [{
+            "type": "httpRedirect",
+            "event": "request",            
+            "location": "http://blue.f5demo.com/txt"
+          }]
+        },
+            {
+          "name": "redirect_4",
+          "conditions": [{
+            "type": "httpHeader",
+            "all": {
+              "operand": "ends-with",
+              "values": [".f5demo.com"],
+              "caseSensitive": false
+            },
+            "name":"host"
+          }],
+          "actions": [{
+            "type": "httpRedirect",
+            "event": "request",            
+            "location": "tcl:https://[getfield [HTTP::host] \":\" 1][HTTP::uri]"
+          }]
+        }
+         ]
+             },
+             "snirouter": {
+                "class": "Service_TCP",
+                "virtualAddresses": ["10.1.10.82"
+                ],
+               "remark":"snirouter: f5demo.snirouter.tcp.v1",
+               
+               "virtualPort": 443,
+               "persistenceMethods": ["tls-session-id"],
+               "policyEndpoint": "snirouter_policy_endpoint"
+             },
+             "snirouter_policy_endpoint": {
+                "class": "Endpoint_Policy",
+        "rules": [
+           {
+          "name": "forward_to_websitetls",
+          "conditions": [{
+            "type": "sslExtension",
+            "serverName": {
+              "operand": "equals",
+              "values": ["website.f5demo.com"]
+            }
+          }
+           ],
+          "actions": [
+            {
+            "type": "forward",
+            "event": "ssl-client-hello",
+            "select": {
+              "service": {"use":"websitetls"}
+            }
+          }]
+        },
+           {
+          "name": "forward_to_ingresstls",
+          "conditions": [{
+            "type": "sslExtension",
+            "serverName": {
+              "operand": "ends-with",
+              "values": [".f5demo.com"]
+            }
+          }
+           ],
+          "actions": [
+            {
+            "type": "forward",
+            "event": "ssl-client-hello",
+            "select": {
+              "service": {"use":"ingresstls"}
+            }
+          }]
+        }
+         ]
+             },
+             "website": {
+                "class": "Service_HTTP",
+                "virtualAddresses": ["10.1.10.80"
+                ],
+               
+               
+               "remark":"website: f5demo.http.v1",
+               "pool": "website_pool",
+               "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"}
+             },
+             "website_pool": {
+                "class": "Pool",
+                "monitors": [
+                   "http"
+                ],
+                "members": [{
+                   "servicePort": 80,
+                   "serverAddresses": [
+                   ]
+                }]
+             },
+             "websitetls": {
+                "class": "Service_HTTPS",
+                "virtualAddresses": [
+                     {"use":"/Common/Shared/VIP_TARGET"}
+                ],
+               "virtualPort": 8006,
+               "remark":"websitetls: f5demo.waf.https.v1",
+               "pool": "websitetls_pool",
+               "redirect80": false,
+               "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"},
+               "serverTLS": {"bigip":"/Common/_wildcard_.f5demo.com_clientssl"},
+               "clientTLS": {"bigip":"/Common/serverssl"},
+               "policyWAF": {"bigip":"/Common/linux-low"},
+               "securityLogProfiles": [
+                 {
+                   "bigip": "/Common/Log all requests"
+                 }                  
+               ]
+             },
+             "websitetls_pool": {
+                "class": "Pool",
+                "monitors": [
+                   "https"
+                ],
+                "members": [{
+                   "servicePort": 443,
+                   "serverAddresses": [
+                   ]
+                }]
+             },
+             "snimonitor": {
+                "class": "Service_HTTP",
+                "virtualAddresses": ["10.1.10.82"
+                ],
+               
+               "virtualPort": 7999,
+               "remark":"snimonitor: f5demo.sni.http.v1",
+               "pool": "ingresstls_pool",
+               "clientTLS": {"bigip":"/Common/serverssl"},
+               "iRules": ["/Common/Shared/Host_Header_To_Sni", "/Common/Shared/Proxy_Protocol_Send"]
+             },
+            "dns01_pool": {
+                "class": "GSLB_Pool",
+                "members": [
+                    {
+                        "ratio": 10,
+                        "server": {
+                            "use": "/Common/Shared/AS3Server"
+                        },
+                        "virtualServer": "0"
+                    }
+                ],
+                "resourceRecordType": "A"
+            },
+                        "dns01_Domain": {
+                                "class": "GSLB_Domain",
+                                "domainName": "my-frontend.f5demo.com",
+                                "resourceRecordType": "A",
+                                "pools": [{
+                                                "use": "dns01_pool"
+                                        }
+                                ]
+                        },
+            "dns02_pool": {
+                "class": "GSLB_Pool",
+                "members": [
+                    {
+                        "ratio": 10,
+                        "server": {
+                            "use": "/Common/Shared/AS3Server"
+                        },
+                        "virtualServer": "1"
+                    }
+                ],
+                "resourceRecordType": "A"
+            },
+                        "dns02_Domain": {
+                                "class": "GSLB_Domain",
+                                "domainName": "*.f5demo.com",
+                                "resourceRecordType": "A",
+                                "pools": [{
+                                                "use": "dns02_pool"
+                                        }
+                                ]
+                        },
+            "dns03_pool": {
+                "class": "GSLB_Pool",
+                "members": [
+                    {
+                        "ratio": 10,
+                        "server": {
+                            "use": "/Common/Shared/AS3Server"
+                        },
+                        "virtualServer": "2"
+                    }
+                ],
+                "resourceRecordType": "A"
+            },
+                        "dns03_Domain": {
+                                "class": "GSLB_Domain",
+                                "domainName": "www.f5demo.com",
+                                "resourceRecordType": "A",
+                                "pools": [{
+                                                "use": "dns03_pool"
+                                        }
+                                ]
+                        },
+            "dns04_pool": {
+                "class": "GSLB_Pool",
+                "members": [
+                    {
+                        "ratio": 10,
+                        "server": {
+                            "use": "/Common/Shared/AS3Server"
+                        },
+                        "virtualServer": "3"
+                    }
+                ],
+                "resourceRecordType": "A"
+            },
+                        "dns04_Domain": {
+                                "class": "GSLB_Domain",
+                                "domainName": "k8s.f5demo.com",
+                                "resourceRecordType": "A",
+                                "pools": [{
+                                                "use": "dns04_pool"
+                                        }
+                                ]
+                        },
+            "dns05_pool": {
+                "class": "GSLB_Pool",
+                "members": [
+                    {
+                        "ratio": 10,
+                        "server": {
+                            "use": "/Common/Shared/AS3Server"
+                        },
+                        "virtualServer": "4"
+                    }
+                ],
+                "resourceRecordType": "A",
+                "monitors": [{"use": "dns05_monitor"} ]
+            },
+            "dns05_monitor": {
+               "class": "GSLB_Monitor",
+               "monitorType":"http",
+                "send":"GET /txt HTTP/1.1\r\nhost: blue.f5demo.com\r\nconnection: close\r\n\r\n",
+                "receive": "blue.f5demo.com"
+               },
+                        "dns05_Domain": {
+                                "class": "GSLB_Domain",
+                                "domainName": "blue.f5demo.com",
+                                "resourceRecordType": "A",
+                                "pools": [{
+                                                "use": "dns05_pool"
+                                        }
+                                ]
+                        }
+       }
+       }
+    }
+    }
+

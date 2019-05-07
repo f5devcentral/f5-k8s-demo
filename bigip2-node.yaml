@@ -9,7 +9,7 @@ metadata:
     flannel.alpha.coreos.com/backend-type: "vxlan"
     flannel.alpha.coreos.com/kube-subnet-manager: "true"
     # This address is the BIG-IP VTEP (internal address) in the Flannel VXLAN
-    flannel.alpha.coreos.com/public-ip: 10.1.10.240
+    flannel.alpha.coreos.com/public-ip: 10.1.10.241
 spec:
   # This defines the Flannel subnet for the BIG-IP device. Be sure this subnet
   # does not collide with the subnets of the other Nodes. The BIG-IP device's

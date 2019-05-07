@@ -2,7 +2,6 @@ kind: ConfigMap
 apiVersion: v1
 metadata:
   name: f5-hello-world
-  namespace: default
   labels:
     f5type: virtual-server
     as3: "true"

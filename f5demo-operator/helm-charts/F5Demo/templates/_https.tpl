@@ -3,9 +3,12 @@
              "{{ .name }}": {
                 "class": "Service_HTTPS",
                 "virtualAddresses": [
-                   {{ .virtualAddress | quote }}
+                   {{- if .virtualAddress }}{{ .virtualAddress | quote }}{{ else }}
+                     {"use":"/Common/Shared/VIP_TARGET"}
+                   {{- end }}
                 ],
-               "virtualPort": {{ .virtualPort | default 443 }},
+               {{- if not .virtualAddress }}"virtualPort": {{ .cnt }},{{ else }}
+               {{ if .virtualPort }}"virtualPort": {{ .virtualPort }},{{- end }}{{- end}}
                "remark":"{{ .name}}: f5demo.https.v1",
                "pool": "{{ .name }}_pool",
                "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"},
@@ -29,9 +32,12 @@
              "{{ .name }}": {
                 "class": "Service_HTTPS",
                 "virtualAddresses": [
-                   {{ .virtualAddress | quote }}
+                   {{- if .virtualAddress }}{{ .virtualAddress | quote }}{{ else }}
+                     {"use":"/Common/Shared/VIP_TARGET"}
+                   {{- end }}
                 ],
-               "virtualPort": {{ .virtualPort | default 443 }},
+               {{ if not .virtualAddress }}"virtualPort": {{ .cnt }},{{ else }}
+               {{ if .virtualPort }}"virtualPort": {{ .virtualPort }},{{- end }}{{- end}}
                "remark":"{{ .name}}: f5demo.waf.https.v1",
                "pool": "{{ .name }}_pool",
                "redirect80": {{ .redirect80 | default false }},
