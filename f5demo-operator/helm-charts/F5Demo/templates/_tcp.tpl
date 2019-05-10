@@ -62,13 +62,16 @@
              "{{- .name }}_policy_endpoint": {
                 "class": "Endpoint_Policy",
         "rules": [
-           {{- $local := dict "first" true  }}       
+           {{- $local := dict "cnt" 0 }}
+           {{- $local := dict "first" true  }}
+
            {{- range .targets }}
            {{- range $key, $val :=. }}
            {{- if not $local.first }},{{- end }}
            {{- $_ := set $local "first" false  }}
+           {{- $_ := set $local "cnt" ($local.cnt |add1)  }}	   
            {
-          "name": "forward_to_{{$val}}",
+          "name": "forward_to_{{ $local.cnt }}",
           "conditions": [{
             "type": "sslExtension",
             "serverName": {
