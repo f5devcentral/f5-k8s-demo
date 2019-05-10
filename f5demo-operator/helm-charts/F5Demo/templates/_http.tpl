@@ -51,15 +51,15 @@
                 ],
                {{ if not .virtualAddress }}"virtualPort": {{ .cnt }},{{ else }}
                {{ if .virtualPort }}"virtualPort": {{ .virtualPort }},{{- end }}{{- end}}
-               "pool": "{{ .name }}_pool",
+               "pool": {{ if  .pool }}{{ .pool |quote }}{{ else }}"{{ .name }}_pool"{{ end }},
                "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"},
-               "policyWAF":{"bigip":"/Common/linux-low"},
+               "policyWAF":{{if .policyWAF }}{{ .policyWAF}}{{ else }}{"bigip":"/Common/linux-low"}{{ end }},
                "securityLogProfiles": [
                {
                  "bigip": "/Common/Log all requests"
                }
                ]
-             },
+             }{{ if not .pool}},
              "{{ .name }}_pool": {
                 "class": "Pool",
                 "monitors": [
@@ -70,7 +70,7 @@
                    "serverAddresses": [
                    ]
                 }]
-             }
+             }{{ end }}
 {{- end }}
 {{- define "f5demo.hostnamerouter.http.v1" }}
              "{{ .name }}": {
