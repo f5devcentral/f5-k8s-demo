@@ -62,8 +62,7 @@
              "{{- .name }}_policy_endpoint": {
                 "class": "Endpoint_Policy",
         "rules": [
-           {{- $local := dict "cnt" 0 }}
-           {{- $local := dict "first" true  }}
+           {{- $local := dict "first" true "cnt" 0 }}
 
            {{- range .targets }}
            {{- range $key, $val :=. }}
