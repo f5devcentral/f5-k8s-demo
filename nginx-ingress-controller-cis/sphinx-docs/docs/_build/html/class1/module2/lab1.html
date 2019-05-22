@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+  
+  <!-- Google Tag Manager -->
+  <!-- removed by Eric Chen -->
+  <!-- End Google Tag Manager -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Deploy the NGINX Ingress Controller &#8212; F5 Container Ingress Services and NGINX+  documentation</title>
+    <link rel="stylesheet" href="../../_static/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/f5_agility_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/f5.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/f5-theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Deploy the “Cafe” Application" href="lab2.html" />
+    <link rel="prev" title="Module – Deploying NGINX+ Ingress" href="module2.html" />
+
+  
+    
+
+  
+  </head><body>
+  <div id="clouddocs-header"></div>
+
+    <div id="dismiss">
+      <button type="button" class="btn btn-info navbar-btn site-hidden">
+        <i class="fa fa-align-justify"></i>
+      </button>
+    </div>
+    <div id="sidebar" class="section-nav">
+      
+      <nav class="nav-sidebartoc">
+
+        
+         <h5>F5 Container Ingress Services and NGINX+  </h5>
+        
+<div id="searchbox" role="search">
+  <form class="search" action="../../search.html" method="get">
+    <input type="text" class="search" name="q" placeholder=" Search..." />
+    <button type="submit" class="btn btn-info navbar-btn"><i class="fa fa-search"></i></button>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        <hr>
+        <span class="nav-sidebartoc">
+            <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../class1.html">Exposing Services in Kubernetes</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../module1/module1.html">Module - Deploying and Exposing a Kubernetes Service using NodePort</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="module2.html">Module – Deploying NGINX+ Ingress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module3/module3.html">Module – Container Ingress Services</a></li>
+</ul>
+</li>
+</ul>
+
+        </span><!-- Use this file to add extra links to the bottom of the ToC sidebar -->
+<hr>
+  <span class="nav-sidebartoc">
+ <!-- insert content here -->
+  </span>
+      </nav>
+    </div>
+
+
+    <div id="right-sidebar">
+      <h7 style="font-weight:normal">On this page:</h7>
+      <nav class="nav-sidebartoc">
+        <span class="nav-sidebartoc">
+            <ul>
+<li><a class="reference internal" href="#">Deploy the NGINX Ingress Controller</a><ul>
+<li><a class="reference internal" href="#change-directory-into-the-deployments-directory">Change directory into the “deployments” directory</a></li>
+<li><a class="reference internal" href="#create-namespace-and-service-account">Create NameSpace and Service Account</a></li>
+<li><a class="reference internal" href="#create-regcred-for-private-docker-repo">Create “regcred” for Private Docker Repo</a></li>
+<li><a class="reference internal" href="#install-default-ssl-cert-key">Install Default SSL Cert/Key</a></li>
+<li><a class="reference internal" href="#create-a-nginx-configmap">Create a NGINX ConfigMap</a></li>
+<li><a class="reference internal" href="#configure-rbac">Configure RBAC</a></li>
+<li><a class="reference internal" href="#create-a-deployment">Create a Deployment</a></li>
+<li><a class="reference internal" href="#verify-your-deployment">Verify your deployment</a></li>
+<li><a class="reference internal" href="#expose-nginx-via-nodeport">Expose NGINX+ via NodePort</a></li>
+<li><a class="reference internal" href="#retrieve-node-port">Retrieve Node Port</a></li>
+<li><a class="reference internal" href="#access-nginx-from-outside-the-cluster">Access NGINX+ From Outside the Cluster</a></li>
+</ul>
+</li>
+</ul>
+
+         </span>
+      </nav>
+    </div>
+
+
+
+
+
+  
+  <div class="main active" id="content" >
+    <article class="docs-container site-article-inner">
+            <nav class="site-breadcrumb-nav site-nav">
+          <ul class="site-breadcrumb-list">
+            <li class="breadcrumb-item"><button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn site-hidden"><i class="fa fa-align-justify"></i></button>&#x20 <a href="/">Community Training Classes &amp; Labs</a> &gt; <a href="../../index.html">F5 Container Ingress Services and NGINX+ </a> &gt; Deploy the NGINX Ingress Controller</li>
+          </ul>
+      </nav>
+      
+      
+
+
+
+    
+
+    
+
+
+    
+  <div class="section" id="deploy-the-nginx-ingress-controller">
+<h1>Deploy the NGINX Ingress Controller<a class="headerlink" href="#deploy-the-nginx-ingress-controller" title="Permalink to this headline">¶</a></h1>
+<p>This lab will deploy an NGINX Ingress Controller.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The Kubernetes project also has an “NGINX Ingress Controller”
+that is <strong>DIFFERENT</strong> than the “NGINX Ingress Controller” that
+is being used in this lab.  The Kubernetes <a class="reference external" href="https://github.com/kubernetes/ingress-nginx">project</a> “NGINX Ingress
+Controller” is <strong>NOT</strong> supported/developed by NGINX (F5).  The
+“<a class="reference external" href="https://github.com/nginxinc/kubernetes-ingress">NGINX Ingress Controller</a>” from NGINX (F5) is.</p>
+</div>
+<p>In the lab environment NGINX+ has been already built into an image and is
+available in a private repository.  The deployment files have also been modified
+to make use of the private repository when deploying NGINX+ Ingress Controller.</p>
+<p>In a customer environment, an NGINX+ container would need to be built using a cert and key from the <a class="reference external" href="https://cs.nginx.com">NGINX Customer Portal</a>.</p>
+<p>NGINX Ingress Controller runs two processes.  One is a management plane
+process that subscribes to Kubernetes API events and updates the NGINX configuration
+file and/or API (for NGINX+) as needed.  The second process is the data plane NGINX
+or NGINX+ process.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In this lab we are using NGINX+ for the data plane.  NGINX Ingress
+can also use open source NGINX with diminished capabilities (lacks
+enhanced health checks; faster updating of pods).</p>
+</div>
+<p>The following steps are adapted from “<a class="reference external" href="https://github.com/nginxinc/kubernetes-ingress/blob/master/docs/installation.md">Installing the Ingress Controller</a>”.</p>
+<div class="section" id="change-directory-into-the-deployments-directory">
+<h2>Change directory into the “deployments” directory<a class="headerlink" href="#change-directory-into-the-deployments-directory" title="Permalink to this headline">¶</a></h2>
+<p>On the K8S Master host you will need to change into the <code class="docutils literal notranslate"><span class="pre">~/kubernetes-ingress/deployments/</span></code>
+directory.</p>
+<div class="code shell highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd ~/kubernetes-ingress/deployments/
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-namespace-and-service-account">
+<h2>Create NameSpace and Service Account<a class="headerlink" href="#create-namespace-and-service-account" title="Permalink to this headline">¶</a></h2>
+<p>The NGINX Ingress Controller runs in an isolated NameSpace and uses a separate
+ServiceAccount for accessing the Kubernetes API.  Run this command to create the “nginx-ingress” namespace and
+service account:</p>
+<div class="code shell highlight-default notranslate"><div class="highlight"><pre><span></span>$ kubectl apply -f common/ns-and-sa.yaml
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-regcred-for-private-docker-repo">
+<h2>Create “regcred” for Private Docker Repo<a class="headerlink" href="#create-regcred-for-private-docker-repo" title="Permalink to this headline">¶</a></h2>
+<p>You will need to create a Kubernetes secret that will be used to access the private
+repo in the lab environment.  Run this command to create the secret:</p>
+<div class="code shell highlight-default notranslate"><div class="highlight"><pre><span></span>$ kubectl create secret docker-registry regcred --docker-server=registry.internal:30500 --docker-username=registry --docker-password=registry --docker-email=gsa@f5.com -n nginx-ingress
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-default-ssl-cert-key">
+<h2>Install Default SSL Cert/Key<a class="headerlink" href="#install-default-ssl-cert-key" title="Permalink to this headline">¶</a></h2>
+<p>The Ingress Controller will use a “default” SSL certificate for requests that
+are not configured to use an explicit certificate.  The following loads the
+default certificate into Kubernetes:</p>
+<div class="code shell highlight-default notranslate"><div class="highlight"><pre><span></span>$ kubectl apply -f common/default-server-secret.yaml
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">NGINX docs state “For testing purposes we include a self-signed certificate and key that we generated. However, we recommend that you use your own certificate and key.”</p>
+</div>
+</div>
+<div class="section" id="create-a-nginx-configmap">
+<h2>Create a NGINX ConfigMap<a class="headerlink" href="#create-a-nginx-configmap" title="Permalink to this headline">¶</a></h2>
+<p>NGINX Ingress Controller makes use of a Kubernetes ConfigMap to store
+customizations to the NGINX+ configuration. Configuration snippets/directives
+can be passed into the <code class="docutils literal notranslate"><span class="pre">data</span></code> section or a set of NGINX and NGINX+ annotations are <a class="reference external" href="https://github.com/nginxinc/kubernetes-ingress/blob/master/docs/configmap-and-annotations.md">available</a>.</p>
+<div class="code shell highlight-default notranslate"><div class="highlight"><pre><span></span>$ kubectl apply -f common/nginx-config.yaml
+</pre></div>
+</div>
+</div>
+<div class="section" id="configure-rbac">
+<h2>Configure RBAC<a class="headerlink" href="#configure-rbac" title="Permalink to this headline">¶</a></h2>
+<p>In this lab environment RBAC is enabled and you will need to enable access
+from the NGINX Service Account to the Kubernetes API.</p>
+<div class="code shell highlight-default notranslate"><div class="highlight"><pre><span></span>$ kubectl apply -f rbac/rbac.yaml
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The <code class="docutils literal notranslate"><span class="pre">ubuntu</span></code> user is accessing the Kubernetes Cluster as a “Cluster Admin” and has privileges
+to apply RBAC permissions.</p>
+</div>
+</div>
+<div class="section" id="create-a-deployment">
+<h2>Create a Deployment<a class="headerlink" href="#create-a-deployment" title="Permalink to this headline">¶</a></h2>
+<p>We will be deploying NGINX+ as a deployment.  It is also possible to deploy as
+a “daemonset” on every node (or subset).</p>
+<p>The following are Eric’s opinion on the differences:</p>
+<p>Advantages of deployment: flexible allocation (not limited to 1 per node).</p>
+<p>Advantages of daemonset: fixed allocation (better if you want to expose port 80/443 directly)</p>
+<div class="code shell highlight-default notranslate"><div class="highlight"><pre><span></span>$ kubectl apply -f deployment/nginx-plus-ingress.yaml
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The lab environment has modified <code class="docutils literal notranslate"><span class="pre">nginx-plus-ingress.yaml</span></code> and
+created resources to support it.  Normally you <strong>MUST</strong> modify
+this file before deploying.</p>
+</div>
+</div>
+<div class="section" id="verify-your-deployment">
+<h2>Verify your deployment<a class="headerlink" href="#verify-your-deployment" title="Permalink to this headline">¶</a></h2>
+<p>Make sure that everything is running.  Add <code class="docutils literal notranslate"><span class="pre">-n</span></code> to specify the correct
+namespace.</p>
+<div class="code shell highlight-default notranslate"><div class="highlight"><pre><span></span>$  kubectl get po -n nginx-ingress
+</pre></div>
+</div>
+<p>You should see output similar to:</p>
+<div class="code text highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NAME</span>                            <span class="n">READY</span>   <span class="n">STATUS</span>    <span class="n">RESTARTS</span>   <span class="n">AGE</span>
+<span class="n">nginx</span><span class="o">-</span><span class="n">ingress</span><span class="o">-</span><span class="mi">56454</span><span class="n">fb6d</span><span class="o">-</span><span class="n">c5hl6</span>   <span class="mi">1</span><span class="o">/</span><span class="mi">1</span>     <span class="n">Running</span>   <span class="mi">0</span>          <span class="mi">44</span><span class="n">m</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="expose-nginx-via-nodeport">
+<h2>Expose NGINX+ via NodePort<a class="headerlink" href="#expose-nginx-via-nodeport" title="Permalink to this headline">¶</a></h2>
+<p>Finally we need to enable external access to the Kubernetes cluster by defining a <code class="docutils literal notranslate"><span class="pre">service</span></code>.</p>
+<p>In the previous lab we made use of a “Cluster” service that was only
+accessible within the Kubernetes cluster.  We will create a NodePort
+service to enable access from outside the cluster.  This will create
+an ephemeral port that will map to port 80/443 on the NGINX+ Ingress
+Controller.</p>
+<div class="code shell highlight-default notranslate"><div class="highlight"><pre><span></span>$ kubectl create -f service/nodeport.yaml
+</pre></div>
+</div>
+</div>
+<div class="section" id="retrieve-node-port">
+<span id="retrieve-nodeport"></span><h2>Retrieve Node Port<a class="headerlink" href="#retrieve-node-port" title="Permalink to this headline">¶</a></h2>
+<p>We will next retrieve the port number that NGINX+ port 80 is exposed at.</p>
+<div class="code shell highlight-default notranslate"><div class="highlight"><pre><span></span>$ kubectl get svc -n nginx-ingress
+</pre></div>
+</div>
+<p>You should see output similar to (your port values will be different):</p>
+<div class="code shell highlight-default notranslate"><div class="highlight"><pre><span></span>ubuntu@kmaster:~/kubernetes-ingress/deployments$ kubectl get svc -n nginx-ingress
+NAME            TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)                      AGE
+nginx-ingress   NodePort   10.98.14.232   &lt;none&gt;        80:32148/TCP,443:30661/TCP   5m34s
+</pre></div>
+</div>
+<p>In the example above port 32148 maps to port 80 on NGINX+.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You will have a different port value!  Record the value for the
+next lab exercise.</p>
+</div>
+</div>
+<div class="section" id="access-nginx-from-outside-the-cluster">
+<h2>Access NGINX+ From Outside the Cluster<a class="headerlink" href="#access-nginx-from-outside-the-cluster" title="Permalink to this headline">¶</a></h2>
+<p>From the Windows JumpHost open up the Chrome browser and browse to the “kmaster” host IP and the previously recorded port:</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">http://10.1.20.20:[Previous</span> <span class="pre">Recorded</span> <span class="pre">Port</span> <span class="pre">Number]</span></code></div></blockquote>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">Credentials for Windows JumpHost are <strong>“user:user”</strong></p>
+</div>
+<p>You should see something like:</p>
+<img alt="../../_images/class1-module2-lab2-nginx-plus-nodeport.png" src="../../_images/class1-module2-lab2-nginx-plus-nodeport.png" />
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You will have a different port value!</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">NGINX docs state “The default server returns the Not Found page with the 404 status code for all requests for domains for which there are no Ingress rules defined.”
+We’ve not yet configured any services to use the NGINX+ Ingress Controller.</p>
+</div>
+</div>
+</div>
+
+
+    
+     <div class="row next-prev-btn-row">
+       <div class="col-lg-12">
+       
+        <a href="module2.html" title="Module – Deploying NGINX+ Ingress" accesskey="p" class="btn btn-primary left"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Previous</a>
+       
+       
+          <a href="lab2.html" title="Deploy the “Cafe” Application" accesskey="n" class="btn btn-primary right">Next <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
+       
+     </div>
+     </div>
+    
+
+    </article>
+  </div>
+
+</div>
+
+
+  <div id="clouddocs-footer"></div>
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+
+  <script src="../../_static/js/bootstrap.min.js"></script>
+  <script src="../../_static/js/clouddocs.js"></script>
+  <script src="../../_static/js/jquery.appear.js"></script>
+  <script src="../../_static/js/printThis.js"></script>
+  </body>
+</html>
