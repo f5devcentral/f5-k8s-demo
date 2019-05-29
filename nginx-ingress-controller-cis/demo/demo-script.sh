@@ -62,7 +62,7 @@ CLUSTER_IP=$(kubectl get service coffee-svc -o go-template='{{.spec.clusterIP}}'
 pe "for run in {1..5}; do curl ${CLUSTER_IP}; done"
 
 printf "\033[32mCoffee and Tea Service \033[0m\n"
-pe "kubectl apply -f ~/kubernetes-ingress/examples/complete-example/cafe.yaml"
+pe "kubectl apply -f ~/kubernetes-ingress/complete-example/cafe.yaml"
 
 #Module 2, Lab1 -- Deploy NGINX Controller
 printf "\033[32mDeploy NGINX Ingress Controller \033[0m\n"
