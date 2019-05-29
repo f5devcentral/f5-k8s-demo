@@ -2,8 +2,8 @@
 
 cd "${BASH_SOURCE%/*}"
 
-wget --no-verbose -O demo-magic.sh https://raw.githubusercontent.com/paxtonhare/demo-magic/master/demo-magic.sh
-chmod +x demo-magic.sh
+#wget --no-verbose -O demo-magic.sh https://raw.githubusercontent.com/paxtonhare/demo-magic/master/demo-magic.sh
+#chmod +x demo-magic.sh
 . demo-magic.sh
 TYPE_SPEED=15
 DEMO_PROMPT="\u@\h:~# "
@@ -15,7 +15,7 @@ clear
 
 #Lab 1
 printf "\033[32mDeploy an Application \033[0m\n"
-TYPE_SPEED=200
+TYPE_SPEED=300
 pe "kubectl create -f - <<'EOF'
 apiVersion: extensions/v1beta1
 kind: Deployment
