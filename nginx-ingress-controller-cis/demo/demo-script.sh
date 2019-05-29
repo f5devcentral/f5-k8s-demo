@@ -14,8 +14,8 @@ clear
 #########################
 
 #Lab 1
-printf "\033[32m Deploy an Application \033[0m\n"
-
+printf "\033[32mDeploy an Application \033[0m\n"
+TYPE_SPEED=200
 pe "kubectl create -f - <<'EOF'
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -37,17 +37,17 @@ spec:
         ports:
         - containerPort: 80
 EOF"
-
+#TYPE_SPEED=15
 pe "kubectl get po"
 pe "kubectl get po -o wide"
 
 # Curl to the pod IP.
-POD=$(kubectl get pods -o go-template='{{(index .spec.name 0)}}')
-CLUSTER_IP=$(kubectl get pods -o go-template='{{(index .spec.IP 0)}}')
+POD=$(kubectl get pods -o=jsonpath='{.items[0].metadata.name}')
+CLUSTER_IP=$(kubectl get pods -o=jsonpath='{.items[0].status.podIP}')
 pe "curl ${CLUSTER_IP}"
 
 #Lab 2
-printf "\033[32m Exposing an Application Service \033[0m\n"
+printf "\033[32mExposing an Application Service \033[0m\n"
 pe "kubectl expose deployment/coffee --name coffee-svc"
 pe "kubectl get svc"
 
@@ -57,15 +57,15 @@ pe "kubectl get po"
 pe "kubectl exec -it ${POD} -- nslookup coffee-svc"
 
 #curl the the service/cluster address. Do this a few times.
-printf "\033[32m Verify Access to Coffee \033[0m\n"
+printf "\033[32mVerify Access to Coffee \033[0m\n"
 CLUSTER_IP=$(kubectl get service coffee-svc -o go-template='{{.spec.clusterIP}}')
 pe "for run in {1..5}; do curl ${CLUSTER_IP}; done"
 
-printf "\033[32m Coffee and Tea Service \033[0m\n"
+printf "\033[32mCoffee and Tea Service \033[0m\n"
 pe "kubectl apply -f ~/kubernetes-ingress/examples/complete-example/cafe.yaml"
 
 #Module 2, Lab1 -- Deploy NGINX Controller
-printf "\033[32m Deploy NGINX Ingress Controller \033[0m\n"
+printf "\033[32mDeploy NGINX Ingress Controller \033[0m\n"
 pe "cd ~/kubernetes-ingress/deployments/"
 
 pe "kubectl apply -f common/ns-and-sa.yaml"
@@ -89,7 +89,7 @@ pe "kubectl create -f service/nodeport.yaml"
 pe "kubectl get svc -n nginx-ingress"
 
 #Module 2, Lab 2 -- Deploy the "cafe" application
-printf "\033[32m  Deploy the Cafe Application \033[0m\n"
+printf "\033[32m Deploy the Cafe Application \033[0m\n"
 
 pe "cd ~/kubernetes-ingress/examples/complete-example/"
 
