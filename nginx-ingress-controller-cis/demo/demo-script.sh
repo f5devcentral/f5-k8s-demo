@@ -12,10 +12,10 @@ clear
 #########################
 #####   K8S Demo    #####
 #########################
+TYPE_SPEED=300
 
 #Lab 1
 printf "\033[32mDeploy an Application \033[0m\n"
-TYPE_SPEED=300
 pe "kubectl create -f - <<'EOF'
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -103,10 +103,9 @@ PORT=$(kubectl get service -n nginx-ingress -o jsonpath='{.items[0].spec.ports[1
 pe "curl --resolve cafe.example.com:${PORT}:10.1.20.20 https://cafe.example.com:${PORT}/coffee -k"
 
 #Module 3 -- Container ingress services
-
-##Lab 1
+printf "\033[32mDeploy BIG-IP Container Ingress Services \033[0m\n"
 ##Create the partition on the BIG-IP
-pe "curl -k -u admin:admin -d '{\"name\": \"kubernetes\"}' -H 'Content-Type: application/json' https://10.1.1.4/mgmt/tm/auth/partition"
+pe "curl -k -u admin:admin -d '{\"name\": \"kubernetes\"}' -H 'Content-Type: application/json' https://10.1.1.4/mgmt/tm/auth/partition" && echo ''
 
 pe "kubectl create secret generic bigip-login --namespace kube-system --from-literal=username=admin --from-literal=password=admin"
 
@@ -116,19 +115,18 @@ pe "kubectl apply -f ~/f5-cis/cis-rbac.yaml -n kube-system"
 
 pe "kubectl apply -f ~/f5-cis/f5-cc-deployment.yaml -n kube-system"
 
+printf "\033[32mExpose NGINX IC Services on the BIG-IP \033[0m\n"
 pe "kubectl apply -f ~/f5-cis/nodeport-cis-80.yaml"
 pe "kubectl apply -f ~/f5-cis/nodeport-cis-443.yaml"
 pe "kubectl apply -f ~/f5-cis/nodeport-cis-8080.yaml"
 
 ##Module 3, Lab2 -- deploy CIS
-pe "cat ~/f5-cis/cis-configmap.yaml"
-
 pe "kubectl apply -f ~/f5-cis/cis-configmap.yaml"
 
 pe "curl https://cafe.example.com/coffee -k"
 
 ##Module 3, Lab3
-
+printf "\033[32mApply WAF Policy ConfigMap \033[0m\n"
 pe "kubectl apply -f ~/f5-cis/cis-better-together-configmap.yaml"
 
 pe 'curl -k https://cafe.example.com/coffee -v -H "X-Hacker: cat /etc/paswd"'
