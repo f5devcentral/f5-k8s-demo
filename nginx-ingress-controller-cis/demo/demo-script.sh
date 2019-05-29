@@ -62,7 +62,7 @@ CLUSTER_IP=$(kubectl get service coffee-svc -o go-template='{{.spec.clusterIP}}'
 pe "for run in {1..5}; do curl ${CLUSTER_IP}; done"
 
 printf "\033[32mCoffee and Tea Service \033[0m\n"
-pe "kubectl apply -f ~/kubernetes-ingress/complete-example/cafe.yaml"
+pe "kubectl apply -f ~/kubernetes-ingress/examples/complete-example/cafe.yaml"
 
 #Module 2, Lab1 -- Deploy NGINX Controller
 printf "\033[32mDeploy NGINX Ingress Controller \033[0m\n"
@@ -82,14 +82,12 @@ pe "kubectl apply -f deployment/nginx-plus-ingress.yaml"
 
 pe "kubectl get po -n nginx-ingress"
 
-pe "kubectl get svc -n nginx-ingress"
-
 pe "kubectl create -f service/nodeport.yaml"
 
 pe "kubectl get svc -n nginx-ingress"
 
 #Module 2, Lab 2 -- Deploy the "cafe" application
-printf "\033[32m Deploy the Cafe Application \033[0m\n"
+printf "\033[32mDeploy the Cafe Application \033[0m\n"
 
 pe "cd ~/kubernetes-ingress/examples/complete-example/"
 
@@ -99,8 +97,8 @@ pe "kubectl create -f cafe-secret.yaml"
 
 pe "kubectl create -f cafe-ingress.yaml"
 
-###Need to determine these ports.
-PORT=$(kubectl get service nginx-service -o go-template='{{(index .spec.ports 0).port}}')
+###Need to determine these ports. TBD...FROM HERE
+PORT=$(kubectl get service -n nginx-ingress -o jsonpath='{.items[0].spec.ports[1].nodePort}')
 
 pe "curl --resolve cafe.example.com:${PORT}:10.1.20.20 https://cafe.example.com:${PORT}/coffee -k"
 
@@ -108,6 +106,7 @@ pe "curl --resolve cafe.example.com:${PORT}:10.1.20.20 https://cafe.example.com:
 
 ##Lab 1
 ##Create the partition on the BIG-IP
+pe "curl -k -u admin:admin -d '{\"name\": \"kubernetes\"}' -H 'Content-Type: application/json' https://10.1.1.4/mgmt/tm/auth/partition"
 
 pe "kubectl create secret generic bigip-login --namespace kube-system --from-literal=username=admin --from-literal=password=admin"
 
@@ -135,9 +134,5 @@ pe "kubectl apply -f ~/f5-cis/cis-better-together-configmap.yaml"
 pe 'curl -k https://cafe.example.com/coffee -v -H "X-Hacker: cat /etc/paswd"'
 
 
-#####################################
-#####   Remove demo-magic.sh    #####
-#####################################
-rm demo-magic.sh
 
 
