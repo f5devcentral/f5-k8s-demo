@@ -5,7 +5,6 @@ cd "${BASH_SOURCE%/*}"
 #wget --no-verbose -O demo-magic.sh https://raw.githubusercontent.com/paxtonhare/demo-magic/master/demo-magic.sh
 #chmod +x demo-magic.sh
 . demo-magic.sh
-TYPE_SPEED=15
 DEMO_PROMPT="\u@\h:~# "
 clear
 
@@ -130,7 +129,3 @@ printf "\033[32mApply WAF Policy ConfigMap \033[0m\n"
 pe "kubectl apply -f ~/f5-cis/cis-better-together-configmap.yaml"
 
 pe 'curl -k https://cafe.example.com/coffee -v -H "X-Hacker: cat /etc/paswd"'
-
-
-
-
