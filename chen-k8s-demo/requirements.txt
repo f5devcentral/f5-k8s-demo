@@ -1,0 +1,4 @@
+pykube
+f5-sdk
+pexpect
+urllib3[secure]

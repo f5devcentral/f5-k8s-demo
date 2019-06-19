@@ -1,0 +1,123 @@
+{
+	"username":"admin",
+	"password":"admin",
+	"template_name":"latest",
+	"inheritedDevicegroup": "true",
+    "deviceGroup": "default",
+    "inheritedTrafficGroup": "true",
+    "trafficGroup": "/Common/traffic-group-1",
+    "partition":"Common",
+	"strings":[
+		{ "iapp__strictUpdates":"enabled" },
+		{ "iapp__appStats":"enabled" },
+		{ "iapp__mode":"auto" },
+		{ "iapp__logLevel":"5" },
+		{ "iapp__routeDomain":"auto" },
+    	{ "iapp__asmDeployMode":"preserve-bypass" },
+    	{ "iapp__apmDeployMode":"preserve-bypass" },
+		{ "pool__addr":"" },
+		{ "pool__mask":"255.255.255.255" },
+		{ "pool__port":"" },
+		{ "pool__DefaultPoolIndex":"0" },
+		{ "pool__MemberDefaultPort":"80" },
+		{ "vs__Name":"" },
+		{ "vs__Description":"" },
+		{ "vs__SourceAddress":"0.0.0.0/0" },
+		{ "vs__IpProtocol":"tcp" },
+		{ "vs__ConnectionLimit":"0" },
+		{ "vs__ProfileClientProtocol":"/Common/tcp-mobile-optimized" },
+		{ "vs__ProfileServerProtocol":"/Common/tcp-lan-optimized" },
+		{ "vs__ProfileHTTP":"" },
+		{ "vs__ProfileOneConnect":"" },
+		{ "vs__ProfileCompression":"" },
+		{ "vs__ProfileAnalytics":"" },
+		{ "vs__ProfileRequestLogging":"" },
+		{ "vs__ProfileDefaultPersist":"" },
+		{ "vs__ProfileFallbackPersist":"" },
+		{ "vs__SNATConfig":"automap" },
+		{ "vs__ProfileServerSSL":"" },
+		{ "vs__ProfileClientSSL":"" },
+		{ "vs__ProfileClientSSLCert":"" },
+		{ "vs__ProfileClientSSLKey":"" },
+		{ "vs__ProfileClientSSLChain":"" },
+		{ "vs__ProfileClientSSLCipherString":"" },
+		{ "vs__ProfileClientSSLAdvOptions":"" },
+		{ "vs__ProfileSecurityLogProfiles":"" },
+		{ "vs__ProfileSecurityIPBlacklist":"none" },
+		{ "vs__ProfileSecurityDoS":"" },
+		{ "vs__ProfileAccess":"" },
+		{ "vs__ProfileConnectivity":"" },
+		{ "vs__ProfilePerRequest":"" },
+		{ "vs__OptionSourcePort":"preserve" },
+		{ "vs__OptionConnectionMirroring":"disabled" },
+		{ "vs__Irules":"" },
+		{ "vs__AdvOptions":"" },
+		{ "vs__AdvProfiles":"" },
+		{ "vs__AdvPolicies":"" },
+		{ "l7policy__strategy":"/Common/first-match"},
+		{ "l7policy__defaultASM":"bypass"},
+		{ "l7policy__defaultL7DOS":"bypass"},
+		{ "feature__statsTLS":"auto" },
+		{ "feature__statsHTTP":"auto" },
+		{ "feature__insertXForwardedFor":"auto" },
+		{ "feature__redirectToHTTPS":"auto" },
+		{ "feature__sslEasyCipher":"disabled" },
+		{ "feature__securityEnableHSTS":"disabled" },
+		{ "feature__easyL4Firewall":"auto" },
+		{ "extensions__Field1":"" },
+		{ "extensions__Field2":"" },
+		{ "extensions__Field3":"" }
+	],
+	"tables":[
+		{
+			"name":"pool__Pools",
+			"columnNames": [ "Index", "Name", "Description", "LbMethod", "Monitor", "AdvOptions" ],
+			"rows" : [
+				{ "row": [ "0", "", "", "round-robin", "0", "none"]  }
+			]
+		},
+		{
+			"name":"pool__Members",
+			"columnNames": [ "Index", "IPAddress", "Port", "ConnectionLimit", "Ratio", "PriorityGroup", "State", "AdvOptions" ],
+			"rows" : [ ]		
+		},
+		{
+			"name":"monitor__Monitors",
+			"columnNames": ["Index", "Name", "Type", "Options"],
+			"rows" : [ 
+				{ "row": [ "0", "/Common/tcp", "none", "none" ] }
+			]
+		},
+		{
+			"name":"vs__Listeners",
+			"columnNames": ["Listener"],
+			"rows" : [ ]
+		},
+		{
+			"name":"vs__BundledItems",
+			"columnNames": ["Resource"],
+			"rows" : [ ]
+		},		
+		{
+			"name":"l7policy__rulesMatch",
+			"columnNames": ["Index","Operand","Negate","Condition","Value","CaseSensitive","Missing"],
+			"rows" : [ ]
+		},
+		{
+			"name":"l7policy__rulesAction",
+			"columnNames": ["Index","Target","Parameter"],
+			"rows" : [ ]
+		},
+		{
+			"name":"feature__easyL4FirewallBlacklist",
+			"columnNames": [ "CIDRRange" ],
+			"rows" : [ ]		
+		},		
+		{
+			"name":"feature__easyL4FirewallSourceList",
+			"columnNames": [ "CIDRRange" ],
+			"rows" : [ { "row": ["0.0.0.0/0"] } ]		
+		}		
+	],
+	"lists": [ ]
+}

@@ -1,0 +1,14 @@
+apiVersion: charts.helm.k8s.io/v1alpha1
+kind: F5Demo
+metadata:
+  name: example-f5demo
+spec:
+  # Default values copied from <project_dir>/helm-charts/F5Demo/values.yaml
+  
+  # Default values for f5demo.
+  # This is a YAML-formatted file.
+  # Declare variables to be passed into your templates.
+  #common:
+  
+  #applications:
+  

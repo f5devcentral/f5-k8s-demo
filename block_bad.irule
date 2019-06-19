@@ -1,6 +1,0 @@
-when HTTP_REQUEST {
-    if { [HTTP::header exists "X-BAD"] } {
-        log local0. "Blocking"
-	reject
-    } 
-}
