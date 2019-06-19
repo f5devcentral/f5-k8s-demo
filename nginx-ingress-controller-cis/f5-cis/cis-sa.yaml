@@ -1,0 +1,12 @@
+---
+# Source: f5-bigip-ctlr/templates/f5-bigip-ctlr-serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: bigip1-f5-bigip-ctlr
+  labels:
+    app: f5-bigip-ctlr
+    chart: f5-bigip-ctlr-0.0.6
+    release: bigip1
+    heritage: Tiller
+

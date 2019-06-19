@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-backend
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+       run: my-backend
+    spec:
+      containers:
+      - image: f5devcentral/f5-demo-httpd:nginx
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: F5DEMO_APP
+          value: "backend"
+        name: my-backend
+        ports:
+        - containerPort: 80
+          protocol: TCP

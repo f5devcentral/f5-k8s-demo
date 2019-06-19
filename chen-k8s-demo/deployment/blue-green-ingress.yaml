@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: blue-green-ingress
+  annotations:
+    virtual-server.f5.com/ip: "10.1.10.82"
+    virtual-server.f5.com/http-port: "80"
+    virtual-server.f5.com/partition: "kubernetes"
+    virtual-server.f5.com/health: |
+      [
+        {
+          "path":     "blue.f5demo.com/",
+          "send":     "HTTP GET /",
+          "interval": 5,
+          "timeout":  15
+        }, {
+          "path":     "green.f5demo.com/",
+          "send":     "HTTP GET /",
+          "interval": 5,
+          "timeout":  15
+        }
+      ]    
+    kubernetes.io/ingress.class: "f5"
+spec:
+  rules:
+  - host: blue.f5demo.com
+    http:
+      paths:
+      - backend:
+          serviceName: node-blue
+          servicePort: 80
+  - host: green.f5demo.com
+    http:
+      paths:
+      - backend:
+          serviceName: node-green
+          servicePort: 80
