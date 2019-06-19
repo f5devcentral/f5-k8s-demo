@@ -1,11 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ingress-nginx
-  namespace: ingress-nginx
+  name: nginx-ingress
+  namespace: nginx-ingress
   labels:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
     cis.f5.com/as3-tenant: AS3
     cis.f5.com/as3-app: MyApps
     cis.f5.com/as3-pool: ingress_pool
@@ -17,8 +15,7 @@ spec:
       targetPort: 80
       protocol: TCP
   selector:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
+      app: nginx-ingress
 
 ---
 

@@ -90,11 +90,10 @@ spec:
     spec:
       serviceAccountName: bigip1-f5-bigip-ctlr
       imagePullSecrets:
-        - name: f5-docker-images
         - name: bigip-login
       containers:
       - name: f5-bigip-ctlr
-        image: "f5networks/k8s-bigip-ctlr:1.9.0"
+        image: "f5networks/k8s-bigip-ctlr:1.9.1"
         volumeMounts:
         - name: bigip-creds
           mountPath: "/tmp/creds"
