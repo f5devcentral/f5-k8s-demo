@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-ingress
+  namespace: nginx-ingress
+  labels:
+    cis.f5.com/as3-tenant: AS3
+    cis.f5.com/as3-app: MyApps
+    cis.f5.com/as3-pool: ingress_pool
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+      app: nginx-ingress
+
+---
+
