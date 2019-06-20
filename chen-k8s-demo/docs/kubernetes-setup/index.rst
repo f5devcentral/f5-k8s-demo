@@ -140,13 +140,17 @@ Update ``inventory/mycluster/group_vars/k8s-cluster/k8s-cluster.yml``
 
 You will also need to modify the hostnames to match the name in AWS in ``hosts.yml``
 
-.. code-block:: text
+.. code-block:: yaml
 
-  kube-node:
-    hosts:
-      ip-10-1-10-11.us-west-2.compute.internal:
-      ip-10-1-10-21.us-west-2.compute.internal:
-      ip-10-1-10-22.us-west-2.compute.internal:
+  children:
+    kube-master:
+      hosts:
+        ip-10-1-10-11.us-west-2.compute.internal:
+    kube-node:
+      hosts:
+        ip-10-1-10-11.us-west-2.compute.internal:
+        ip-10-1-10-21.us-west-2.compute.internal:
+        ip-10-1-10-22.us-west-2.compute.internal:
 
 Run the installer
 ~~~~~~~~~~~~~~~~~
@@ -181,3 +185,12 @@ Modify the command to add the ``eth1`` line
     - --ip-masq
     - --kube-subnet-mgr
     - --iface=eth1
+
+Add a secret
+~~~~~~~~~~~~
+
+Create a secret that will store the SSL certificate that will be used in the demo.
+
+.. code-block:: sh
+  # create your own tls.crt / tls.key, not provided
+  $ kubectl create secret tls tls-secret --key tls.key --cert tls.crt
