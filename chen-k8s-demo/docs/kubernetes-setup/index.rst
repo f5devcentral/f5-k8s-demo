@@ -134,3 +134,34 @@ Update ``inventory/mycluster/group_vars/k8s-cluster/k8s-cluster.yml``
   # Choose network plugin (cilium, calico, contiv, weave or flannel)
   # Can also be set to 'cloud', which lets the cloud provider setup appropriate routing
   kube_network_plugin: flannel
+
+Now you will need to run the install process
+
+.. code-block:: sh
+
+  $ ansible-playbook -i inventory/mycluster/hosts.yml --become --become-user=root cluster.yml
+
+When this completes you will need to copy the kubectl config.
+
+.. code-block:: sh
+
+  $ mkdir ~/.kube
+  $ sudo cp /etc/kubernetes/admin.conf ~/.kube/config
+  $ sudo chown ubuntu ~/.kube/config
+
+After this completes you will need to manually update the daemon-set for Flannel
+to reference eth1 instead of eth0.
+
+.. code-block:: sh
+
+  $ kubectl edit ds -n kube-system kube-flannel
+
+Modify the command to add the ``eth1`` line
+
+.. code-block:: text
+  
+  - command:
+    - /opt/bin/flanneld
+    - --ip-masq
+    - --kube-subnet-mgr
+    - --iface=eth1
