@@ -93,6 +93,11 @@ kubectl create -f my-frontend-deployment.yaml
 
 kubectl create -f my-frontend-service-as3.yaml
 
+
+kubectl create -f my-website-deployment.yaml
+
+kubectl create -f my-website-service.yaml
+
 ##
 ## Deploy ASP and the relevant configmap
 ##
