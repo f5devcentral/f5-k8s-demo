@@ -102,6 +102,7 @@ Activate you virtualenv
 from your kubespray directory virtualenv
 
 .. code-block:: sh
+  
   # make sure you install ansible 2.7.x, 2.8.x did not work
   # at the time of this document
   $ pip install ansible==2.7.11
@@ -195,3 +196,9 @@ Create a secret that will store the SSL certificate that will be used in the dem
 
   # create your own tls.crt / tls.key, not provided
   $ kubectl create secret tls tls-secret --key tls.key --cert tls.crt
+
+..  modify dashboard / add SA / enable skip
+
+..  export kubernetes-admin cert/key to jumphost
+
+..  configure BIG-IP / DNS listener / auth for dashboard
