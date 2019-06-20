@@ -5,4 +5,4 @@ metadata:
 data:
   proxy-protocol: "True"
   real-ip-header: "proxy_protocol"
-  set-real-ip-from: "10.1.10.0/24"
+  set-real-ip-from: "10.233.64.0/18"

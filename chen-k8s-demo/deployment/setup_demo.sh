@@ -78,8 +78,22 @@ kubectl create -f f5-cc-deployment.yaml -n kube-system
 kubectl create -f f5-cc-deployment2.yaml -n kube-system
 
 ##
+## Deploy NGINX Ingress Controller
+##
+
+kubectl apply -f nginx/ns-and-sa.yaml
+kubectl apply -f nginx/default-server-secret.yaml
+kubectl apply -f nginx/nginx-config.yaml
+kubectl apply -f nginx/custom-resource-definitions.yaml
+kubectl apply -f nginx/rbac.yaml
+kubectl apply -f nginx/nginx-ingress.yaml
+kubectl apply -f nginx/nginx-configuration-configmap.yaml -n nginx-ingress
+kubectl apply -f nginx/ingress-nginx-service.yaml
+kubectl apply -f nginx/ingress-nginx-service-tls.yaml
+
+##
 ## Deploy our frontend application and associate the relevant service/configmap to setup the BIG-IP
-## 
+##
 
 printf "##############################################\n"
 printf "Deploy FRONTEND APP\n"
@@ -148,6 +162,7 @@ printf "##############################################\n\n\n"
 
 kubectl create -f node-blue.yaml
 kubectl create -f node-green.yaml
+kubectl create -f blue-ingress-nginx.yaml
 #kubectl create -f blue-green-ingress.yaml
 #kubectl create -f blue-green-ingress-tls.yaml
 
