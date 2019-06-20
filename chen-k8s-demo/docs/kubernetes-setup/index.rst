@@ -192,5 +192,6 @@ Add a secret
 Create a secret that will store the SSL certificate that will be used in the demo.
 
 .. code-block:: sh
+
   # create your own tls.crt / tls.key, not provided
   $ kubectl create secret tls tls-secret --key tls.key --cert tls.crt

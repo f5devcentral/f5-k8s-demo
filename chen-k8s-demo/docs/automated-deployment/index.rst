@@ -11,13 +11,13 @@ The following describes how to use an automated script (bash) that will deploy
 
  On the BIG-IP the script will also
 
- * Create `kubernetes` partition
+ * Create ``kubernetes`` partition
  * Create VXLAN configuration (for Flannel)
 
 Running the script
 ------------------
 
-To run the script go into the `~/f5-demo` directory on `node1`
+To run the script go into the ``~/f5-demo`` directory on ``node1``
 
 .. code-block:: sh
 
@@ -46,7 +46,7 @@ Verify Basic Deployment
 
 You can verify the TCP service by running the following curl command.
 
-.. code-block:: sh
+.. code-block:: text
 
   $ curl 10.1.10.81/txt
   ================================================
@@ -77,7 +77,7 @@ Observe that the Client IP is the self-ip of the BIG-IP on the VXLAN tunnel.
 
 Next check the HTTP service
 
-.. code-block:: sh
+.. code-block:: text
 
   $ curl 10.1.10.80/txt
   ================================================
@@ -127,7 +127,7 @@ Verifying Enhanced demo
 
 To verify things are working
 
-.. code-block:: sh
+.. code-block:: text
 
   $ curl --resolve blue.f5demo.com:443:10.1.10.82 https://blue.f5demo.com/txt -k -v
   * Added blue.f5demo.com:443:10.1.10.82 to DNS cache
@@ -176,6 +176,25 @@ name that is sent by the client to route the connection to the NGINX Ingress
 over TCP.  It injects a "proxy-protocol" header to pass along the original client
 IP address.
 
+Verifying DNS
+~~~~~~~~~~~~~
+
+The enhanced demo includes an example of provisioning BIG-IP DNS records.
+
+Some example queries.
+
+.. code-block:: sh
+
+  # individual wide-ip
+  $ dig @10.1.10.60 my-frontend.f5demo.com +short
+  10.1.10.81
+  # wildcard DNS, health check on Ingress
+  $ dig @10.1.10.60 foobar.f5demo.com +short
+  10.1.10.82
+  # separate wide-ip w/ health check on service
+  $ dig @10.1.10.60 blue.f5demo.com +short
+  10.1.10.82
+
 Verifying WAF policy
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -201,3 +220,23 @@ The enhanced demo also deploys a WAF policy.  To verify:
   * Closing connection 0
   * TLSv1.2 (OUT), TLS alert, Client hello (1):
   <html><head><title>Request Rejected</title></head><body>The requested URL was rejected. Please consult with your administrator.<br><br>Your support ID is: 8716975781835702304</body></html>
+
+Removing the AS3 Declaration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the previous examples an AS3 declaration was deployed as a configmap.  To
+delete the existing AS3 configuration you need to deploy another configmap that
+has an "empty" AS3 declaration.
+
+.. code-block:: sh
+
+  $ kubectl apply -f as3-configmap-empty.yaml
+
+Tearing it all down
+-------------------
+
+To reset the environment run the following (this will remove EVERYTHING).
+
+.. code-block::
+
+  $ ./teardown_demo.sh
