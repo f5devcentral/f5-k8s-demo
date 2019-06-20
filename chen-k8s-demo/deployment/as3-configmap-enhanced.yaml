@@ -168,9 +168,9 @@ data:
              },
              "hostnamerouter_policy_endpoint": {
                 "class": "Endpoint_Policy",
-        "rules": [
+        "rules": [	   	   
            {
-          "name": "forward_to_website",
+          "name": "forward_to_1",
           "conditions": [{
             "type": "httpHeader",
             "all": {
@@ -189,9 +189,9 @@ data:
               "service": {"use":"website"}
             }
           }]
-        },
+        },	   	   
            {
-          "name": "forward_to_ingress",
+          "name": "forward_to_2",
           "conditions": [{
             "type": "httpHeader",
             "all": {
@@ -304,9 +304,9 @@ data:
              },
              "snirouter_policy_endpoint": {
                 "class": "Endpoint_Policy",
-        "rules": [
+        "rules": [	   
            {
-          "name": "forward_to_websitetls",
+          "name": "forward_to_1",
           "conditions": [{
             "type": "sslExtension",
             "serverName": {
@@ -323,9 +323,9 @@ data:
               "service": {"use":"websitetls"}
             }
           }]
-        },
+        },	   
            {
-          "name": "forward_to_ingresstls",
+          "name": "forward_to_2",
           "conditions": [{
             "type": "sslExtension",
             "serverName": {
