@@ -60,6 +60,10 @@ kubectl delete -f my-frontend-service-as3.yaml
 
 kubectl delete -f my-frontend-deployment.yaml
 
+kubectl delete -f my-website-deployment.yaml
+
+kubectl delete -f my-website-service.yaml
+
 printf "##############################################\n"
 printf "Delete Ingress\n"
 printf "##############################################\n\n\n"

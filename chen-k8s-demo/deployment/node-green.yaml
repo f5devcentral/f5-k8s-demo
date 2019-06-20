@@ -10,7 +10,7 @@ spec:
         run: node-green
     spec:
       containers:
-      - image: "f5devcentral/f5-demo-httpd"
+      - image: "f5devcentral/f5-demo-httpd:nginx"
         env:
         - name: F5DEMO_APP
           value: "website"

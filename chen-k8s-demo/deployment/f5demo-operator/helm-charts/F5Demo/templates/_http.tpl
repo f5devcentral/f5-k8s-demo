@@ -44,22 +44,21 @@
 {{- define "f5demo.waf.http.v1" }}
              "{{ .name }}": {
                 "class": "Service_HTTP",
-                "virtualAddresses": [
-                   {{- if .virtualAddress }}{{ .virtualAddress | quote }}{{ else }}
+                "virtualAddresses": [{{- if .virtualAddress }}{{ .virtualAddress | quote }}{{ else }}
                      {"use":"/Common/Shared/VIP_TARGET"}
-                   {{- end }}
-                ],
+                   {{- end }}],
                {{ if not .virtualAddress }}"virtualPort": {{ .cnt }},{{ else }}
                {{ if .virtualPort }}"virtualPort": {{ .virtualPort }},{{- end }}{{- end}}
-               "pool": "{{ .name }}_pool",
+               "remark":"{{ .name}}: f5demo.waf.http.v1",	       
+               "pool": {{ if  .pool }}{{ .pool |quote }}{{ else }}"{{ .name }}_pool"{{ end }},
                "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"},
-               "policyWAF":{"bigip":"/Common/linux-low"},
+               "policyWAF":{{if .policyWAF }}{{ .policyWAF}}{{ else }}{"bigip":"/Common/linux-low"}{{ end }},
                "securityLogProfiles": [
                {
                  "bigip": "/Common/Log all requests"
                }
                ]
-             },
+             }{{ if not .pool}},
              "{{ .name }}_pool": {
                 "class": "Pool",
                 "monitors": [
@@ -70,7 +69,7 @@
                    "serverAddresses": [
                    ]
                 }]
-             }
+             }{{ end }}
 {{- end }}
 {{- define "f5demo.hostnamerouter.http.v1" }}
              "{{ .name }}": {
@@ -89,13 +88,15 @@
              "{{- .name }}_policy_endpoint": {
                 "class": "Endpoint_Policy",
         "rules": [
-           {{- $local := dict "first" true  }}       
+           {{- $local := dict "first" true "cnt" 0 }}       
+
            {{- range .targets }}
            {{- range $key, $val :=. }}
            {{- if not $local.first }},{{- end }}
            {{- $_ := set $local "first" false  }}
+           {{- $_ := set $local "cnt" ($local.cnt |add1)  }}	   	   
            {
-          "name": "forward_to_{{$val}}",
+          "name": "forward_to_{{$local.cnt}}",
           "conditions": [{
             "type": "httpHeader",
             "all": {

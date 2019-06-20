@@ -3,22 +3,22 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: bigip1-f5-bigip-ctlr
+  name: bigip2-f5-bigip-ctlr
   labels:
     app: f5-bigip-ctlr
     chart: f5-bigip-ctlr-0.0.6
-    release: bigip1
+    release: bigip2
     heritage: Tiller
 ---
 # Source: f5-bigip-ctlr/templates/f5-bigip-ctlr-clusterrole.yaml
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: bigip1-f5-bigip-ctlr
+  name: bigip2-f5-bigip-ctlr
   labels:
     app: f5-bigip-ctlr
     chart: f5-bigip-ctlr-0.0.6
-    release: bigip1
+    release: bigip2
     heritage: Tiller
 rules:
 - apiGroups:
@@ -55,30 +55,30 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: bigip1-f5-bigip-ctlr
+  name: bigip2-f5-bigip-ctlr
   labels:
     app: f5-bigip-ctlr
     chart: f5-bigip-ctlr-0.0.6
-    release: bigip1
+    release: bigip2
     heritage: Tiller
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: bigip1-f5-bigip-ctlr
+  name: bigip2-f5-bigip-ctlr
 subjects:
 - kind: ServiceAccount
-  name: bigip1-f5-bigip-ctlr
+  name: bigip2-f5-bigip-ctlr
   namespace: "kube-system"
 ---
 # Source: f5-bigip-ctlr/templates/f5-bigip-ctlr-deploy.yaml
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: bigip1-f5-bigip-ctlr
+  name: bigip2-f5-bigip-ctlr
   labels:
     app: f5-bigip-ctlr
     chart: f5-bigip-ctlr-0.0.6
-    release: bigip1
+    release: bigip2
     heritage: Tiller
 spec:
   replicas: 1
@@ -86,14 +86,15 @@ spec:
     metadata:
       labels:
         app: f5-bigip-ctlr
-        release: bigip1
+        release: bigip2
     spec:
-      serviceAccountName: bigip1-f5-bigip-ctlr
+      serviceAccountName: bigip2-f5-bigip-ctlr
       imagePullSecrets:
+        - name: f5-docker-images
         - name: bigip-login
       containers:
       - name: f5-bigip-ctlr
-        image: "f5networks/k8s-bigip-ctlr:1.9.1"
+        image: "f5networks/k8s-bigip-ctlr:1.9.0"
         volumeMounts:
         - name: bigip-creds
           mountPath: "/tmp/creds"
@@ -107,7 +108,7 @@ spec:
         - --bigip-partition
         - "kubernetes"
         - --bigip-url
-        - "10.1.10.240"
+        - "10.1.10.241"
         - --flannel-name
         - "flannel_vxlan"
         - --insecure
@@ -116,6 +117,8 @@ spec:
         - "cluster"
         - --resolve-ingress-names
         - "LOOKUP"
+#        - --log-level
+#        - "DEBUG"
       volumes:
       - name: bigip-creds
         secret:

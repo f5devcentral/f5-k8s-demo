@@ -41,10 +41,10 @@ sed -e "s/MAC_ADDR/$macAddr2/g" bigip2-node.yaml |kubectl create -f -
 
 # Create self-ip
 
-curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-local","partition": "Common","address": "10.244.30.15/16", "floating": "disabled","vlan": "/Common/flannel_vxlan"}' https://10.1.10.240/mgmt/tm/net/self
+curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-local","partition": "Common","address": "10.233.125.15/18", "floating": "disabled","vlan": "/Common/flannel_vxlan"}' https://10.1.10.240/mgmt/tm/net/self
 #curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-floating","partition": "Common","address": "10.244.30.16/16", "floating": "enabled","vlan": "/Common/flannel_vxlan","trafficGroup":"/Common/traffic-group-1"}' https://10.1.10.240/mgmt/tm/net/self
 
-curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-local","partition": "Common","address": "10.244.31.15/16", "floating": "disabled","vlan": "/Common/flannel_vxlan"}' https://10.1.10.241/mgmt/tm/net/self
+curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-local","partition": "Common","address": "10.233.126.15/18", "floating": "disabled","vlan": "/Common/flannel_vxlan"}' https://10.1.10.241/mgmt/tm/net/self
 #curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "vxlan-floating","partition": "Common","address": "10.244.31.16/16", "floating": "enabled","vlan": "/Common/flannel_vxlan","trafficGroup":"/Common/traffic-group-1"}' https://10.1.10.241/mgmt/tm/net/self
 
 
@@ -92,6 +92,11 @@ kubectl create -f my-frontend-deployment.yaml
 #kubectl create -f as3-configmap.yaml
 
 kubectl create -f my-frontend-service-as3.yaml
+
+
+kubectl create -f my-website-deployment.yaml
+
+kubectl create -f my-website-service.yaml
 
 ##
 ## Deploy ASP and the relevant configmap

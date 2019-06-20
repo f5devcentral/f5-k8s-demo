@@ -16,9 +16,9 @@
             "XFF_HTTP_Profile": {
               "class": "HTTP_Profile",
                 "xForwardedFor": true
-               }
+               }{{ if .Values.common.irules }},{{ end }}
                 {{- $local := dict "first" true  }}       
-                {{ range $key, $val := .Values.common.irules }},
+                {{ range $key, $val := .Values.common.irules }}
                 {{- if not $local.first }},{{- end }}
                 {{- $_ := set $local "first" false  }}
                 "{{ $key }}": {
