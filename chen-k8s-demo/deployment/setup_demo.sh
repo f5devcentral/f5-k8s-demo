@@ -163,6 +163,7 @@ printf "##############################################\n\n\n"
 kubectl create -f node-blue.yaml
 kubectl create -f node-green.yaml
 kubectl create -f blue-ingress-nginx.yaml
+kubectl create -f green-ingress-nginx.yaml
 #kubectl create -f blue-green-ingress.yaml
 #kubectl create -f blue-green-ingress-tls.yaml
 
