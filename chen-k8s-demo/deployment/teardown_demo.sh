@@ -68,11 +68,14 @@ printf "##############################################\n"
 printf "Delete Ingress\n"
 printf "##############################################\n\n\n"
 
-kubectl delete -f blue-green-ingress-tls.yaml
-kubectl delete -f blue-green-ingress.yaml
+#kubectl delete -f blue-green-ingress-tls.yaml
+#kubectl delete -f blue-green-ingress.yaml
+kubectl delete -f blue-ingress-nginx.yaml
+kubectl delete -f green-ingress-nginx.yaml
 kubectl delete -f node-blue.yaml
 kubectl delete -f node-green.yaml
 
+kubectl apply -f as3-configmap-empty.yaml
 
 ##
 ## Delete F5 BIG-IP CC
@@ -82,8 +85,30 @@ printf "##############################################\n"
 printf "Delete BIG-IP CC\n"
 printf "##############################################\n\n\n"
 sleep 30
+kubectl delete -f as3-configmap-empty.yaml
 kubectl delete -f f5-cc-deployment.yaml -n kube-system
 kubectl delete -f f5-cc-deployment2.yaml -n kube-system
+
+##
+## Remove NGINX
+##
+
+kubectl delete -f nginx/ingress-nginx-service.yaml
+kubectl delete -f nginx/ingress-nginx-service-tls.yaml
+
+kubectl delete -f nginx/nginx-ingress.yaml
+sleep 30
+kubectl delete -f nginx/nginx-configuration-configmap.yaml
+kubectl delete -f nginx/nginx-config.yaml
+kubectl delete -f nginx/default-server-secret.yaml
+kubectl delete -f nginx/custom-resource-definitions.yaml
+
+kubectl delete -f nginx/rbac.yaml
+kubectl delete -f nginx/ns-and-sa.yaml
+
+
+
+
 
 ##
 ## Delete BIG-IP kubectl secret

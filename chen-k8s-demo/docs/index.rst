@@ -11,4 +11,5 @@ Welcome to K8S Flannel Lab's documentation!
    :glob:
    :caption: Contents:
 
+   automated-deployment/*
    kubernetes-setup/*

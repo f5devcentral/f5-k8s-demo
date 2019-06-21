@@ -37,8 +37,7 @@ data:
              "template": "generic",
              "frontend": {
                 "class": "Service_TCP",
-                "virtualAddresses": ["10.1.10.81"
-                ],
+                "virtualAddresses": ["10.1.10.81"],
                "remark":"frontend: f5demo.tcp.v1",
                
                "virtualPort": 80,
@@ -46,9 +45,7 @@ data:
              },
              "frontend_pool": {
                 "class": "Pool",
-                "monitors": [
-                   "tcp"
-                ],
+                "monitors": [ "tcp" ],
                 "members": [{
                    "servicePort": 80,
                    "serverAddresses": []

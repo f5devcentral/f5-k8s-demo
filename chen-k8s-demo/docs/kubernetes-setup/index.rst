@@ -102,12 +102,16 @@ Activate you virtualenv
 from your kubespray directory virtualenv
 
 .. code-block:: sh
+  
   # make sure you install ansible 2.7.x, 2.8.x did not work
   # at the time of this document
   $ pip install ansible==2.7.11
   $ pip install -r requirements.txt
 
-Generate the cluster files from the sample.
+Generate the cluster files from the sample
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+copy the sample files
 
 .. code-block:: sh
 
@@ -135,6 +139,23 @@ Update ``inventory/mycluster/group_vars/k8s-cluster/k8s-cluster.yml``
   # Can also be set to 'cloud', which lets the cloud provider setup appropriate routing
   kube_network_plugin: flannel
 
+You will also need to modify the hostnames to match the name in AWS in ``hosts.yml``
+
+.. code-block:: yaml
+
+  children:
+    kube-master:
+      hosts:
+        ip-10-1-10-11.us-west-2.compute.internal:
+    kube-node:
+      hosts:
+        ip-10-1-10-11.us-west-2.compute.internal:
+        ip-10-1-10-21.us-west-2.compute.internal:
+        ip-10-1-10-22.us-west-2.compute.internal:
+
+Run the installer
+~~~~~~~~~~~~~~~~~
+
 Now you will need to run the install process
 
 .. code-block:: sh
@@ -159,9 +180,25 @@ to reference eth1 instead of eth0.
 Modify the command to add the ``eth1`` line
 
 .. code-block:: text
-  
+
   - command:
     - /opt/bin/flanneld
     - --ip-masq
     - --kube-subnet-mgr
     - --iface=eth1
+
+Add a secret
+~~~~~~~~~~~~
+
+Create a secret that will store the SSL certificate that will be used in the demo.
+
+.. code-block:: sh
+
+  # create your own tls.crt / tls.key, not provided
+  $ kubectl create secret tls tls-secret --key tls.key --cert tls.crt
+
+..  modify dashboard / add SA / enable skip
+
+..  export kubernetes-admin cert/key to jumphost
+
+..  configure BIG-IP / DNS listener / auth for dashboard
