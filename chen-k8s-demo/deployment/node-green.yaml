@@ -53,6 +53,9 @@ metadata:
   name: node-green-tls
   labels:
     run: node-green-tls
+    cis.f5.com/as3-tenant: AS3
+    cis.f5.com/as3-app: MyApps
+    cis.f5.com/as3-pool: greentls_pool    
 spec:
   ports:
   - port: 443
