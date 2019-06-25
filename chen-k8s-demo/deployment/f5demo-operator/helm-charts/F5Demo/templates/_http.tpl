@@ -82,7 +82,7 @@
                {{ if not .virtualAddress }}"virtualPort": {{ .cnt }},{{ else }}
                {{ if .virtualPort }}"virtualPort": {{ .virtualPort }},{{- end }}{{- end}}
                "remark":"{{ .name}}: f5demo.hostnamerouter.http.v1",
-               "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"},
+               "profileHTTP":{"bigip": "/Common/http"},
                "policyEndpoint": "{{- .name}}_policy_endpoint"
              },
              "{{- .name }}_policy_endpoint": {

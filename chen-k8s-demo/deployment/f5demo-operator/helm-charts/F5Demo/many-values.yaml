@@ -60,6 +60,9 @@ applications:
      template: f5demo.proxyprotocol.tcp.v1
 #     virtualAddress: "10.1.10.82"
 #     virtualPort: 8443
+  - greentls:
+     name: greentls
+     template: f5demo.tcp.v1
   - hostnamerouter:
      name: hostnamerouter
      template: f5demo.hostnamerouter.http.v1
@@ -80,6 +83,7 @@ applications:
      virtualPort: 443
      targets:
        - website.f5demo.com: websitetls
+       - green.f5demo.com: greentls       
        - "*.f5demo.com": ingresstls
   - website:
      name: website

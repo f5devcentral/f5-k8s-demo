@@ -156,6 +156,22 @@ data:
                    "serverAddresses": []
                 }]
              },
+             "greentls": {
+                "class": "Service_TCP",
+                "virtualAddresses": [
+                     {"use":"/Common/Shared/VIP_TARGET"}],
+               "remark":"greentls: f5demo.tcp.v1",
+               "virtualPort": 8003,
+                "pool": "greentls_pool"
+             },
+             "greentls_pool": {
+                "class": "Pool",
+                "monitors": [ "tcp" ],
+                "members": [{
+                   "servicePort": 80,
+                   "serverAddresses": []
+                }]
+             },
              "hostnamerouter": {
                 "class": "Service_HTTP",
                 "virtualAddresses": ["10.1.10.82"
@@ -163,7 +179,7 @@ data:
                
                "virtualPort": 80,
                "remark":"hostnamerouter: f5demo.hostnamerouter.http.v1",
-               "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"},
+               "profileHTTP":{"bigip": "/Common/http"},
                "policyEndpoint": "hostnamerouter_policy_endpoint"
              },
              "hostnamerouter_policy_endpoint": {
@@ -329,6 +345,25 @@ data:
           "conditions": [{
             "type": "sslExtension",
             "serverName": {
+              "operand": "equals",
+              "values": ["green.f5demo.com"]
+            }
+          }
+           ],
+          "actions": [
+            {
+            "type": "forward",
+            "event": "ssl-client-hello",
+            "select": {
+              "service": {"use":"greentls"}
+            }
+          }]
+        },	   
+           {
+          "name": "forward_to_3",
+          "conditions": [{
+            "type": "sslExtension",
+            "serverName": {
               "operand": "ends-with",
               "values": [".f5demo.com"]
             }
@@ -371,7 +406,7 @@ data:
                 "virtualAddresses": [
                      {"use":"/Common/Shared/VIP_TARGET"}
                 ],
-               "virtualPort": 8006,
+               "virtualPort": 8007,
                "remark":"websitetls: f5demo.waf.https.v1",
                "pool": "websitetls_pool",
                "redirect80": false,

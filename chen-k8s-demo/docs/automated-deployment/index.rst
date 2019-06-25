@@ -116,6 +116,9 @@ The following example layers on the use of a NGINX Ingress Controller that is
 configured to use proxy-protocol, BIG-IP ASM for WAF protection, and BIG-IP
 DNS for GSLB.
 
+It is not recommended that you do "everything" for a demo.  Instead take a look
+at what is of interest from the examples below.
+
 Run the following command
 
 .. code-block:: sh
@@ -221,6 +224,152 @@ The enhanced demo also deploys a WAF policy.  To verify:
   * TLSv1.2 (OUT), TLS alert, Client hello (1):
   <html><head><title>Request Rejected</title></head><body>The requested URL was rejected. Please consult with your administrator.<br><br>Your support ID is: 8716975781835702304</body></html>
 
+HTTP Routing
+~~~~~~~~~~~~
+
+The virtual 10.1.10.82 is configured with a Local Traffic Policy to direct
+requests to the proper backend.
+
+Requests to http://website.f5demo.com will go directly to the backend Pod.
+
+.. code-block:: text
+
+  curl --resolve website.f5demo.com:80:10.1.10.82 http://website.f5demo.com/txt -I
+  HTTP/1.1 200 OK
+  Date: Fri, 21 Jun 2019 10:15:02 GMT
+  Server: Apache/2.4.39 (Unix) OpenSSL/1.1.1b
+  ...
+
+.. note:: You can verify by seeing the "Server" is set to Apache.
+
+Requests to http://green.f5demo.com will go through the NGINX Ingress.
+
+.. code-block:: text
+
+  $ curl --resolve green.f5demo.com:80:10.1.10.82 http://green.f5demo.com/txt -I
+  HTTP/1.1 200 OK
+  Server: nginx/1.17.0
+  Date: Fri, 21 Jun 2019 10:23:38 GMT
+  Content-Type: text/plain
+  Connection: keep-alive
+  x-nginx-ingress: nginx-ingress-755df5c4cc-wkjxk
+
+.. note:: observe the "x-nginx-ingress" header.  This was added as a custom
+          annotation to the green ingress to show which Ingress is handling
+          the connection
+
+SNI Routing
+~~~~~~~~~~~
+
+In the HTTP routing example the BIG-IP was making a traffic decision at L7.
+
+This example will look at the TLS option 0, Server Name Indication, to make a
+traffic decision.  This can be done without the need to terminate the SSL
+connection.
+
+Previously http://green.f5demo.com went through the NGINX Ingress.  To show
+the flexibility of the BIG-IP we will now sent traffic for https://green.f5demo.com
+directly to the backend pod.
+
+.. code-block:: text
+
+  $ curl -k --resolve green.f5demo.com:443:10.1.10.82  https://green.f5demo.com/txt -I -v
+  ...
+  * Server certificate:
+  *  subject: C=XX; L=Default City; O=Default Company Ltd
+  *  start date: Nov 22 19:13:45 2017 GMT
+  *  expire date: Nov 22 19:13:45 2018 GMT
+  *  issuer: C=XX; L=Default City; O=Default Company Ltd
+  *  SSL certificate verify result: self signed certificate (18), continuing anyway.
+  * Using HTTP2, server supports multi-use
+  * Connection state changed (HTTP/2 confirmed)
+  * Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+  * Using Stream ID: 1 (easy handle 0x5609990de580)
+  > HEAD /txt HTTP/2
+  > Host: green.f5demo.com
+  > User-Agent: curl/7.58.0
+  > Accept: */*
+  >
+  * Connection state changed (MAX_CONCURRENT_STREAMS updated)!
+  < HTTP/2 200
+  HTTP/2 200
+  < server: nginx/1.17.0
+  server: nginx/1.17.0
+  < date: Fri, 21 Jun 2019 10:45:27 GMT
+  date: Fri, 21 Jun 2019 10:45:27 GMT
+  < content-type: text/plain
+  content-type: text/plain
+
+.. note:: observe that the SSL certificate is issued by "Default Company" and
+          not "F5 Demo" that will be seen later.
+
+Next we will look at having the BIG-IP terminate the SSL connection.
+
+.. code-block::
+
+  curl -k --resolve website.f5demo.com:443:10.1.10.82  https://website.f5demo.com/txt -I -v
+  ...
+  * Server certificate:
+  *  subject: CN=wildcard.f5demo.com
+  *  start date: May 24 20:42:00 2018 GMT
+  *  expire date: May 23 20:42:00 2023 GMT
+  *  issuer: C=US; ST=Washington; L=Seattle; O=F5 Networks; OU=Demo
+  *  SSL certificate verify result: unable to get local issuer certificate (20), continuing anyway.
+  > HEAD /txt HTTP/1.1
+  > Host: website.f5demo.com
+  > User-Agent: curl/7.58.0
+  > Accept: */*
+  >
+  < HTTP/1.1 200 OK
+  HTTP/1.1 200 OK
+  < Date: Fri, 21 Jun 2019 10:51:14 GMT
+  Date: Fri, 21 Jun 2019 10:51:14 GMT
+  < Accept-Ranges: bytes
+  Accept-Ranges: bytes
+  < X-COLOR: 656263
+  X-COLOR: 656263
+  < Content-Type: text/plain
+  Content-Type: text/plain
+  < Set-Cookie: BIGipServer~AS3~MyApps~websitetls_pool=742517002.47873.0000; path=/; Httponly; Secure
+
+.. note:: observe the certificate is issued by "F5 Networks" and that there is
+          a cookie that is being set by the BIG-IP for cookie persistence
+
+Lastly we will pass the traffic to the NGINX Ingress to terminate the SSL
+connection.
+
+.. code-block:: text
+
+  curl -k --resolve blue.f5demo.com:443:10.1.10.82  https://blue.f5demo.com/txt -I -v
+  * Server certificate:
+  *  subject: CN=wildcard.f5demo.com
+  *  start date: May 24 20:42:00 2018 GMT
+  *  expire date: May 23 20:42:00 2023 GMT
+  *  issuer: C=US; ST=Washington; L=Seattle; O=F5 Networks; OU=Demo
+  *  SSL certificate verify result: unable to get local issuer certificate (20), continuing anyway.
+  > HEAD /txt HTTP/1.1
+  > Host: blue.f5demo.com
+  > User-Agent: curl/7.58.0
+  > Accept: */*
+  >
+  < HTTP/1.1 200 OK
+  HTTP/1.1 200 OK
+  < Server: nginx/1.17.0
+  Server: nginx/1.17.0
+  < Date: Fri, 21 Jun 2019 10:54:24 GMT
+  Date: Fri, 21 Jun 2019 10:54:24 GMT
+  < Content-Type: text/plain
+  Content-Type: text/plain
+  < Connection: keep-alive
+  Connection: keep-alive
+  < x-nginx-ingress: nginx-ingress-755df5c4cc-wkjxk
+  x-nginx-ingress: nginx-ingress-755df5c4cc-wkjxk
+
+.. note:: observe the certificate is issued by "F5 Networks" in this case the
+          certificate is stored in a Kubernetes secret and is loaded on the NGINX
+          Ingress Controller.  Observe the "x-nginx-ingress" header that shows
+          that the NGINX Ingress is terminating the SSL connection.
+
 Removing the AS3 Declaration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -231,6 +380,7 @@ has an "empty" AS3 declaration.
 .. code-block:: sh
 
   $ kubectl apply -f as3-configmap-empty.yaml
+
 
 Tearing it all down
 -------------------

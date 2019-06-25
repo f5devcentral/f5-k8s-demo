@@ -114,8 +114,6 @@ spec:
         - "true"
         - --pool-member-type
         - "cluster"
-        - --resolve-ingress-names
-        - "LOOKUP"
       volumes:
       - name: bigip-creds
         secret:
