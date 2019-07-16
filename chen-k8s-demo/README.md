@@ -3,7 +3,7 @@ F5 Kubernetes Demo
 
 ### About
 
-Scripts/Examples from: http://101-lab-kubernetes.readthedocs.io/en/latest/
+Scripts/Examples for Eric's K8s demos.
 
 ### Authored By
 
