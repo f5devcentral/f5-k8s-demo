@@ -10,12 +10,12 @@
                {{- if not .virtualAddress }}"virtualPort": {{ .cnt }},{{ else }}
                {{ if .virtualPort }}"virtualPort": {{ .virtualPort }},{{- end }}{{- end}}
                "remark":"{{ .name}}: f5demo.https.v1",
-               "pool": "{{ .name }}_pool",
+               "pool": "{{ .pool | default "{{ .name }}_pool"}}",	       
                "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"},
                "redirect80": {{ .redirect80 | default false }},            
                "serverTLS": {{ .serverTLS | default "{\"bigip\":\"/Common/clientssl\"}"}},
-               "clientTLS": {"bigip":"/Common/serverssl"}
-             },
+               "clientTLS": {{ .clientTLS | default "{\"bigip\":\"/Common/serverssl\"}"}}
+             }{{if not .pool }},
              "{{ .name }}_pool": {
                 "class": "Pool",
                 "monitors": [
@@ -26,7 +26,7 @@
                    "serverAddresses": [
                    ]
                 }]
-             }
+             }{{- end }}
 {{- end }}
 {{- define "f5demo.sni.https.v1" }}
              "{{ .name }}": {
@@ -39,14 +39,14 @@
                {{- if not .virtualAddress }}"virtualPort": {{ .cnt }},{{ else }}
                {{ if .virtualPort }}"virtualPort": {{ .virtualPort }},{{- end }}{{- end}}
                "remark":"{{ .name}}: f5demo.https.v1",
-               "pool": "{{ .name }}_pool",
+               "pool": "{{ .pool | default "{{ .name }}_pool"}}",
                "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"},
                "redirect80": {{ .redirect80 | default false }},            
                "serverTLS": {{ .serverTLS | default "{\"bigip\":\"/Common/clientssl\"}"}},
-               "clientTLS": {"bigip":"/Common/serverssl"},
+               "clientTLS": {{ .clientTLS | default "{\"bigip\":\"/Common/serverssl\"}"}},	       
                "iRules": ["/Common/Shared/Host_Header_To_Sni"]
-             },
-             "{{ .name }}_pool": {
+             }{{if not .pool }},
+             "{{ .pool | default "{{ .name }}_pool"}}: {
                 "class": "Pool",
                 "monitors": [
                    "https"
@@ -56,7 +56,7 @@
                    "serverAddresses": [
                    ]
                 }]
-             }
+             }{{- end }}
 {{- end }}
 {{- define "f5demo.waf.https.v1" }}
              "{{ .name }}": {

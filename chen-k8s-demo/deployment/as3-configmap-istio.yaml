@@ -1,0 +1,118 @@
+---
+# Source: F5Demo/templates/configmap.yaml
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: f5demo-as3-configmap
+  labels:
+    f5type: virtual-server
+    as3: "true"
+data:
+  template: |
+    {
+      "class": "AS3",
+      "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.1.0",
+        "id": "f5demo",
+        "label": "CIS AS3 Example",
+        "remark": "Example of using CIS",
+       "Common": {
+          "class": "Tenant",
+          "Shared": {
+            "class": "Application",
+            "template": "shared",
+            "XFF_HTTP_Profile": {
+              "class": "HTTP_Profile",
+                "xForwardedFor": true
+               },       
+                
+                "Host_Header_To_Sni": {
+                  "class":"iRule",
+                  "iRule": {"base64": "d2hlbiBIVFRQX1JFUVVFU1QgewoJI1NldCB0aGUgU05JIHZhbHVlIChlLmcuIEhUVFA6Omhvc3QpCglzZXQgc25pX3ZhbHVlIFtnZXRmaWVsZCBbSFRUUDo6aG9zdF0gIjoiIDFdCn0Kd2hlbiBTRVJWRVJTU0xfQ0xJRU5USEVMTE9fU0VORCB7CiAKCSMgU05JIGV4dGVuc2lvbiByZWNvcmQgYXMgZGVmaW5lZCBpbiBSRkMgMzU0Ni8zLjEKCSMKCSMgLSBUTFMgRXh0ZW5zaW9uIFR5cGUgICAgICAgICAgICAgICAgPSAgaW50MTYoIDAgPSBTTkkgKSAKCSMgLSBUTFMgRXh0ZW5zaW9uIExlbmd0aCAgICAgICAgICAgICAgPSAgaW50MTYoICRzbmlfbGVuZ3RoICsgNSBieXRlICkKCSMgICAgLSBTTkkgUmVjb3JkIExlbmd0aCAgICAgICAgICAgICAgPSAgaW50MTYoICRzbmlfbGVuZ3RoICsgMyBieXRlKQoJIyAgICAgICAtIFNOSSBSZWNvcmQgVHlwZSAgICAgICAgICAgICA9ICAgaW50OCggMCA9IEhPU1QgKQoJIyAgICAgICAgICAtIFNOSSBSZWNvcmQgVmFsdWUgTGVuZ3RoICA9ICBpbnQxNiggJHNuaV9sZW5ndGggKQoJIyAgICAgICAgICAtIFNOSSBSZWNvcmQgVmFsdWUgICAgICAgICA9ICAgIHN0ciggJHNuaV92YWx1ZSApCgkjCiAKCSMgQ2FsY3VsYXRlIHRoZSBsZW5ndGggb2YgdGhlIFNOSSB2YWx1ZSwgQ29tcHV0ZSB0aGUgU05JIFJlY29yZCAvIFRMUyBleHRlbnNpb24gZmllbGRzIGFuZCBhZGQgdGhlIHJlc3VsdCB0byB0aGUgU0VSVkVSU1NMX0NMSUVOVEhFTExPIAogCglTU0w6OmV4dGVuc2lvbnMgaW5zZXJ0IFtiaW5hcnkgZm9ybWF0IFNTU2NTYSogMCBbZXhwciB7IFtzZXQgc25pX2xlbmd0aCBbc3RyaW5nIGxlbmd0aCAkc25pX3ZhbHVlXV0gKyA1IH1dIFtleHByIHsgJHNuaV9sZW5ndGggKyAzIH1dIDAgJHNuaV9sZW5ndGggJHNuaV92YWx1ZV0KIAp9Cg=="}
+                }
+                
+
+       }
+       },
+        "AS3": {
+          "class": "Tenant",
+          "MyApps": {
+             "class": "Application",
+             "template": "generic",
+             "echo": {
+                "class": "Service_TCP",
+                "virtualAddresses": ["10.1.10.80"],
+               "remark":"echo: f5demo.tcp.v1",
+               
+               "virtualPort": 9000,
+                "pool": "echo_pool"
+             },
+             "echo_pool": {
+                "class": "Pool",
+                "monitors": [ "tcp" ],
+                "members": [{
+                   "servicePort": 80,
+                   "serverAddresses": []
+                }]
+             },
+             "website": {
+                "class": "Service_HTTP",
+                "virtualAddresses": ["10.1.10.80"],
+               
+               "virtualPort": 80,
+               "remark":"website: f5demo.waf.http.v1",	       
+               "pool": "website_pool",
+               "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"},
+               "policyWAF":{"bigip":"/Common/linux-low"},
+               "securityLogProfiles": [
+               {
+                 "bigip": "/Common/Log all requests"
+               }
+               ]
+             },
+             "website_pool": {
+                "class": "Pool",
+                "monitors": [
+                   "http"
+                ],
+                "members": [{
+                   "servicePort": 80,
+                   "serverAddresses": [
+                   ]
+                }]
+             },
+             "istiogwcistls": {
+                "class": "Service_TCP",
+                "virtualAddresses": ["10.1.10.80"],
+               "remark":"istiogwcistls: f5demo.tcp.v1",
+               
+               "virtualPort": 443,
+                "pool": "istiogwcistls_pool"
+             },
+             "istiogwcistls_pool": {
+                "class": "Pool",
+                "monitors": [ "tcp" ],
+                "members": [{
+                   "servicePort": 80,
+                   "serverAddresses": []
+                }]
+             },
+             "istiogwcismtls": {
+                "class": "Service_HTTPS",
+                "virtualAddresses": ["10.1.10.81"
+                ],
+               "virtualPort": 443,
+               "remark":"istiogwcismtls: f5demo.https.v1",
+               "pool": "istiogwcistls_pool",
+               "profileHTTP":{"use": "/Common/Shared/XFF_HTTP_Profile"},
+               "redirect80": false,            
+               "serverTLS": {"bigip":"/Common/clientssl"},
+               "clientTLS": {"bigip":"/Common/istio_serverssl"},	       
+               "iRules": ["/Common/Shared/Host_Header_To_Sni"]
+             }
+       }
+       }
+    }
+    }
+

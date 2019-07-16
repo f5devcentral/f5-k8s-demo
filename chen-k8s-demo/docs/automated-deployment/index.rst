@@ -107,6 +107,35 @@ Next check the HTTP service
 
 Observe the X-Forwarded-For header that was added by the HTTP profile.
 
+Sorting K8s Demo
+----------------
+
+The following sets up an environment similar to the one used in the following demo: https://youtu.be/Df8FcQ6QSo8
+
+Summary
+~~~~~~~
+
+This is a demo of TCP, HTTP, and mutual TLS.  Similar to the basic demo.
+
+Setup
+~~~~~
+
+Run the following command
+
+.. code-block:: sh
+
+  $ ./setup_istio.sh
+
+Teardown
+~~~~~~~~
+
+Run the following command
+
+.. code-block:: sh
+
+  $ ./teardown_istio.sh
+
+
 Enhanced Demo
 -------------
 

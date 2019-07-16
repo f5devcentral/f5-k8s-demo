@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-echo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: my-echo
+    spec:
+      containers:
+      - image: "chen23/echo9000:latest"
+        imagePullPolicy: IfNotPresent
+        name: my-echo
+        ports:
+        - containerPort: 9000
+          protocol: TCP
+

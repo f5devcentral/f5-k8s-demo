@@ -1,0 +1,33 @@
+# Default values for f5-as3.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+common:
+  template: f5demo.common.basic.v1
+  irules:
+    Host_Header_To_Sni: "iRules/host_header_to_sni.irule"
+
+applications:
+  - echo:
+     name: echo
+     template: f5demo.tcp.v1
+     virtualAddress: "10.1.10.80"
+     virtualPort: 9000
+  - website:
+     name: website
+     template: f5demo.waf.http.v1
+     virtualAddress: "10.1.10.80"
+     virtualPort: 80
+  - istiotgwcistls:
+     name: istiogwcistls
+     template: f5demo.tcp.v1
+     virtualAddress: "10.1.10.80"
+     virtualPort: 443     
+  - istiotgwcismtls:
+     name: istiogwcismtls
+     template: f5demo.sni.https.v1
+     virtualAddress: "10.1.10.81"
+     pool: istiogwcistls_pool
+     clientTLS: "{\"bigip\":\"/Common/istio_serverssl\"}"
+     virtualPort: 443     
+
+
