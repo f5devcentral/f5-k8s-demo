@@ -94,7 +94,7 @@ spec:
         - name: bigip-login
       containers:
       - name: f5-bigip-ctlr
-        image: "f5networks/k8s-bigip-ctlr:1.9.1"
+        image: "f5networks/k8s-bigip-ctlr:1.9.2"
         volumeMounts:
         - name: bigip-creds
           mountPath: "/tmp/creds"

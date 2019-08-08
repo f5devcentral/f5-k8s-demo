@@ -139,6 +139,10 @@ curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.
 ##
 curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/shared/appsvcs/declare
 
+# delete ARP entries
+curl -k -u admin:admin -H "Content-Type: application/json" https://10.1.10.240/mgmt/tm/net/arp?options=all -X DELETE
+curl -k -u admin:admin -H "Content-Type: application/json" https://10.1.10.241/mgmt/tm/net/arp?options=all -X DELETE
+
 # delete vxlan profile
 
 curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.10.240/mgmt/tm/net/self/~Common~vxlan-floating
