@@ -17,6 +17,12 @@ spec:
       privateKey: /etc/istio/ingressgateway-certs/tls.key
       caCertificates: /etc/istio/ingressgateway-ca-certs/ca-chain.cert.pem
     hosts:
-    - "httpbin.example.com"
+    - "*"
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
 EOF
 

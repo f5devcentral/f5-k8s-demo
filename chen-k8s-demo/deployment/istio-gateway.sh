@@ -16,6 +16,12 @@ spec:
       serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
       privateKey: /etc/istio/ingressgateway-certs/tls.key
     hosts:
-    - "httpbin.example.com"
+    - "*"
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
 EOF
 
