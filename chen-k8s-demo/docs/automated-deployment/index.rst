@@ -21,7 +21,7 @@ To run the script go into the ``~/f5-demo`` directory on ``node1``
 
 .. code-block:: sh
 
-  $ cd ~/f5-demo/chen-k8s-demo/deployments
+  $ cd ~/f5-demo/chen-k8s-demo/deployment
 
 Then run the script `setup_demo.sh`
 
@@ -126,6 +126,27 @@ Run the following command
 
   $ ./setup_istio.sh
 
+Demo
+~~~~
+
+Apply AS3 ConfigMap
+
+.. code-block:: sh
+
+  $ kubectl apply -f as3-configmap-istio.yaml
+
+Echo Demo
+
+.. code-block:: sh
+
+  $ nc 10.1.10.80 9000
+  hi
+  HI
+
+WAF Demo / mTLS
+
+Postman should have a "Sorting Kubernetes" collection.
+
 Teardown
 ~~~~~~~~
 
@@ -134,6 +155,25 @@ Run the following command
 .. code-block:: sh
 
   $ ./teardown_istio.sh
+
+3 Ways to Connect BIG-IP to Istio
+---------------------------------
+
+From the following demo: https://youtu.be/dSmjY3flIq4
+
+After running the `./setup_istio.sh` script.
+
+Apply AS3 ConfigMap
+
+.. code-block:: sh
+
+  $ kubectl apply -f as3-configmap-istio-jwt.yaml
+
+Allow non-mTLS Connections
+
+.. code-block:: sh
+
+  $ ./istio-gateway.sh   
 
 
 Enhanced Demo
