@@ -32,12 +32,12 @@ sleep 10
 curl  curl --stderr /dev/null -k -u admin:admin -H "Content-Type: application/json"  "https://10.1.10.240/mgmt/tm/sys" | jq .selfLink -r | grep -E ver=1[23]
 if [ $? != 0 ]
   then
-  # v13
-  macAddr1=$(curl --stderr /dev/null -k -u admin:admin -H "Content-Type: application/json"  "https://10.1.10.240/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/stats?options=all-properties"|jq '.entries."https://localhost/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/~Common~flannel_vxlan/stats"."nestedStats".entries.macAddr.description' -r)
-  macAddr2=$(curl --stderr /dev/null -k -u admin:admin -H "Content-Type: application/json"  "https://10.1.10.241/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/stats?options=all-properties"|jq '.entries."https://localhost/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/~Common~flannel_vxlan/stats"."nestedStats".entries.macAddr.description' -r)
-else
   macAddr1=$(curl --stderr /dev/null -k -u admin:admin -H "Content-Type: application/json"  "https://10.1.10.240/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/stats?options=all-properties"|jq '.entries."https://localhost/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/stats"."nestedStats".entries.macAddr.description' -r)
   macAddr2=$(curl --stderr /dev/null -k -u admin:admin -H "Content-Type: application/json"  "https://10.1.10.241/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/stats?options=all-properties"|jq '.entries."https://localhost/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/stats"."nestedStats".entries.macAddr.description' -r)
+else
+  # v13    
+  macAddr1=$(curl --stderr /dev/null -k -u admin:admin -H "Content-Type: application/json"  "https://10.1.10.240/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/stats?options=all-properties"|jq '.entries."https://localhost/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/~Common~flannel_vxlan/stats"."nestedStats".entries.macAddr.description' -r)
+  macAddr2=$(curl --stderr /dev/null -k -u admin:admin -H "Content-Type: application/json"  "https://10.1.10.241/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/stats?options=all-properties"|jq '.entries."https://localhost/mgmt/tm/net/tunnels/tunnel/~Common~flannel_vxlan/~Common~flannel_vxlan/stats"."nestedStats".entries.macAddr.description' -r)    
   fi
 
 #

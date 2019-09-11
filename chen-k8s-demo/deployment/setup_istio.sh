@@ -35,7 +35,7 @@ metadata:
   name: httpbin
 spec:
   hosts:
-  - "httpbin.example.com"
+  - "*"
   gateways:
   - httpbin-gateway
   http:
@@ -44,6 +44,8 @@ spec:
         prefix: /status
     - uri:
         prefix: /delay
+    - uri:
+        prefix: /headers
     route:
     - destination:
         port:
