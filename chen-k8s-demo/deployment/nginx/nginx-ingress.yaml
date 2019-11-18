@@ -18,9 +18,9 @@ spec:
     spec:
       serviceAccountName: nginx-ingress
       containers:
-      - image: nginx/nginx-ingress:edge
-        imagePullPolicy: Always
-        name: nginx-ingress
+      - image: magicalyak/nginx-plus:r19v1
+        imagePullPolicy: IfNotPresent
+        name: nginx-plus-ingress
         ports:
         - name: http
           containerPort: 80
@@ -28,6 +28,14 @@ spec:
           containerPort: 443
        #- name: prometheus
          #containerPort: 9113
+        securityContext:
+          allowPrivilegeEscalation: true
+          runAsUser: 101 #nginx
+          capabilities:
+            drop:
+            - ALL
+            add:
+            - NET_BIND_SERVICE
         env:
         - name: POD_NAMESPACE
           valueFrom:
@@ -38,6 +46,7 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         args:
+          - -nginx-plus
           - -nginx-configmaps=$(POD_NAMESPACE)/nginx-config
           - -default-server-tls-secret=$(POD_NAMESPACE)/default-server-secret
          #- -v=3 # Enables extensive logging. Useful for troubleshooting.
@@ -45,4 +54,5 @@ spec:
          #- -external-service=nginx-ingress
          #- -enable-leader-election
          #- -enable-prometheus-metrics
-         #- -enable-custom-resources
+          - -enable-custom-resources
+          - -nginx-status-allow-cidrs=10.0.0.0/8
