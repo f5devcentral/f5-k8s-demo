@@ -55,4 +55,5 @@ spec:
          #- -enable-leader-election
          #- -enable-prometheus-metrics
           - -enable-custom-resources
-          - -nginx-status-allow-cidrs=10.0.0.0/8
+         # - -nginx-status-allow-cidrs=10.0.0.0/8
+          - -nginx-status-allow-cidrs=0.0.0.0/0 #Wide open for status page DEMO ONLY
