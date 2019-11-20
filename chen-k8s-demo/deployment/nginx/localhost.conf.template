@@ -1,0 +1,60 @@
+upstream 127.0.0.1 {
+  zone 127.0.0.1 64k;
+  server 127.0.0.1:8245;
+}
+upstream bigip {
+  server 10.1.1.4:443;
+}
+
+keyval_zone zone=pools:32k state=pools.keyval sync timeout=300;
+keyval "$POD_IP" $pool zone=pools;
+
+js_include conf.d/nginx_to_as3.js;
+
+server {
+  listen 8245;
+  server_name api.example.com;
+  root /usr/share/nginx/html;
+  location /version {
+    js_content version;
+  }
+   location  = /dashboard.html {
+        }
+  location /api/ {
+    api write=on;
+#    allow 127.0.0.1;
+    allow 10.0.0.0/8; # for demo
+    deny all;
+  }
+      location /pool {
+       return 200 $pool;
+    }
+   location /foo {
+	js_content foo;
+}
+    location /pools/update {
+      js_content UpdatePools;
+    }
+    location /pools/push {
+      js_content GenerateAS3;
+    }
+
+    location /pools/push/dns {
+      js_content GenerateAS3Dns;
+    }
+
+
+    location /poll {
+	internal;
+	proxy_pass http://127.0.0.1/pools/update;
+	health_check uri=/pools/update interval=30;
+}
+
+    location /mgmt/shared/appsvcs/declare {
+#    internal;
+    proxy_pass https://bigip;
+
+    }
+
+
+}

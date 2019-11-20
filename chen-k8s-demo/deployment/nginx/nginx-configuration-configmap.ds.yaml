@@ -1,0 +1,21 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-config
+data:
+        #  proxy-protocol: "True"
+#  real-ip-header: "proxy_protocol"
+#  set-real-ip-from: "10.233.64.0/18"
+#  error-log-level: debug
+  main-snippets: |
+    load_module modules/ngx_http_js_module.so;
+    load_module  modules/ngx_stream_js_module.so;
+  stream-snippets: |
+    server {
+      zone_sync;
+      zone_sync_server 10.1.10.11:9000;
+      zone_sync_server 10.1.10.21:9000;
+      zone_sync_server 10.1.10.22:9000;
+      listen 9000;
+      status_zone pools;
+      }
