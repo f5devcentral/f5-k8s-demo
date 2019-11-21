@@ -108,8 +108,8 @@ spec:
         - "kubernetes"
         - --bigip-url
         - "10.1.10.240"
-        - --flannel-name
-        - "flannel_vxlan"
+          #- --flannel-name
+          #- "flannel_vxlan"
         - --insecure
         - "true"
         - --pool-member-type

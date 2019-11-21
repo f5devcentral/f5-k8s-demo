@@ -57,4 +57,18 @@ spec:
           - -enable-custom-resources
          # - -nginx-status-allow-cidrs=10.0.0.0/8
           - -nginx-status-allow-cidrs=0.0.0.0/0 #Wide open for status page DEMO ONLY
-          
+        ### custom volume mounts
+        volumeMounts:
+          - name: nginx-health
+            mountPath: /etc/nginx/conf.d/nginx_health.js
+            subPath: nginx_health.js
+          - name: healthprobe-conf
+            mountPath: /etc/nginx/conf.d/healthprobe.conf
+            subPath: healthprobe.conf
+      volumes:
+        - name: nginx-health
+          configMap:
+            name: nginx-health
+        - name: healthprobe-conf
+          configMap:
+            name: healthprobe.conf

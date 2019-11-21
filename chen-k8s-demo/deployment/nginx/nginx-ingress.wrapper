@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+sed -e s/\$POD_IP/$POD_IP/g /etc/nginx/conf.d/localhost.conf.template > /etc/nginx/conf.d/localhost.conf
+
+exec /nginx-ingress "$@"

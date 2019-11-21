@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-ingress-dashboard
+  namespace: nginx-ingress
+  labels:
+    cis.f5.com/as3-tenant: AS3
+    cis.f5.com/as3-app: MyApps
+    cis.f5.com/as3-pool: nginxplusapi_pool
+spec:
+  type: NodePort
+  ports:
+    - name: dashboard
+      port: 8245
+      targetPort: 8245
+      protocol: TCP
+  selector:
+      app: nginx-ingress
+
+---
+

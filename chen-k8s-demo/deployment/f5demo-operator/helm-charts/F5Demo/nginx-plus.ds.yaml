@@ -1,0 +1,48 @@
+# Default values for f5-as3.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+common:
+  template: f5demo.common.dns.v3
+  devices:
+    0:
+      address: "10.1.10.240"
+      addressTranslation: "10.1.10.240"
+
+  virtualServers:
+    0:
+     address: 10.1.10.11
+     port: 8245
+     addressTranslation: 10.1.10.11
+     addressTranslationPort: 8245
+    1:
+     address: 10.1.10.21
+     port: 8245
+     addressTranslation: 10.1.10.21
+     addressTranslationPort: 8245
+    2:
+     address: 10.1.10.22
+     port: 8245
+     addressTranslation: 10.1.10.22
+     addressTranslationPort: 8245     
+
+applications:
+  - blue:
+     name: blue
+     template: f5demo.sni.dns.v3
+     fqdn: blue.f5demo.com
+     virtualServers:
+     - 0
+     - 1
+     - 2
+     send: "GET /health?fqdn=blue.f5demo.com"
+     receive: "status\":true"
+  - green:
+     name: green
+     template: f5demo.sni.dns.v3
+     fqdn: green.f5demo.com
+     virtualServers:
+     - 0
+     - 1
+     - 2     
+     send: "GET /health?fqdn=green.f5demo.com"
+     receive: "status\":true"

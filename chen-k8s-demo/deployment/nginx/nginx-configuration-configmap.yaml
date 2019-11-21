@@ -6,3 +6,5 @@ data:
   proxy-protocol: "True"
   real-ip-header: "proxy_protocol"
   set-real-ip-from: "10.233.64.0/18"
+  main-snippets: |
+    load_module modules/ngx_http_js_module.so;

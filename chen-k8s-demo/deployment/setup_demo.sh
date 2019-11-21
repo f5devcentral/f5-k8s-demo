@@ -98,6 +98,7 @@ kubectl apply -f nginx/nginx-ingress.yaml
 kubectl apply -f nginx/nginx-configuration-configmap.yaml -n nginx-ingress
 kubectl apply -f nginx/ingress-nginx-service.yaml
 kubectl apply -f nginx/ingress-nginx-service-tls.yaml
+kubectl apply -f nginx/ingress-nginx-dashboard-service.yaml
 
 ##
 ## Deploy our frontend application and associate the relevant service/configmap to setup the BIG-IP

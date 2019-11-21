@@ -1,0 +1,93 @@
+# Default values for f5-as3.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+common:
+  vipTarget: 255.255.255.254
+  template: f5demo.common.dns.v1
+  irules:
+    Proxy_Protocol_Send: "iRules/proxy_protocol_send.irule"
+    Proxy_Protocol_Receive: "iRules/proxy_protocol_receive.irule"
+    Host_Header_To_Sni: "iRules/host_header_to_sni.irule"
+
+  devices:
+    0:
+      address: "10.1.10.240"
+      addressTranslation: "10.1.10.240"
+#    1:
+#      address: "10.1.10.241"
+#      addressTranslation: "10.1.10.241"
+
+  virtualServers:
+    0:
+     address: 10.1.10.81
+     port: 80
+     addressTranslation: 10.1.10.81
+     addressTranslationPort: 80
+    1:
+     address: 10.1.10.82
+     port: 80
+     addressTranslation: 10.1.10.82
+     addressTranslationPort: 80
+    2:
+     address: 10.1.10.80
+     port: 80
+     addressTranslation: 10.1.10.80
+     addressTranslationPort: 80
+    3:
+     address: 10.1.10.240
+     port: 6443
+     addressTranslation: 10.1.10.240
+     addressTranslationPort: 6443
+    4:
+     address: 10.1.10.82
+     port: 7999
+     addressTranslation: 10.1.10.82
+     addressTranslationPort: 7999
+    5:
+     address: 10.1.10.21
+     port: 7999
+     addressTranslation: 10.1.10.21
+     addressTranslationPort: 7999
+    6:
+     address: 10.1.10.22
+     port: 7999
+     addressTranslation: 10.1.10.22
+     addressTranslationPort: 7999
+
+
+applications:
+  - frontend:
+     name: frontend
+     template: f5demo.tcp.v1
+     virtualAddress: "10.1.10.81"
+     virtualPort: 80
+  - ingress:
+     name: ingress
+     template: f5demo.proxyprotocol.tcp.v1
+     virtualAddress: "10.1.10.82"
+     virtualPort: 80
+  - ingresstls:
+     name: ingresstls
+     template: f5demo.proxyprotocol.tcp.v1
+     virtualAddress: "10.1.10.82"
+     virtualPort: 443
+  - nginxplusapi:
+     name: nginxplusapi
+     template: f5demo.tcp.v1
+     virtualAddress: "10.1.10.82"
+     virtualPort: 7999     
+
+  - blue:
+     name: blue
+     template: f5demo.sni.dns.v1
+     fqdn: blue.f5demo.com
+     virtualServer: 4
+     send: "GET /health?fqdn=blue.f5demo.com"
+     receive: "status\":true"
+  - green:
+     name: green
+     template: f5demo.sni.dns.v1
+     fqdn: green.f5demo.com
+     virtualServer: 4
+     send: "GET /health?fqdn=green.f5demo.com"
+     receive: "status\":true"
