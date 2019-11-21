@@ -41,6 +41,20 @@
                "iRules": ["/Common/Shared/Host_Header_To_Sni", "/Common/Shared/Proxy_Protocol_Send"]
              }
 {{- end }}
+{{- define "f5demo.nginxplus.http.v1" }}
+             "{{ .name }}": {
+                "class": "Service_HTTP",
+                "virtualAddresses": [
+                   {{- if .virtualAddress }}{{ .virtualAddress | quote }}{{ else }}
+                     {"use":"/Common/Shared/VIP_TARGET"}
+                   {{- end }}
+                ],
+               {{ if not .virtualPort }}"virtualPort": {{ .cnt }},{{ else }}
+               {{ if .virtualPort }}"virtualPort": {{ .virtualPort }},{{- end }}{{- end}}
+               "remark":"{{ .name}}: f5demo.nginxplus.http.v1",
+               "pool": "{{ .pool }}"
+             }
+{{- end }}
 {{- define "f5demo.waf.http.v1" }}
              "{{ .name }}": {
                 "class": "Service_HTTP",

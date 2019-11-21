@@ -111,3 +111,39 @@
                                 ]
                         }
 {{- end -}}
+
+{{- define "f5demo.sni.dns.v3" }}
+            "{{ .name }}_pool": {
+                "class": "GSLB_Pool",
+                "members": [
+                {{- $local := dict "first" true  }}
+                {{ range $virtualServer := .virtualServers }}
+                {{- if not $local.first }},{{- end }}
+                {{- $_ := set $local "first" false  }}
+                    {
+                        "server": {
+                          "use": "/Common/Shared/AS3Server"
+                        },
+                        "virtualServer": "{{ $virtualServer }}"
+                    }
+                {{ end }}
+                ],
+                "resourceRecordType": "A",
+                "monitors": [{"use": "{{ .name}}_monitor"} ]
+            },
+            "{{ .name }}_monitor": {
+               "class": "GSLB_Monitor",
+               "monitorType":"http",
+                "send":"{{ .send}} HTTP/1.1\r\nhost: {{ .fqdn }}\r\nconnection: close\r\n\r\n",
+                "receive": {{ .receive | quote }}
+               },
+                        "{{ .name }}_Domain": {
+                                "class": "GSLB_Domain",
+                                "domainName": "{{ .fqdn }}",
+                                "resourceRecordType": "A",
+                                "pools": [{
+                                                "use": "{{ .name }}_pool"
+                                        }
+                                ]
+                        }
+{{- end -}}
