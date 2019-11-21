@@ -15,6 +15,11 @@ server {
   listen 8245;
   server_name api.example.com;
   root /usr/share/nginx/html;
+
+   location /health {
+	js_content status_by_fqdn;
+}
+
   location /version {
     js_content version;
   }
