@@ -1,0 +1,167 @@
+---
+# Source: F5Demo/templates/configmap.yaml
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: f5demo-as3-configmap
+  labels:
+    f5type: virtual-server
+    as3: "true"
+data:
+  template: |
+    {
+      "class": "AS3",
+      "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.1.0",
+        "id": "f5demo",
+        "label": "CIS AS3 Example",
+        "remark": "Example of using CIS",
+       "Common": {
+          "class": "Tenant",
+          "Shared": {
+            "class": "Application",
+            "template": "shared",
+              "myMonitor": {
+                "class": "GSLB_Monitor",
+                "monitorType": "tcp",
+                "send": ""
+            },
+              "AS3DataCenter": {
+                      "class": "GSLB_Data_Center"
+              }
+              ,"AS3Server": {
+                                "class": "GSLB_Server",
+                                "dataCenter": 
+                                         {"use":"AS3DataCenter"}
+                                ,
+                                "devices": [
+                                            {
+                                                "address": "10.1.10.240",
+                                                "addressTranslation": "10.1.10.240"
+                                            }
+                                ]
+                                ,
+                                "virtualServers": [
+                                       {
+                                         "monitors":[{"use":"myMonitor"}],
+                                             "address":"10.1.10.11",
+                                             "addressTranslation":"10.1.10.11",
+                                             "addressTranslationPort":8245,
+                                             "port":8245 
+                                       },
+                                       {
+                                         "monitors":[{"use":"myMonitor"}],
+                                             "address":"10.1.10.21",
+                                             "addressTranslation":"10.1.10.21",
+                                             "addressTranslationPort":8245,
+                                             "port":8245 
+                                       },
+                                       {
+                                         "monitors":[{"use":"myMonitor"}],
+                                             "address":"10.1.10.22",
+                                             "addressTranslation":"10.1.10.22",
+                                             "addressTranslationPort":8245,
+                                             "port":8245 
+                                       }]
+                        }
+          }
+       },
+        "AS3": {
+          "class": "Tenant",
+          "MyApps": {
+             "class": "Application",
+             "template": "generic",
+            "blue_pool": {
+                "class": "GSLB_Pool",
+                "members": [
+                
+                    {
+                        "server": {
+                          "use": "/Common/Shared/AS3Server"
+                        },
+                        "virtualServer": "0"
+                    }
+                ,
+                    {
+                        "server": {
+                          "use": "/Common/Shared/AS3Server"
+                        },
+                        "virtualServer": "1"
+                    }
+                ,
+                    {
+                        "server": {
+                          "use": "/Common/Shared/AS3Server"
+                        },
+                        "virtualServer": "2"
+                    }
+                
+                ],
+                "resourceRecordType": "A",
+                "monitors": [{"use": "blue_monitor"} ]
+            },
+            "blue_monitor": {
+               "class": "GSLB_Monitor",
+               "monitorType":"http",
+                "send":"GET /health?fqdn=blue.f5demo.com HTTP/1.1\r\nhost: blue.f5demo.com\r\nconnection: close\r\n\r\n",
+                "receive": "status\":true"
+               },
+                        "blue_Domain": {
+                                "class": "GSLB_Domain",
+                                "domainName": "blue.f5demo.com",
+                                "resourceRecordType": "A",
+                                "pools": [{
+                                                "use": "blue_pool"
+                                        }
+                                ]
+                        },
+            "green_pool": {
+                "class": "GSLB_Pool",
+                "members": [
+                
+                    {
+                        "server": {
+                          "use": "/Common/Shared/AS3Server"
+                        },
+                        "virtualServer": "0"
+                    }
+                ,
+                    {
+                        "server": {
+                          "use": "/Common/Shared/AS3Server"
+                        },
+                        "virtualServer": "1"
+                    }
+                ,
+                    {
+                        "server": {
+                          "use": "/Common/Shared/AS3Server"
+                        },
+                        "virtualServer": "2"
+                    }
+                
+                ],
+                "resourceRecordType": "A",
+                "monitors": [{"use": "green_monitor"} ]
+            },
+            "green_monitor": {
+               "class": "GSLB_Monitor",
+               "monitorType":"http",
+                "send":"GET /health?fqdn=green.f5demo.com HTTP/1.1\r\nhost: green.f5demo.com\r\nconnection: close\r\n\r\n",
+                "receive": "status\":true"
+               },
+                        "green_Domain": {
+                                "class": "GSLB_Domain",
+                                "domainName": "green.f5demo.com",
+                                "resourceRecordType": "A",
+                                "pools": [{
+                                                "use": "green_pool"
+                                        }
+                                ]
+                        }
+       }
+       }
+    }
+    }
+
