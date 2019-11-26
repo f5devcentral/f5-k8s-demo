@@ -215,10 +215,13 @@ var template = {
 
 var output = {};
 var virtualServers = {};
+var dataCenters = {"10.1.20.54":"dc1","10.1.20.55":"dc2"}
+		
 var x = 0;
 for (var u in input) {
 
     virtualServers[u] = x.toString();
+    var data_center = dataCenters[u];    
     x++;
     template["Common"]["Shared"]["AS3Server"]["virtualServers"].push({
         "address": u,
@@ -244,10 +247,10 @@ for (var u in input) {
             if (cnt == 0) {
                 continue;
             }
-            if (app + "_pool" in template["NGINXPlusDNS"]["DNS"]) {
-                template["NGINXPlusDNS"]["DNS"][app + "_pool"]["members"].push(member);
+            if (data_center + "_" + app + "_pool" in template["NGINXPlusDNS"]["DNS"]) {
+                template["NGINXPlusDNS"]["DNS"][data_center + "_" + app + "_pool"]["members"].push(member);
             } else {
-                template["NGINXPlusDNS"]["DNS"][app + "_pool"] = {
+                template["NGINXPlusDNS"]["DNS"][data_center + "_" + app + "_pool"] = {
                     "class": "GSLB_Pool",
                     "members": [member],
                     "resourceRecordType": "A"
@@ -255,7 +258,7 @@ for (var u in input) {
             }
             if (app + "_domain" in template["NGINXPlusDNS"]["DNS"]) {
                 template["NGINXPlusDNS"]["DNS"][app + "_domain"]["pools"].push({
-                    "use": app + "_pool"
+                    "use": data_center + "_" + app + "_pool"
                 });
             } else {
                 template["NGINXPlusDNS"]["DNS"][app + "_domain"] = {
@@ -263,7 +266,7 @@ for (var u in input) {
                     "domainName": app + ".f5demo.com",
                     "resourceRecordType": "A",
                     "pools": [{
-                        "use": app + "_pool"
+                        "use": data_center + "_" + app + "_pool"
                     }]
                 };
             }
@@ -293,4 +296,141 @@ for (var u in input) {
         });
     //r.return(200,"OK");
 }
-            
+
+
+function GenerateCloudDns(r) {
+    r.subrequest('/api/5/http/keyvals/pools', {
+            method: 'GET'
+        },
+        function(res) {
+            var output = {};
+
+            if (res.status == 200) {
+                var input = JSON.parse(res.responseBody);
+                var myRe = /([a-zA-Z0-9]+)\.f5demo\.com/;
+var template = {
+    "account_id": "{{ACCOUNT_ID}}",
+    "catalog_id": "c-aaQnOrPjGu",
+    "plan_id": "p-__free_dns",
+    "service_type": "gslb",
+    "service_instance_name": "{{SERVICE_INSTANCE_NAME}}",
+    "configuration": {
+        "gslb_service": {
+            "load_balanced_records": {
+            },
+            "pools": {
+            },
+            "virtual_servers": {
+            },
+            "zone": "{{GSLB_ZONE}}"
+        },
+        "schemaVersion": "0.1"
+    }
+
+};
+if ("account_id" in r.args) {
+    template["account_id"] = r.args["account_id"];
+}
+if ("gslb_zone" in r.args) {
+    template["configuration"]["gslb_service"]["zone"] = r.args["gslb_zone"];
+    template["service_instance_name"] = r.args["gslb_zone"];    
+}
+		
+var output = {};
+var virtualServers = {};
+var publicIps = {"10.1.20.54":"192.0.2.10","10.1.20.55":"192.0.2.11"}
+var dataCenters = {"10.1.20.54":"dc1","10.1.20.55":"dc2"}
+var x = 0;
+for (var u in input) {
+
+    virtualServers[u] = x;
+
+    var data_center = dataCenters[u];
+    x++;
+
+    if (u != "127.0.0.1") {
+        var entry = JSON.parse(input[u]);
+        for (var app in entry) {
+	    var cnt = entry[app];
+	    if( cnt == 0 ) {
+		continue;
+	    }
+	    var pool_name = "pools_" + data_center + "_" + app;
+	    var ip_endpoint = "ipEndpoints_" + data_center + "_" + app + "_instance_";
+            if ( !(app in template["configuration"]["gslb_service"]["load_balanced_records"])) {
+		template["configuration"]["gslb_service"]["load_balanced_records"][app] =  {
+                    "aliases": [
+			app
+                    ],
+                    "display_name": app,
+                    "enable": true,
+                    "persist_cidr_ipv4": 24,
+                    "persist_cidr_ipv6": 56,
+                    "persistence": true,
+                    "persistence_ttl": 3600,
+                    "proximity_rules": [
+                        {
+                            "region": "global",
+                            "pool": pool_name,
+                            "score": 100
+                        }
+                    ],
+                    "rr_type": "A"
+                }
+            } else {
+		template["configuration"]["gslb_service"]["load_balanced_records"][app]["proximity_rules"].push(                        {
+                            "region": "global",
+                            "pool": pool_name,
+                            "score": 100
+                });
+	    }
+            if ( !(pool_name in template["configuration"]["gslb_service"]["pools"])) {
+		template["configuration"]["gslb_service"]["pools"][pool_name] = {
+                    "display_name": data_center + "_" + app,
+                    "enable": true,
+                    "load_balancing_mode": "round-robin",
+                    "max_answers": 1,
+                    "members": [
+                        {
+                            "virtual_server": ip_endpoint + virtualServers[u]
+                        }
+                    ],
+                    "rr_type": "A",
+                    "ttl": 30
+                }
+
+	    } else {
+		template["configuration"]["gslb_service"]["pools"][pool_name]["members"].push({"virtual_server":ip_endpoint + virtualServers[u]});
+	    }
+	    template["configuration"]["gslb_service"]["virtual_servers"][ip_endpoint + virtualServers[u]] =  {
+                    "display_name": "dc1_app001_instance_1",
+                    "address": publicIps[u],
+                    "port": 80
+                }
+        }
+    }
+}
+//		r.return(res.status, JSON.stringify(template));
+//                return;
+                r.subrequest('/v1/svc-subscription/subscriptions/' + r.args["subscription_id"], {
+                        method: 'PUT',
+                        body: JSON.stringify(template)
+                    },
+                    function(res) {
+                        var output = {};
+
+                        if (res.status == 200) {
+                            var input = JSON.parse(res.responseBody);
+                            r.return(res.status, JSON.stringify(input));
+                            return;
+                        }
+                        r.return(res.status, res.responseBody);
+                        //   r.return(500);
+                    });
+
+            }
+            r.return(500);
+        });
+    //r.return(200,"OK");
+}
+
