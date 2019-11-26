@@ -5,17 +5,23 @@ upstream 127.0.0.1 {
 upstream bigip {
   server 10.1.1.4:443;
 }
+upstream cloud {
+  server api.cloudservices.f5.com:443;
+}
 
 keyval_zone zone=pools:32k state=pools.keyval sync timeout=300;
 keyval "$POD_IP" $pool zone=pools;
-
+#map $pool $data_center {
+#  10.1.20.54 'dc1';
+#  10.1.20.55 'dc2';
+#}
 js_include conf.d/nginx_to_as3.js;
 
 server {
   listen 8245;
   server_name api.example.com;
   root /usr/share/nginx/html;
-
+  set $data_center 'dc1';
    location /health {
 	js_content status_by_fqdn;
 }
@@ -47,7 +53,9 @@ server {
     location /pools/push/dns {
       js_content GenerateAS3Dns;
     }
-
+    location /pools/push/cloud_dns {
+      js_content GenerateCloudDns;
+    }
 
     location /poll {
 	internal;
@@ -56,9 +64,12 @@ server {
 }
 
     location /mgmt/shared/appsvcs/declare {
-#    internal;
+    internal;
     proxy_pass https://bigip;
-
+    }
+    location /v1/svc-subscription/subscriptions {
+    internal;
+    proxy_pass https://cloud;
     }
 
 
