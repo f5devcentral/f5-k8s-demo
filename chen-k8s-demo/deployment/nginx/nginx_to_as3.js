@@ -1,3 +1,5 @@
+var dataCenters = {"10.1.20.54":"dc1","10.1.20.55":"dc2"};
+
 function status_by_fqdn(r) {
     r.subrequest('/api/5/http/upstreams', {
             method: 'GET'
@@ -66,6 +68,39 @@ function UpdatePools(r) {
         });
     //r.return(200,"OK");
 }
+function Summarize(r) {
+    r.subrequest('/api/5/http/keyvals/pools', {
+            method: 'GET'
+        },
+        function(res) {
+            var output = {};
+
+            if (res.status == 200) {
+                var input = JSON.parse(res.responseBody);
+            for (var u in input) {
+		var data_center = dataCenters[u];
+                var entry = JSON.parse(input[u]);
+                for (var app in entry) {
+		    var pool_name = data_center;
+		    if(app + ".f5demo.com" in output) {
+			output[app + ".f5demo.com"];
+		    } else {
+			output[app + ".f5demo.com"] = {};
+		    }
+		    if(pool_name in output[app + ".f5demo.com"]) {
+			output[app + ".f5demo.com"][pool_name].push({[u]:entry[app]});
+		    } else {
+			output[app + ".f5demo.com"][pool_name] = [{[u]:entry[app]}];
+		    }
+		}
+		
+	    }
+		r.return(res.status, JSON.stringify(output));
+		return;
+	    }
+	});
+}
+		
 
 function GenerateAS3(r) {
     r.subrequest('/api/5/http/keyvals/pools', {
@@ -197,8 +232,8 @@ var template = {
                     "use": "AS3DataCenter"
                 },
                 "devices": [{
-                    "address": "10.1.10.240",
-                    "addressTranslation": "10.1.10.240"
+                    "address": "10.1.10.241",
+                    "addressTranslation": "10.1.10.241"
                 }],
                 "virtualServers": []
             }
@@ -215,7 +250,7 @@ var template = {
 
 var output = {};
 var virtualServers = {};
-var dataCenters = {"10.1.20.54":"dc1","10.1.20.55":"dc2"}
+
 		
 var x = 0;
 for (var u in input) {
@@ -244,9 +279,7 @@ for (var u in input) {
                 },
                 "virtualServer": virtualServers[u]
             };
-            if (cnt == 0) {
-                continue;
-            }
+
             if (data_center + "_" + app + "_pool" in template["NGINXPlusDNS"]["DNS"]) {
                 template["NGINXPlusDNS"]["DNS"][data_center + "_" + app + "_pool"]["members"].push(member);
             } else {
@@ -255,6 +288,9 @@ for (var u in input) {
                     "members": [member],
                     "resourceRecordType": "A"
                 };
+                if (cnt == 0) {
+		    template["NGINXPlusDNS"]["DNS"][data_center + "_" + app + "_pool"]["enabled"] = false;
+                }		
             }
             if (app + "_domain" in template["NGINXPlusDNS"]["DNS"]) {
                 template["NGINXPlusDNS"]["DNS"][app + "_domain"]["pools"].push({
@@ -338,8 +374,8 @@ if ("gslb_zone" in r.args) {
 		
 var output = {};
 var virtualServers = {};
-var publicIps = {"10.1.20.54":"192.0.2.10","10.1.20.55":"192.0.2.11"}
-var dataCenters = {"10.1.20.54":"dc1","10.1.20.55":"dc2"}
+var publicIps = {"10.1.20.54":"192.0.2.10","10.1.20.55":"192.0.2.11"};
+var dataCenters = {"10.1.20.54":"dc1","10.1.20.55":"dc2"};
 var x = 0;
 for (var u in input) {
 
