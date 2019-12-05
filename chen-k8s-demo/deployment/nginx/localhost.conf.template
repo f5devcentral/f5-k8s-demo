@@ -1,76 +1,74 @@
 upstream 127.0.0.1 {
-  zone 127.0.0.1 64k;
-  server 127.0.0.1:8245;
+	zone                           127.0.0.1 64k;
+	server                         127.0.0.1:8245;
 }
 upstream bigip {
-  server 10.1.1.4:443;
+	server                         10.1.1.5:443;
 }
 upstream cloud {
-  server api.cloudservices.f5.com:443;
+	server                         api.cloudservices.f5.com:443;
 }
 
-keyval_zone zone=pools:32k state=pools.keyval sync timeout=300;
-keyval "$POD_IP" $pool zone=pools;
-#map $pool $data_center {
-#  10.1.20.54 'dc1';
-#  10.1.20.55 'dc2';
-#}
-js_include conf.d/nginx_to_as3.js;
+ keyval_zone                    zone=pools:32k state=pools.keyval sync timeout=300;
+ keyval                         "10.1.20.54" $pool zone=pools;
+
+ js_include                     conf.d/nginx_to_as3.js;
 
 server {
-  listen 8245;
-  server_name api.example.com;
-  root /usr/share/nginx/html;
-  set $data_center 'dc1';
-   location /health {
-	js_content status_by_fqdn;
-}
+	subrequest_output_buffer_size  200k;
+	listen                         8245;
+	server_name                    api.example.com;
+	root                           /usr/share/nginx/html;
+	set                            $data_center 'dc1';
 
-  location /version {
-    js_content version;
-  }
-   location  = /dashboard.html {
-        }
-  location /api/ {
-    api write=on;
-#    allow 127.0.0.1;
-    allow 10.0.0.0/8; # for demo
-    deny all;
-  }
-      location /pool {
-       return 200 $pool;
-    }
-   location /foo {
-	js_content foo;
-}
-    location /pools/update {
-      js_content UpdatePools;
-    }
-    location /pools/push {
-      js_content GenerateAS3;
-    }
+	location /health {
+		js_content                    StatusByFqdn;
+	}
 
-    location /pools/push/dns {
-      js_content GenerateAS3Dns;
-    }
-    location /pools/push/cloud_dns {
-      js_content GenerateCloudDns;
-    }
+	location /version {
+		js_content                    Version;
+	}
 
-    location /poll {
-	internal;
-	proxy_pass http://127.0.0.1/pools/update;
-	health_check uri=/pools/update interval=30;
-}
+	location = /dashboard.html {
+	}
+	location /api/ {
+		api                           write=on;
+		#                             allow 127.0.0.1;
+		allow                         10.0.0.0/8; # for demo
+		deny                          all;
+	}
+	location /pool {
+		return                        200 $pool;
+	}
+	location /pools {
+		js_content                    Summarize;
+	}
+	location /pools/update {
+		js_content                    UpdatePools;
+	}
+	location /pools/push {
+		js_content                    GenerateAS3;
+	}
 
-    location /mgmt/shared/appsvcs/declare {
-    internal;
-    proxy_pass https://bigip;
-    }
-    location /v1/svc-subscription/subscriptions {
-    internal;
-    proxy_pass https://cloud;
-    }
+	location /pools/push/dns {
+		js_content                    GenerateAS3Dns;
+	}
+	location /pools/push/cloud_dns {
+		js_content                    GenerateCloudDns;
+	}
 
+	location /poll {
+		internal;
+		proxy_pass                    http://127.0.0.1/pools/update;
+		health_check                  uri=/pools/update interval=30;
+	}
 
+	location /mgmt/shared/appsvcs/declare {
+		internal;
+		proxy_pass                    https://bigip;
+	}
+	location /v1/svc-subscription/subscriptions {
+		internal;
+		proxy_pass                    https://cloud;
+	}
 }
