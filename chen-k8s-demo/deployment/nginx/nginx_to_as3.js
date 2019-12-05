@@ -10,6 +10,7 @@ var f5CloudSvcsDnsBaseUri = "/v1/svc-subscription/subscriptions";
 var demoDomain = ".f5demo.com";
 var fqdnRegexString = `([a-zA-Z0-9])+${demoDomain.replace(".", ".\\")}`;
 var dataCenters = { "10.1.20.54": "dc1", "10.1.20.55": "dc2" };
+// replace with "real" publicIps, 192.0.2.0/24 are for example only
 var publicIps = { "10.1.20.54": "192.0.2.10", "10.1.20.55": "192.0.2.11" };
 
 function StatusByFqdn(r) {
@@ -355,9 +356,6 @@ function GenerateCloudDns(r) {
                     var entry = JSON.parse(input[u]);
                     for (var app in entry) {
                         var cnt = entry[app];
-                        if (cnt == 0) {
-                            continue;
-                        }
                         var poolName = `pools_${dataCenter}_${app}`;
                         var ipEndpoint = `ipEndpoints_${dataCenter}_${app}_instance_`;
                         if (!(app in template.configuration.gslb_service.load_balanced_records)) {
@@ -402,6 +400,9 @@ function GenerateCloudDns(r) {
                                 "ttl": 30
                             }
 
+                        if( cnt == 0 ) {
+                           template["configuration"]["gslb_service"]["pools"][pool_name]["enable"]=false;
+                        }			    
                         } else {
                             template.configuration.gslb_service.pools[poolName].members.push({ "virtual_server": ipEndpoint + virtualServers[u] });
                         }
