@@ -19,6 +19,9 @@ data:
         "remark": "Example of using CIS",
         "AS3": {
           "class": "Tenant"
+       },
+       "Common": {
+          "class": "Tenant"
        }
     }
     }
