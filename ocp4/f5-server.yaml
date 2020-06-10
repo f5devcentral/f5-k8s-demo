@@ -1,0 +1,31 @@
+apiVersion: cis.f5.com/v1
+kind: F5BigIpCtlr
+metadata:
+  name: f5-server
+  namespace: openshift-operators
+spec:
+  args:
+    log_as3_response: true
+    manage_routes: true
+    agent: as3
+    log_level: INFO
+    route_vserver_addr: 192.168.131.100
+    bigip_partition: ocp
+    openshift_sdn_name: /Common/openshift_vxlan
+    bigip_url: 	192.168.131.240
+    insecure: true
+    pool-member-type: cluster
+    namespace: default
+  bigip_login_secret: bigip-login
+  image:
+    pullPolicy: IfNotPresent
+    repo: k8s-bigip-ctlr
+    user: f5networks
+  namespace: kube-system
+  rbac:
+    create: true
+  resources: {}
+  serviceAccount:
+    create: true
+    name: null
+  version:  2.0.0
