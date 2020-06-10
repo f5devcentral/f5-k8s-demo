@@ -93,7 +93,7 @@ spec:
         - name: bigip-login
       containers:
       - name: f5-bigip-ctlr
-        image: "f5networks/k8s-bigip-ctlr:1.11.1"
+        image: "f5networks/k8s-bigip-ctlr:1.13.0"
         volumeMounts:
         - name: bigip-creds
           mountPath: "/tmp/creds"
@@ -114,6 +114,14 @@ spec:
         - "true"
         - --pool-member-type
         - "cluster"
+        - --resolve-ingress-names
+        - "LOOKUP"
+        - --override-as3-declaration
+        - "default/f5-as3-declaration"
+        - --agent
+        - "as3"
+          #- --log-level
+          #- "DEBUG"
       volumes:
       - name: bigip-creds
         secret:

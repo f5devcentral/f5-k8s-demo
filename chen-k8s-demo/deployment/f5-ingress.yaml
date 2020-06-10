@@ -3,8 +3,9 @@ kind: Ingress
 metadata:
   name: f5-ingress
   annotations:
-    custom_ip: "10.1.10.80"
-    kubernetes.io/ingress.class: "custom"
+    kubernetes.io/ingress.class: "f5"
+    virtual-server.f5.com/ip: "10.1.10.83"
+    virtual-server.f5.com/partition: "kubernetes_AS3"
 spec:
   rules:
   - host: www.f5demo.com

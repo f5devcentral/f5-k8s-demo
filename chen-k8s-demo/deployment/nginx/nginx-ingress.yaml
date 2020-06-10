@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-ingress
@@ -18,7 +18,7 @@ spec:
     spec:
       serviceAccountName: nginx-ingress
       containers:
-      - image: magicalyak/nginx-plus:r19v1
+      - image: myregistry.chen.local/nginx-ingress:1.6.2
         imagePullPolicy: IfNotPresent
         name: nginx-plus-ingress
         ports:
