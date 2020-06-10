@@ -1,0 +1,14 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: cisroute
+  namespace: default
+spec:
+  host: my-frontend.cisroutes.dc1.example.com
+  path: /
+  to:
+    kind: Service
+    name: my-frontend
+  port:
+    targetPort: 80
+
