@@ -7,15 +7,18 @@ spec:
   args:
     log_as3_response: true
     manage_routes: true
+    manage_ingress: true
+    manage_configmaps: true
     agent: as3
     log_level: INFO
-    route_vserver_addr: 192.168.131.100
+    route_vserver_addr: 10.1.10.100
     bigip_partition: ocp
     openshift_sdn_name: /Common/openshift_vxlan
-    bigip_url: 	192.168.131.240
+    bigip_url: 	10.1.20.240
     insecure: true
     pool-member-type: cluster
     namespace: default
+    override-as3-declaration: default/f5-as3-declaration
   bigip_login_secret: bigip-login
   image:
     pullPolicy: IfNotPresent

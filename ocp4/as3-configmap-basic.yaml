@@ -37,7 +37,7 @@ data:
              "template": "generic",
              "frontend": {
                 "class": "Service_TCP",
-                "virtualAddresses": ["192.168.131.101"],
+                "virtualAddresses": ["10.1.10.101"],
                "remark":"frontend: f5demo.tcp.v1",
                "persistenceMethods":[],
                "virtualPort": 80,

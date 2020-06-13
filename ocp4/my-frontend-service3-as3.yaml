@@ -4,10 +4,6 @@ metadata:
   name: my-frontend3
   labels:
     run: my-frontend3
-    cis.f5.com/as3-tenant: AS3
-    cis.f5.com/as3-app: MyApps
-    cis.f5.com/as3-pool: frontend3_pool
-
 spec:
   ports:
   - name: my-frontend3

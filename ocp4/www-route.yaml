@@ -1,0 +1,15 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: wwwroute
+  namespace: default
+spec:
+  host: www.apps.dc1.example.com
+  to:
+    kind: Service
+    name: www
+  port:
+    targetPort: 443
+  tls:
+    termination: passthrough
+

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: f5-as3-declaration
+  namespace: default
+data:
+  template: |
+    {
+      "declaration": {
+        "ocp_AS3": {
+                "Shared": {
+                    "https_ose_vserver": {
+                        "policyIAM":
+                        {
+                          "bigip": "/Common/openshift-oauth-sso-ap"
+                        }
+                    }
+                }
+            }
+        }
+    }

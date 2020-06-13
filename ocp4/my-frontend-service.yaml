@@ -4,11 +4,12 @@ metadata:
   name: my-frontend
   labels:
     run: my-frontend
+
 spec:
   ports:
-  - port: 80
+  - name: my-frontend
+    port: 80
     protocol: TCP
-    targetPort: 80
-  type: NodePort
+    targetPort: 8080
   selector:
     run: my-frontend

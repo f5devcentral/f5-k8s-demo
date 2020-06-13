@@ -4,8 +4,8 @@ metadata:
   name: cisingress
   namespace: default
   annotations:
-    kubernetes.io/ingress.class: "f5"
-    virtual-server.f5.com/ip: "192.168.131.102"
+#    kubernetes.io/ingress.class: "f5"
+    virtual-server.f5.com/ip: "10.1.10.102"
     virtual-server.f5.com/http-port: "80"
 spec:
   rules:

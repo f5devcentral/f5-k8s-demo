@@ -8,4 +8,4 @@ metadata:
 # provide a name for the BIG-IP device's host Node
 host: bigip1
 # Provide an IP address to serve as the BIG-IP VTEP in the OpenShift SDN
-hostIP: 192.168.131.240
+hostIP: 10.1.20.240
