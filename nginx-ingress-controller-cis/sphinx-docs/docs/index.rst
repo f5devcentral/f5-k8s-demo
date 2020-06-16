@@ -26,11 +26,11 @@ The UDF Blueprint called **NGINX Ingress Controller Walkthrough** will give you 
 ==============    ==================  ==============================================
   System                Hostame                        Description
 ==============    ==================  ==============================================
-  BIG-IP1            ip-10-1-1-4               F5 BIG-IP
-  K8S Master          ip-10-1-1-5      Kubernetes Master node (where lab files are)
-  K8S Node1          ip-10-1-1-6      Kubernetes Master node (where lab files are)
-  K8S Node2          ip-10-1-1-7      Kubernetes Master node (where lab files are)
-  Windows RDP        ip-10-1-1-8      Windows JumpHost
+  BIG-IP1            ip-10-1-1-4       F5 BIG-IP
+  k8S Master         ip-10-1-1-9       Kubernetes Master node (where lab files are)
+  k8S Node1          ip-10-1-1-10      Kubernetes Minion
+  k8S Node2          ip-10-1-1-11      Kubernetes Minion
+  Windows RDP        ip-10-1-1-8       Windows JumpHost
 ==============    ==================  ==============================================
 
 .. note:: The entire lab can be performed from the Windows Jumphost (if you've not set up SSH keys for UDF).

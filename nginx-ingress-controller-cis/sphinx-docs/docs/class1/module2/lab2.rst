@@ -79,7 +79,7 @@ command (you will need to specify the port number for your environment):
 
 .. code:: shell
 
- $ curl --resolve cafe.example.com:[SSL Port Number]:10.1.20.20 https://cafe.example.com:[SSL Port Number]/coffee -k
+ $ curl --resolve cafe.example.com:[SSL Port Number]:10.1.1.9 https://cafe.example.com:[SSL Port Number]/coffee -k
 
 .. NOTE:: The ``--resolve`` flag instructs ``curl`` to set the appropriate Host
           headers (while sending the proper SNI extention in the CLIENT HELLO) to

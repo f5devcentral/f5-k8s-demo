@@ -16,7 +16,7 @@ Port ``80`` inside the container should be exposed to the cluster.
 .. code:: shell
 
   kubectl create -f - <<'EOF'
-  apiVersion: extensions/v1beta1
+  apiVersion: apps/v1
   kind: Deployment
   metadata:
     name: coffee
