@@ -176,7 +176,7 @@ Access NGINX+ From Outside the Cluster
 
 From the Windows JumpHost open up the Chrome browser and browse to the "kmaster" host IP and the previously recorded port:
 
-  ``http://10.1.20.20:[Previous Recorded Port Number]``
+  ``http://10.1.20.109:[Previous Recorded Port Number]``
 
 .. tip:: Credentials for Windows JumpHost are **"user:user"**
 

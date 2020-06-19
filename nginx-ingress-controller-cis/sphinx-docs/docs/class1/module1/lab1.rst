@@ -16,7 +16,7 @@ Port ``80`` inside the container should be exposed to the cluster.
 .. code:: shell
 
   kubectl create -f - <<'EOF'
-  apiVersion: extensions/v1beta1
+  apiVersion: apps/v1
   kind: Deployment
   metadata:
     name: coffee
@@ -79,9 +79,19 @@ Expected output:
 
 .. tip:: You may also see other pods like "registry" that are running.
   
-.. NOTE:: Observe that the pods are running on separate nodes (knode1 and knode2) and that the IP addresses are outside the routable range of the environment (10.1.0.0/16 in UDF).
-          The pod IP addresses are in the cluster overlay network.
+.. NOTE:: Observe that the pods are both running on knode1, though there are two nodes (knode1 and knode2) and that the IP addresses are outside the routable range of the environment (10.1.0.0/16 in UDF).
+          The pod IP addresses are in the cluster overlay network. (Optional) Use underneath command to show all pods from all namespaces and you will notice that the pods are evenly diviated.
 
+.. code:: shell
+
+  kubectl get po -o wide --all-namespaces
+  
+Re-type to get the PODs' IP addresses.
+
+.. code:: shell
+
+  kubectl get po -o wide
+  
 Use the ``curl`` command to test whether your application is running.
 
 .. code:: shell
