@@ -1,0 +1,22 @@
+apiVersion: k8s.nginx.org/v1alpha1
+kind: NginxIngressController
+metadata:
+  name: my-nginx-ingress-controller
+  namespace: nginx-ingress
+spec:
+  enableCRDs: true
+  image:
+    pullPolicy: Always
+    repository: registry.dc1.example.com/nginx-plus-ingress
+    tag: 1.7.1
+  nginxPlus: true
+  replicas: 1
+  serviceType: NodePort
+  type: deployment
+  enableCRDs: true
+  reportIngressStatus: 
+    enable: true
+  nginxStatus:
+    enable: true
+    port: 9090
+    allowCidrs: "10.0.0.0/8"
