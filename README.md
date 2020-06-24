@@ -12,7 +12,7 @@ Eric Chen's K8s Demo using Flannel.
 
 ### nginx-ingress-controller-cis
 
-Kevin Reynold's NGINX Ingress Controller and Container Ingress Services Lab.
+Kevin Reynolds' NGINX Ingress Controller and Container Ingress Services Lab.
 
 ### ocp4
 
