@@ -1,7 +1,7 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: f5-as3-declaration
+  name: f5-as3-override
   namespace: default
   labels:
     f5type: virtual-server

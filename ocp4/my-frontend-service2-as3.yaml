@@ -4,7 +4,7 @@ metadata:
   name: my-frontend2
   labels:
     run: my-frontend2
-    cis.f5.com/as3-tenant: AS3
+    cis.f5.com/as3-tenant: ConfigMap
     cis.f5.com/as3-app: MyApps
     cis.f5.com/as3-pool: frontend2_pool
 

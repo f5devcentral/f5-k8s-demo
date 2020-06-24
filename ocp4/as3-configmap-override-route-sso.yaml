@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: f5-as3-declaration
+  name: f5-as3-override
   namespace: default
 data:
   template: |

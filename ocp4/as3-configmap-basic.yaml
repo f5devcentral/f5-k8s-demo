@@ -16,8 +16,8 @@ data:
         "schemaVersion": "3.1.0",
         "id": "f5demo",
         "label": "CIS AS3 Example",
-        "remark": "Example of using CIS",
-        "AS3": {
+        "remark": "Example of using CIS ConfigMap",
+        "ConfigMap": {
           "class": "Tenant",
           "MyApps": {
              "class": "Application",
