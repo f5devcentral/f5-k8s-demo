@@ -6,7 +6,7 @@ metadata:
   name: f5demo-as3-configmap
   labels:
     f5type: virtual-server
-    as3: "true"
+    as3: "false"
 data:
   template: |
     {
@@ -104,7 +104,7 @@ data:
              },                       
                 "Proxy_Protocol_Send": {
                   "class":"iRule",
-                  "iRule": {"base64": "d2hlbiBTRVJWRVJfQ09OTkVDVEVEIHsKICAgICAgVENQOjpyZXNwb25kICJQUk9YWSBUQ1BbSVA6OnZlcnNpb25dIFtJUDo6Y2xpZW50X2FkZHJdIFtjbGllbnRzaWRlIHtJUDo6bG9jYWxfYWRkcn1dIFtUQ1A6OmNsaWVudF9wb3J0XSBbY2xpZW50c2lkZSB7VENQOjpsb2NhbF9wb3J0fV1cclxuIgp9Cg=="}
+                  "iRule": "when CLIENT_ACCEPTED {\n    set proxyheader \"PROXY TCP[IP::version] [IP::remote_addr] [IP::local_addr] [TCP::remote_port] [TCP::local_port]\\r\\n\"\n}\n \nwhen SERVER_CONNECTED {\n    TCP::respond $proxyheader\n}"
                 }	     
        }
        }
