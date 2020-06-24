@@ -20,3 +20,8 @@ spec:
     enable: true
     port: 9090
     allowCidrs: "10.0.0.0/8"
+  configMapData:
+    proxy-protocol: "True"
+    real-ip-header: "proxy_protocol"
+    set-real-ip-from: "10.130.0.0/23"
+
