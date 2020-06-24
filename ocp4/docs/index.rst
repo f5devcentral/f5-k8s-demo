@@ -14,4 +14,4 @@ This provides documentation on how to use this lab environment.
    :caption: Contents:
 
    demo/*
-
+   build/*
