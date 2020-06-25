@@ -51,4 +51,9 @@ Next click on the profile (should be on the previous screen where you clicked on
 .. image:: bigip-oauth-profile.png
   :scale: 50%
 
+You can also view the Access Policy as well.
+
+.. image:: bigip-oauth-ap.png
+  :scale: 50 %
+
 The OpenShift Console is using this BIG-IP configuration to authenticate.
