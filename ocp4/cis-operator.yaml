@@ -1,0 +1,13 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: f5-bigip-ctlr-operator
+  namespace: default
+spec:
+  channel: beta
+  installPlanApproval: Automatic
+  name: f5-bigip-ctlr-operator
+  source: certified-operators
+  sourceNamespace: openshift-marketplace
+  startingCSV: f5-bigip-ctlr-operator.v1.0.0
+
