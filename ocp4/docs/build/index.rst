@@ -115,6 +115,44 @@ you specified in the install-config.yaml).
 
 You can also monitor the status using openshift-install command.
 
+.. code-block:: shell
+
+  $ ./openshift-install --dir ocp4 wait-for bootstrap-complete
+
+Once the bootstrap process completes you can shutdown the bootstrap node and wait for all the cluster operators to deploy.
+
+You will first need to copy the auth file.
+
+.. code-block:: shell
+
+  $ mkdir ~/.kube
+  $ cp ocp4/auth/kubeconfig ~/.kube/config
+
+You can then monitor the operator status (you want them to all say "true")
+
+.. code-block:: shell
+
+  $ oc get clusteroperator
+  NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE
+  authentication                             4.3.24    True        False         False      13d
+  cloud-credential                           4.3.24    True        False         False      13d
+  cluster-autoscaler                         4.3.24    True        False         False      13d
+  console                                    4.3.24    True        False         False      7d5h
+  dns                                        4.3.24    True        False         False      12h
+  image-registry                             4.3.24    True        False         False      13d
+  ingress                                    4.3.24    True        False         False      12h
+  insights                                   4.3.24    True        False         False      13d
+  kube-apiserver                             4.3.24    True        False         False      13d
+  kube-controller-manager                    4.3.24    True        False         False      13d
+  kube-scheduler                             4.3.24    True        False         False      13d
+  ...
+
+You can also monitor the status using the openshift-install command
+
+.. code-block:: shell
+
+  $ ./openshift-install --dir ocp4 wait-for install-complete
+
 Other Nodes
 +++++++++++
 
