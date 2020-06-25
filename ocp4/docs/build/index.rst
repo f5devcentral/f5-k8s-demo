@@ -1,6 +1,9 @@
 Building the Demo Environment
 ==============================
 
+.. note:: 
+   This is provided for reference.  You do not need to perform these steps to run the demo.
+
 The demo environment is built in F5's UDF environment.
 
 The UDF hypervisor is KVM and the process used is a variant of:
