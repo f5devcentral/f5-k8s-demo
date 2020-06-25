@@ -22,7 +22,7 @@ copyright = '2020, Eric Chen'
 author = 'Eric Chen'
 
 # The full version, including alpha/beta/rc tags
-release = '2019.06'
+release = '2020.06'
 
 
 # -- General configuration ---------------------------------------------------
