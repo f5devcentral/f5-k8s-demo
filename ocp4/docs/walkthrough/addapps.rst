@@ -47,7 +47,7 @@ In the example above (yours will differ) I should be able to access "my-frontend
 going to one of the worker nodes on port "31282".  Find the port number 
 in your environment and try running the following command (using the port number that you see).
 
-.. code-block:: shell
+.. code-block:: text
 
   $ curl 10.1.1.9:31282/txt
     ================================================
