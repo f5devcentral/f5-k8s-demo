@@ -20,8 +20,6 @@ Run the following commands to deploy a set of applications and services.
     oc create -f my-frontend-deployment.yaml
     oc create -f www-deployment.yaml
 
-    oc create -f ingress-nginx-service-tls.yaml
-    oc create -f ingress-nginx-service.yaml
     oc create -f my-frontend-service2-as3.yaml
     oc create -f my-frontend-service3-as3.yaml
     oc create -f my-frontend-service.yaml

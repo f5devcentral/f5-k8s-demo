@@ -186,9 +186,18 @@ The following is what you should use.
         name: null
     version:  2.0.0
 
-Next click on "f5-server".
+The Pod
+-------
 
-.. image:: console-f5-server.png
+Next change to the "kube-system" project and find the Pod "f5-server...".
+
+.. image:: console-cis-all-good.png
+  :scale: 50 %
+
+If you "DON'T" see something like that (like errors).  Then the easiest
+fix is to restart the pod by 
+
+.. image:: console-cis-delete-pod.png
   :scale: 50 %
 
 Deploy a Route
@@ -214,9 +223,18 @@ We will next deploy the following Route.
     port:
         targetPort: 80
 
-To deploy this route run the following command (the contents of the file
-is the Route listed above).
+Under the "default" project go to Networking -> Routes.
 
-.. code-block:: shell
+Click on "create" then "Edit YAML" and enter the route from above.
 
-    $ oc create -f my-route.yaml
+.. image:: console-create-route.png
+  :scale: 50 %
+
+After clicking on create scroll down and observe the route appears on both
+the "default" and "F5 BIG-IP".
+
+.. image:: console-route-status.png
+  :scale: 50 %
+
+You should then be able to visit the deployed Route in Chrome (following 
+steps from "Basic Demo").
