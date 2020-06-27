@@ -13,6 +13,6 @@ through the steps to get up to the "Basic Demo".
    
    reset
    addapps
-
+   deploycis
 
 
