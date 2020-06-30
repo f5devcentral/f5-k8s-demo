@@ -12,16 +12,16 @@
 ##
 ## Create F5 kubernetes partition
 ##
-curl -k -u admin:admin -H "Content-Type: application/json" -X POST -d '{"name":"ocp", "fullPath": "/ocp", "subPath": "/"}' https://10.1.10.240/mgmt/tm/sys/folder | jq .
+curl -k -u admin:admin -H "Content-Type: application/json" -X POST -d '{"name":"ocp", "fullPath": "/ocp", "subPath": "/"}' https://10.1.20.240/mgmt/tm/sys/folder | jq .
 #
 # Setup Flannel
 #
 
 
-curl -k -u admin:admin -H "Content-Type: application/json" -X POST -d '{"name": "ose-vxlan","partition": "Common","defaultsFrom": "/Common/vxlan", "floodingType": "multipoint" }' https://10.1.10.240/mgmt/tm/net/tunnels/vxlan
+curl -k -u admin:admin -H "Content-Type: application/json" -X POST -d '{"name": "ose-vxlan","partition": "Common","defaultsFrom": "/Common/vxlan", "floodingType": "multipoint" }' https://10.1.20.240/mgmt/tm/net/tunnels/vxlan
 sleep 3
 
-curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "openshift_vxlan","partition": "Common","key": 0,"localAddress": "10.1.20.240","profile": "/Common/ose-vxlan" }' https://10.1.10.240/mgmt/tm/net/tunnels/tunnel
+curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "openshift_vxlan","partition": "Common","key": 0,"localAddress": "10.1.20.240","profile": "/Common/ose-vxlan" }' https://10.1.20.240/mgmt/tm/net/tunnels/tunnel
 #
 oc create -f host.yaml
 sleep 30
@@ -31,8 +31,8 @@ SELFFLOAT=$(echo $SUBNET | sed -e 's/\.0\/23/\.4\/14/g')
 
 # Create self-ip
 
-curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d "{\"name\": \"vxlan-local\",\"partition\": \"Common\",\"address\": \"${SELFLOCAL}\", \"floating\": \"disabled\",\"vlan\": \"/Common/openshift_vxlan\"}" https://10.1.10.240/mgmt/tm/net/self
-curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d "{\"name\": \"vxlan-float\",\"partition\": \"Common\",\"address\": \"${SELFFLOAT}\", \"floating\": \"enabled\",\"vlan\": \"/Common/openshift_vxlan\",\"trafficGroup\":\"/Common/traffic-group-1\"}" https://10.1.10.240/mgmt/tm/net/self
+curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d "{\"name\": \"vxlan-local\",\"partition\": \"Common\",\"address\": \"${SELFLOCAL}\", \"floating\": \"disabled\",\"vlan\": \"/Common/openshift_vxlan\"}" https://10.1.20.240/mgmt/tm/net/self
+curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d "{\"name\": \"vxlan-float\",\"partition\": \"Common\",\"address\": \"${SELFFLOAT}\", \"floating\": \"enabled\",\"vlan\": \"/Common/openshift_vxlan\",\"trafficGroup\":\"/Common/traffic-group-1\"}" https://10.1.20.240/mgmt/tm/net/self
 
 
 sleep 10
@@ -87,7 +87,7 @@ oc create -f www-service.yaml
 
 
 sleep 3
-curl -k -u admin:admin -H "Content-Type: application/json" -d '{"command":"save"}' https://10.1.10.240/mgmt/tm/sys/config
+curl -k -u admin:admin -H "Content-Type: application/json" -d '{"command":"save"}' https://10.1.20.240/mgmt/tm/sys/config
 
 printf "##############################################\n"
 printf "Connect to Frontend APP with http://10.1.10.80\n"
