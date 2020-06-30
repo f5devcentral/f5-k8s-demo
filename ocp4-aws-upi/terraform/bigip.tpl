@@ -1,4 +1,16 @@
 #cloud-config
+write_files:
+  - path: /config/custom-config.sh
+    permissions: 0755
+    owner: root:root
+    content: |
+      #!/bin/bash
+      PYTHONPATH=/opt/aws/awscli-1.10.26/lib/python2.7/site-packages/ /opt/aws/awscli-1.10.26/bin/aws s3 cp s3://${s3_bucket}/admin.shadow /config/admin.shadow
+      tmsh modify /auth user admin encrypted-password $(cat /config/admin.shadow)
+      tmsh save sys config
+      rm -f /config/admin.shadow
+      # this also signals that the BIG-IP is completely up
+      PYTHONPATH=/opt/aws/awscli-1.10.26/lib/python2.7/site-packages/ /opt/aws/awscli-1.10.26/bin/aws s3 rm s3://${s3_bucket}/admin.shadow
 tmos_declared:
   enabled: true
   icontrollx_trusted_sources: false
@@ -70,15 +82,7 @@ tmos_declared:
         gw: 10.1.10.1
         network: default
         mtu: 1500
-  extension_services:
-    service_operations:
-    - extensionType: as3
-      type: url
-      value: file:///var/tmp/as3_example.json	
   post_onboard_enabled: true
   post_onboard_commands:
-    # not recommended to set password via cloud-init in AWS
-    # this is NOT a secure method, used for demo purposes only
-    - tmsh modify auth user admin { password ${password} }
-    - tmsh modify auth user admin shell bash
-    - tmsh save sys config
+    # the following will set the passwd
+    - /config/custom-config.sh
