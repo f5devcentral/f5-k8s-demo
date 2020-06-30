@@ -63,11 +63,11 @@ oc delete -f cis-subscription.yaml
 oc delete -f ingress-nginx-service.yaml -n nginx-ingress
 oc delete -f ingress-nginx-service-tls.yaml -n nginx-ingress
 
-oc delete -f nginx-ingress-controller.yaml
-oc delete secret -n nginx-ingress tls-secret
+oc delete -f nginx-ingress-controller.yaml -n nginx-ingress
+oc delete secret -n nginx-ingress tls-secret -n nginx-ingress
 
-oc delete -f nginx-operator.yaml
-oc delete -f nginx-subscription.yaml
+oc delete -f nginx-operator.yaml -n nginx-ingress
+oc delete -f nginx-subscription.yaml -n nginx-ingress
 oc delete namespace nginx-ingress
 sleep 3
 
