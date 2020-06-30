@@ -16,7 +16,7 @@ spec:
           value: "website"
         - name: F5DEMO_NODENAME
           value: "WWW Route"
-        - name: F5DEMO_NODENAME
+        - name: F5DEMO_NODENAME_SSL
           value: "WWW Route (SSL Backend)"
         imagePullPolicy: IfNotPresent
         name: www
