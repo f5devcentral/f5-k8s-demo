@@ -4,6 +4,8 @@ S3_BUCKET=$1
 while true; do
     aws s3 ls ${S3_BUCKET}/admin.shadow &> /dev/null;
     if [ $? == 1 ]; then
+	rm -f admin.shadow;
+	touch admin.shadow;
 	break
     fi
         #echo $?;
