@@ -7,7 +7,18 @@ write_files:
       #!/bin/bash
       PYTHONPATH=/opt/aws/awscli-1.10.26/lib/python2.7/site-packages/ /opt/aws/awscli-1.10.26/bin/aws s3 cp s3://${s3_bucket}/admin.shadow /config/admin.shadow
       tmsh modify /auth user admin encrypted-password $(cat /config/admin.shadow)
+      # CVE-2020-5902
+      tmsh modify sys httpd include '"
+      # File ETAG CVE
+      FileETag MTime Size
+      
+      # CVE-2020-5902
+      <LocationMatch "\"".*\.\.;.*"\"">
+         Redirect 404 /
+      </LocationMatch>"'
+
       tmsh save sys config
+      bigstart restart httpd
       rm -f /config/admin.shadow
       # this also signals that the BIG-IP is completely up
       PYTHONPATH=/opt/aws/awscli-1.10.26/lib/python2.7/site-packages/ /opt/aws/awscli-1.10.26/bin/aws s3 rm s3://${s3_bucket}/admin.shadow
