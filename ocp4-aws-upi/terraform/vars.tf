@@ -13,4 +13,8 @@ variable "f5_ami_search_name" {
   type        = string
   default     = "F5 BIGIP-15.1.* PAYG-Best 25Mbps*"
 }
+variable "rhcos_ami" {
+  description = "AMI ID for RHCOS"
+  type = string
+}
 variable "cluster_id" {}

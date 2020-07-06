@@ -52,6 +52,11 @@ tmos_declared:
           - 0.pool.ntp.org
           - 1.pool.ntp.org
           - 2.pool.ntp.org
+      mgmtRoute:
+        class: Route
+        gw: 10.1.20.1
+        mtu: 1500
+        network: 10.1.1.0/24
       internal:
         class: VLAN
         mtu: 9001
