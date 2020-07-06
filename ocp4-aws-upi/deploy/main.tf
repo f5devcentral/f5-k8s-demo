@@ -1,3 +1,7 @@
+provider "aws" {
+  version = "~> 2.0"
+  region  = "${var.aws_region}"
+}
 provider "bigip" {
   address  = "https://${var.bigip1_ip}:443"
   username = "admin"

@@ -164,10 +164,8 @@
                     "use": "dns_profile"
                 },
                 "pool": "dns_resolver_pool",
-                "shareAddresses": true,
-                "iRules": [
-                    "dns_irule"
-                ]
+                "shareAddresses": true
+                            
             },
             "dns_listener_tcp_vs": {
                 "class": "Service_TCP",
@@ -179,10 +177,7 @@
                     "use": "dns_profile"
                 },
                 "pool": "dns_resolver_pool",
-                "shareAddresses": true,
-                "iRules": [
-                    "dns_irule"
-                ]
+                "shareAddresses": true
             },
             "dns_resolver_pool": {
                 "class": "Pool",
@@ -190,7 +185,7 @@
                     {
                         "servicePort": 53,
                         "serverAddresses": [
-                            "10.1.0.2"
+                            "10.1.1.4"
                         ]
                     }
                 ]
