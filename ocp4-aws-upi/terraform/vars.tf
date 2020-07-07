@@ -18,3 +18,4 @@ variable "rhcos_ami" {
   type = string
 }
 variable "cluster_id" {}
+variable "allow_ip" {}
