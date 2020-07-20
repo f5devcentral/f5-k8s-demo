@@ -11,7 +11,7 @@ variable "ssh_key" {
 variable "f5_ami_search_name" {
   description = "BIG-IP AMI name to search for"
   type        = string
-  default     = "F5 BIGIP-15.1.* PAYG-Best 25Mbps*"
+  default     = "F5 BIGIP-15.1.0.4* PAYG-Best 25Mbps*"
 }
 variable "rhcos_ami" {
   description = "AMI ID for RHCOS"
