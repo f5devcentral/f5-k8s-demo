@@ -4,9 +4,10 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: bigip1-f5-bigip-ctlr
+  namespace: kube-system
   labels:
     app: f5-bigip-ctlr
-    chart: f5-bigip-ctlr-0.0.6
+    chart: f5-bigip-ctlr-0.0.7
     release: bigip1
     heritage: Tiller
 ---
@@ -17,48 +18,55 @@ metadata:
   name: bigip1-f5-bigip-ctlr
   labels:
     app: f5-bigip-ctlr
-    chart: f5-bigip-ctlr-0.0.6
+    chart: f5-bigip-ctlr-0.0.7
     release: bigip1
     heritage: Tiller
 rules:
-- apiGroups:
-  - ""
-  - "extensions"
-  resources:
-  - nodes
-  - services
-  - endpoints
-  - namespaces
-  - ingresses
-  - secrets
-  - pods
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  - "extensions"
-  resources:
-  - configmaps
-  - events
-  - ingresses/status
-  verbs:
-  - get
-  - list
-  - watch
-  - update
-  - create
-  - patch
+  - verbs:
+      - get
+      - list
+      - watch
+    apiGroups:
+      - ''
+      - apps
+      - extensions
+      - route.openshift.io
+    resources:
+      - nodes
+      - services
+      - endpoints
+      - namespaces
+      - ingresses
+      - secrets
+      - pods
+      - routes
+  - verbs:
+      - get
+      - list
+      - watch
+      - update
+      - create
+      - patch
+    apiGroups:
+      - ''
+      - apps
+      - extensions
+      - route.openshift.io
+    resources:
+      - configmaps
+      - events
+      - ingresses/status
+      - routes/status
 ---
 # Source: f5-bigip-ctlr/templates/f5-bigip-ctlr-clusterrolebinding.yaml
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: bigip1-f5-bigip-ctlr
+  namespace: kube-system
   labels:
     app: f5-bigip-ctlr
-    chart: f5-bigip-ctlr-0.0.6
+    chart: f5-bigip-ctlr-0.0.7
     release: bigip1
     heritage: Tiller
 roleRef:
@@ -68,20 +76,24 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: bigip1-f5-bigip-ctlr
-  namespace: "kube-system"
+  namespace: kube-system
 ---
 # Source: f5-bigip-ctlr/templates/f5-bigip-ctlr-deploy.yaml
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: bigip1-f5-bigip-ctlr
+  namespace: kube-system
   labels:
     app: f5-bigip-ctlr
-    chart: f5-bigip-ctlr-0.0.6
+    chart: f5-bigip-ctlr-0.0.7
     release: bigip1
     heritage: Tiller
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: f5-bigip-ctlr
   template:
     metadata:
       labels:
@@ -89,21 +101,21 @@ spec:
         release: bigip1
     spec:
       serviceAccountName: bigip1-f5-bigip-ctlr
-      imagePullSecrets:
-        - name: bigip-login
       containers:
       - name: f5-bigip-ctlr
-        image: "f5networks/k8s-bigip-ctlr:1.13.0"
+        image: "f5networks/k8s-bigip-ctlr:2.0.0"
         volumeMounts:
         - name: bigip-creds
           mountPath: "/tmp/creds"
           readOnly: true
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         command:
         - /app/bin/k8s-bigip-ctlr
         args:
         - --credentials-directory
         - /tmp/creds
+        - --agent
+        - "as3"
         - --bigip-partition
         - "kubernetes"
         - --bigip-url
@@ -112,16 +124,10 @@ spec:
         - "flannel_vxlan"
         - --insecure
         - "true"
+        - --override-as3-declaration
+        - "default/f5-as3-override"
         - --pool-member-type
         - "cluster"
-        - --resolve-ingress-names
-        - "LOOKUP"
-        - --override-as3-declaration
-        - "default/f5-as3-declaration"
-        - --agent
-        - "as3"
-          #- --log-level
-          #- "DEBUG"
       volumes:
       - name: bigip-creds
         secret:
