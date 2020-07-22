@@ -1,0 +1,87 @@
+{
+     "class": "AS3",
+     "action": "deploy",
+     "persist": true,
+     "declaration": 
+{
+    "class": "ADC",
+    "schemaVersion": "3.0.0",
+    "Common": {
+        "class": "Tenant",
+        "Shared": {
+            "class": "Application",
+            "template": "shared",
+            "SharedVIP": {
+                "class": "Service_Address",
+                "virtualAddress": "10.1.10.10"
+            },
+            "DataCenterOne": {
+                "class": "GSLB_Data_Center"
+            },
+            "OCPDNS": {
+                "class": "GSLB_Server",
+                "dataCenter": {
+                    "use": "DataCenterOne"
+                },
+                "devices": [
+                    {
+                        "address": "10.1.20.240",
+                        "addressTranslation": "10.1.20.240"
+                    }
+                ],
+                "virtualServers": [
+                    {
+                        "address": "10.1.10.10",
+                        "addressTranslation": "10.1.10.10",
+                        "addressTranslationPort": 443,
+                        "port": 443
+                    },
+                    {
+                        "address": "10.1.10.100",
+                        "addressTranslation": "10.1.10.100",
+                        "addressTranslationPort": 80,
+                        "port": 80
+                    },
+                    {
+                        "address": "10.1.10.101",
+                        "addressTranslation": "10.1.10.101",
+                        "addressTranslationPort": 80,
+                        "port": 80
+                    },
+                    {
+                        "address": "10.1.10.102",
+                        "addressTranslation": "10.1.10.102",
+                        "addressTranslationPort": 80,
+                        "port": 80
+                    },
+                    {
+                        "address": "10.1.10.10",
+                        "addressTranslation": "10.1.10.10",
+                        "addressTranslationPort": 80,
+                        "port": 80
+                    }
+                ]
+            },
+            "constants": {
+                "class": "Constants",
+                "fast": {
+                    "template": "openshift/0_shared",
+                    "view": {
+                        "self_address": "10.1.20.240",
+                        "virtual_address": "10.1.10.10",
+                        "virtual_address1": "10.1.10.100",
+                        "virtual_address2": "10.1.10.101",
+                        "virtual_address3": "10.1.10.102"
+                    },
+                    "lastModified": "2020-07-01T10:24:07.108Z"
+                }
+            }
+        }
+    },
+    "id": "fast-Common-Shared-bb690409-babf-4263-ac2e-19d4e44861ac",
+    "updateMode": "selective",
+    "controls": {
+        "archiveTimestamp": "2020-07-01T10:24:13.526Z"
+    }
+}
+}

@@ -16,8 +16,6 @@ spec:
           value: "website"
         - name: F5DEMO_NODENAME
           value: "CIS Ingress"
-        - name: F5DEMO_BACKEND_URL
-          value: "http://my-backend/"
         imagePullPolicy: IfNotPresent
         name: my-frontend3
         ports:

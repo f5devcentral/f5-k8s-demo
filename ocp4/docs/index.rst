@@ -9,9 +9,10 @@ Welcome to OpenShift 4 Lab's documentation!
 This provides documentation on how to use this lab environment.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :glob:
    :caption: Contents:
 
-   demo/*
-   build/*
+   demo/index
+   walkthrough/index
+   build/index

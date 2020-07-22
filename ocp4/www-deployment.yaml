@@ -16,10 +16,10 @@ spec:
           value: "website"
         - name: F5DEMO_NODENAME
           value: "WWW Route"
-        - name: F5DEMO_BACKEND_URL
-          value: "http://my-backend/"
+        - name: F5DEMO_NODENAME_SSL
+          value: "WWW Route (SSL Backend)"
         imagePullPolicy: IfNotPresent
-        name: my-frontend
+        name: www
         ports:
         - containerPort: 8443
           protocol: TCP

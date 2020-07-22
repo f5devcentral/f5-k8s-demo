@@ -4,7 +4,6 @@ metadata:
   name: my-nginx-ingress-controller
   namespace: nginx-ingress
 spec:
-  enableCRDs: true
   image:
     pullPolicy: Always
     repository: registry.dc1.example.com/nginx-plus-ingress
