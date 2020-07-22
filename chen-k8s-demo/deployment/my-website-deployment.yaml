@@ -1,16 +1,19 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: my-website
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: my-website  
   template:
     metadata:
       labels:
-        run: my-website
+        app: my-website
     spec:
       containers:
-      - image: f5devcentral/f5-demo-httpd:latest
+      - image: f5devcentral/f5-demo-httpd:nginx
         env:
         - name: F5DEMO_APP
           value: "website"
