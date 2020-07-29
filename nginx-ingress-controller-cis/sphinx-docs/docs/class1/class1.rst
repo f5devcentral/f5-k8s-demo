@@ -1,7 +1,8 @@
-Exposing Services in Kubernetes
-================================
+Class1: Exposing Services in Kubernetes
+=======================================
 
-In this class we will deploy a Kubernetes Service and expose it using kube-proxy, then NGINX+ ingress controller, and finally a BIG-IP using CIS.
+In this class we will deploy a Kubernetes Service and expose it using
+kube-proxy, then NGINX+ ingress controller, and finally a BIG-IP using CIS.
 
 - Deploy an application and expose services using NodePort
 - Deploy NGINX+ Ingress
