@@ -29,12 +29,12 @@ Under Systems -> Users -> Partitions
 Click on the **"+"**.
 
 .. image:: /_static/class1-module3-lab1-create-partition.png
-   :scale: 50%
+   :scale: 75
   
 Create a partition named "kubernetes" and click finish.
 
 .. image:: /_static/class1-module3-lab1-create-partition2.png
-   :scale: 50%
+   :scale: 75
 
 Create a Secret for BIG-IP
 --------------------------

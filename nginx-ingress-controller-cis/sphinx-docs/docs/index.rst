@@ -13,7 +13,7 @@ Together NGINX+ and BIG-IP will secure traffic to the Kubernetes applications.
 
 .. image::  /_static/nginx-plus-bigip-better-together.png
    :align: center
-   :width: 1000
+   :scale: 65
 
 |
 |
@@ -37,7 +37,7 @@ to the following infrastructure:
 .. note:: The Lab Guide is available from UDF or on the Windows Jumphost.
 
    .. image:: /_static/NISguide.png
-      :width: 300
+      :scale: 50
  
 .. toctree::
    :maxdepth: 2

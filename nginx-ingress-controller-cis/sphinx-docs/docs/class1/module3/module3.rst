@@ -13,12 +13,20 @@ Balancing. Then you will configure CIS to use L7 WAF policies. These
 configurations will be pushed to an F5 BIG-IP that is sitting outside the
 Kubernetes cluster.
 
-.. image::  /_static/nginx-plus-bigip-better-together.png
+|
+|
 
-.. _`Container Ingress Services`: https://github.com/F5Networks/k8s-bigip-ctlr
+.. image::  /_static/nginx-plus-bigip-better-together.png
+   :align: center
+   :scale: 65
+
+|
+|
 
 .. toctree::
    :maxdepth: 1
    :glob:
 
    lab*
+
+.. _`Container Ingress Services`: https://github.com/F5Networks/k8s-bigip-ctlr

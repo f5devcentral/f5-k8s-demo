@@ -25,7 +25,7 @@ of Node Port to connect to a service or route directly to the pod via the CNI
 (participates in the VXLAN, BGP, or cloud provider network).
 
 .. image:: /_static/k8network.png
-   :width: 200pt
+   :scale: 50
 
 .. toctree::
    :maxdepth: 1
