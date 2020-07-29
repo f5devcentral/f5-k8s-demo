@@ -21,7 +21,7 @@ outside the Kubernetes cluster.
 
 .. code:: shell
 
-   $ kubectl apply -f ~/f5-cis/cis-better-together-configmap.yaml
+   kubectl apply -f ~/f5-cis/cis-better-together-configmap.yaml
 ..
 
 Now you should be able to trigger the WAF policy by sending a contrived attack

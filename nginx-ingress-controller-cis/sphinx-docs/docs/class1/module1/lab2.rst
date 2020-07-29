@@ -18,13 +18,13 @@ Tell Kubernetes to "expose" the deployment you made in the previous step.
 
 .. code:: shell
 
-   $ kubectl expose deployment/coffee --name coffee-svc
+   kubectl expose deployment/coffee --name coffee-svc
 
 Now ``get`` the service's properties:
 
 .. code:: shell
 
-   $ kubectl get svc
+   kubectl get svc
   
 .. NOTE:: "svc" is short for "service".  You could also type it out fully, but
    commonly "svc" is used.
@@ -51,13 +51,13 @@ running.
 
 .. code:: shell
 
-   $ kubectl get po
+   kubectl get po
 
 Once you have that output you can run:
 
 .. code::
 
-   $ kubectl exec -it [name of pod] -- nslookup coffee-svc
+   kubectl exec -it [name of pod] -- nslookup coffee-svc
   
 The ``exec -it`` will run the ``nslookup`` command interactively and exit
 when the command completes.  You could also run ``sh`` if you want to
@@ -85,7 +85,7 @@ Verify that you can access the coffee service via the Cluster IP.
 
 .. code:: shell
   
-   $ curl [Cluster IP]
+   curl [Cluster IP]
   
 Example output (Your Cluster IP will be a different value):
 
@@ -120,7 +120,7 @@ We will now ``apply`` the complete example that includes a "tea" service.
 
 .. code:: shell
 
-   $ kubectl apply -f ~/kubernetes-ingress/examples/complete-example/cafe.yaml
+   kubectl apply -f ~/kubernetes-ingress/examples/complete-example/cafe.yaml
   
 Example output:
 

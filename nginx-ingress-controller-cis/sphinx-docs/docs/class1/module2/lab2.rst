@@ -15,14 +15,14 @@ On the K8S Master host go to the
 
 .. code:: shell
 
-   $ cd ~/kubernetes-ingress/examples/complete-example/
+   cd ~/kubernetes-ingress/examples/complete-example/
   
 In the previous lab you should have already completed the following steps.
 Please re-run this command to make sure that everything is all set.
 
 .. code:: shell
 
-   $ kubectl apply -f cafe.yaml
+   kubectl apply -f cafe.yaml
   
 Load Certs and Keys
 -------------------
@@ -32,7 +32,7 @@ Kubernetes Secret. To load the cert/key:
 
 .. code:: shell
 
-   $ kubectl create -f cafe-secret.yaml
+   kubectl create -f cafe-secret.yaml
 
 Load Ingress Resource
 ---------------------
@@ -72,7 +72,7 @@ Deploy the Ingress resource:
 
 .. code:: shell
 
-   $ kubectl create -f cafe-ingress.yaml
+   kubectl create -f cafe-ingress.yaml
 
 Verify Service
 --------------
@@ -84,7 +84,7 @@ for your environment):
 
 .. code:: shell
 
-  $ curl --resolve cafe.example.com:[SSL Port Number]:10.1.1.9 https://cafe.example.com:[SSL Port Number]/coffee -k
+  curl --resolve cafe.example.com:[SSL Port Number]:10.1.1.9 https://cafe.example.com:[SSL Port Number]/coffee -k
 
 .. NOTE:: The ``--resolve`` flag instructs ``curl`` to set the appropriate Host
    headers (while sending the proper SNI extention in the CLIENT HELLO) to

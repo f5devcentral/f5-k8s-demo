@@ -44,7 +44,7 @@ On the K8S Master node run the following:
 
 .. code:: shell
 
-   $ kubectl create secret generic bigip-login --namespace kube-system --from-literal=username=admin --from-literal=password=admin
+   kubectl create secret generic bigip-login --namespace kube-system --from-literal=username=admin --from-literal=password=admin
 
 Service Account
 ---------------
@@ -53,7 +53,7 @@ You will also need a Service Account that the controller will run as.
 
 .. code:: shell
   
-   $ kubectl apply -f ~/f5-cis/cis-sa.yaml -n kube-system
+   kubectl apply -f ~/f5-cis/cis-sa.yaml -n kube-system
   
 RBAC Permissions
 ----------------
@@ -62,7 +62,7 @@ Grant appropriate permissions to the Service Account.
 
 .. code:: shell
   
-   $ kubectl apply -f ~/f5-cis/cis-rbac.yaml -n kube-system
+   kubectl apply -f ~/f5-cis/cis-rbac.yaml -n kube-system
   
 
 Deploy the Controller
@@ -72,7 +72,7 @@ The following command will deploy the controller.
 
 .. code:: shell
   
-   $ kubectl apply -f ~/f5-cis/f5-cc-deployment.yaml -n kube-system
+   kubectl apply -f ~/f5-cis/f5-cc-deployment.yaml -n kube-system
   
 
 Update Services

@@ -91,7 +91,7 @@ Create the ConfigMap for the basic service by applying the following command.
 
 .. code:: shell
   
-   $ kubectl apply -f ~/f5-cis/cis-configmap.yaml
+   kubectl apply -f ~/f5-cis/cis-configmap.yaml
   
 Verify the Service
 ------------------
@@ -103,7 +103,7 @@ You can verify the service by using curl against the BIG-IP virtual server (cafe
 
 .. code:: shell
   
-   $  curl https://cafe.example.com/coffee -k
+   curl https://cafe.example.com/coffee -k
 
 Example Output:
 

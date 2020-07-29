@@ -35,7 +35,7 @@ On the K8S Master host you will need to change into the
 
 .. code:: shell
 
-   $ cd ~/kubernetes-ingress/deployments/
+   cd ~/kubernetes-ingress/deployments/
 
 Create NameSpace and Service Account
 ------------------------------------
@@ -46,7 +46,7 @@ ServiceAccount for accessing the Kubernetes API. Run this command to create the
 
 .. code:: shell
 
-   $ kubectl apply -f common/ns-and-sa.yaml
+   kubectl apply -f common/ns-and-sa.yaml
   
 Create "regcred" for Private Docker Repo
 ----------------------------------------
@@ -56,7 +56,7 @@ private  repo in the lab environment. Run this command to create the secret:
 
 .. code:: shell
 
-   $ kubectl create secret docker-registry regcred --docker-server=registry.internal:30500 --docker-username=registry --docker-password=registry --docker-email=gsa@f5.com -n nginx-ingress
+   kubectl create secret docker-registry regcred --docker-server=registry.internal:30500 --docker-username=registry --docker-password=registry --docker-email=gsa@f5.com -n nginx-ingress
 
 
 Install Default SSL Cert/Key
@@ -68,7 +68,7 @@ default certificate into Kubernetes:
 
 .. code:: shell
 
-   $ kubectl apply -f common/default-server-secret.yaml
+   kubectl apply -f common/default-server-secret.yaml
   
 .. NOTE:: NGINX docs state "For testing purposes we include a self-signed
    certificate and key that we generated. However, we recommend that you use
@@ -84,7 +84,7 @@ annotations are `available`_.
 
 .. code:: shell
 
-   $ kubectl apply -f common/nginx-config.yaml
+   kubectl apply -f common/nginx-config.yaml
 
 Configure RBAC
 --------------
@@ -94,7 +94,7 @@ the NGINX Service Account to the Kubernetes API.
 
 .. code:: shell
 
-   $ kubectl apply -f rbac/rbac.yaml
+   kubectl apply -f rbac/rbac.yaml
 
 .. NOTE:: The ``ubuntu`` user is accessing the Kubernetes Cluster as a "Cluster
    Admin" and has privileges to apply RBAC permissions.
@@ -114,7 +114,7 @@ The following are Eric's opinion on the differences:
 
 .. code:: shell
 
-   $ kubectl apply -f deployment/nginx-plus-ingress.yaml
+   kubectl apply -f deployment/nginx-plus-ingress.yaml
   
 .. NOTE:: The lab environment has modified ``nginx-plus-ingress.yaml`` and 
    created resources to support it.  Normally you **MUST** modify 
@@ -128,7 +128,7 @@ namespace.
 
 .. code:: shell
 
-   $ kubectl get po -n nginx-ingress
+   kubectl get po -n nginx-ingress
   
 You should see output similar to:
 
@@ -150,7 +150,7 @@ map to port 80/443 on the NGINX+ Ingress Controller.
 
 .. code:: shell
 
-   $ kubectl create -f service/nodeport.yaml
+   kubectl create -f service/nodeport.yaml
 
 .. _retrieve_nodeport:
   
@@ -161,7 +161,7 @@ We will next retrieve the port number that NGINX+ port 80 is exposed at.
 
 .. code:: shell
 
-  $ kubectl get svc -n nginx-ingress
+  kubectl get svc -n nginx-ingress
 
 You should see output similar to (your port values will be different):
 
