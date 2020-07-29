@@ -4,7 +4,7 @@ metadata:
   name: nginx-ingress
   namespace: nginx-ingress
   labels:
-    cis.f5.com/as3-tenant: ConfigMap
+    cis.f5.com/as3-tenant: ConfigMapNginx
     cis.f5.com/as3-app: MyApps
     cis.f5.com/as3-pool: ingress_pool
 spec:

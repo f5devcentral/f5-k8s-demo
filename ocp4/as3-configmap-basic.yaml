@@ -38,74 +38,7 @@ data:
                    "serverAddresses": [],
                    "shareNodes": true
                 }]
-             },
-             "ingress": {
-                "class": "Service_TCP",
-                "virtualAddresses": ["10.1.10.102"
-                ],
-               
-               "virtualPort": 80,
-               "remark":"ingress: f5demo.proxyprotocol.tcp.v1",
-               "pool": "ingress_pool",
-               "iRules": ["Proxy_Protocol_Send"]
-             },
-             "ingress_pool": {
-                "class": "Pool",
-                "monitors": [
-                   "tcp"
-                ],
-                "members": [{
-                   "servicePort": 80,
-                   "serverAddresses": [],
-                   "shareNodes": true		   
-                }]
-             },
-             "ingresstls": {
-                "class": "Service_TCP",
-                "virtualAddresses": ["10.1.10.102"
-                ],
-               
-               "virtualPort": 443,
-               "remark":"ingresstls: f5demo.proxyprotocol.tcp.v1",
-               "pool": "ingresstls_pool",
-               "iRules": ["Proxy_Protocol_Send"]
-             },
-             "ingresstls_pool": {
-                "class": "Pool",
-                "monitors": [
-                   "tcp"
-                ],
-                "members": [{
-                   "servicePort": 80,
-                   "serverAddresses": [],
-                   "shareNodes": true		   
-                }]
-             },
-             "nginxplusapi": {
-                "class": "Service_TCP",
-                "virtualAddresses": ["10.1.10.102"],
-               "remark":"nginxplusapi: f5demo.tcp.v1",
-               
-               "virtualPort": 9090,
-                "pool": "nginxplusapi_pool"
-             },
-             "nginxplusapi_pool": {
-                "class": "Pool",
-                "monitors": [ "tcp" ],
-                "members": [{
-                   "servicePort": 80,
-                   "serverAddresses": [],
-                   "shareNodes": true		   
-                }]
-             },	     
-            "XFF_HTTP_Profile": {
-              "class": "HTTP_Profile",
-                "xForwardedFor": true
-             },                       
-                "Proxy_Protocol_Send": {
-                  "class":"iRule",
-                  "iRule": "when CLIENT_ACCEPTED {\n    set proxyheader \"PROXY TCP[IP::version] [IP::remote_addr] [IP::local_addr] [TCP::remote_port] [TCP::local_port]\\r\\n\"\n}\n \nwhen SERVER_CONNECTED {\n    TCP::respond $proxyheader\n}"
-                }	     
+             }
        }
        }
     }
