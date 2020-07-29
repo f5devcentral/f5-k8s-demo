@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: my-frontend
   labels:
-    run: my-frontend
+    app: my-frontend
 spec:
   ports:
   - port: 80
@@ -11,4 +11,4 @@ spec:
     targetPort: 80
   type: NodePort
   selector:
-    run: my-frontend
+    app: my-frontend

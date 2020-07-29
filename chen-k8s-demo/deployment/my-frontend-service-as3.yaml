@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: my-frontend
   labels:
-    run: my-frontend
+    app: my-frontend
     cis.f5.com/as3-tenant: AS3
     cis.f5.com/as3-app: MyApps
     cis.f5.com/as3-pool: frontend_pool
@@ -16,4 +16,4 @@ spec:
     targetPort: 80
   type: LoadBalancer
   selector:
-    run: my-frontend
+    app: my-frontend

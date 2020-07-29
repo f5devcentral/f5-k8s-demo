@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: my-website
   labels:
-    run: my-website
+    app: my-website
     cis.f5.com/as3-tenant: AS3
     cis.f5.com/as3-app: MyApps
     cis.f5.com/as3-pool: website_pool
@@ -14,14 +14,14 @@ spec:
     targetPort: 80
   type: LoadBalancer
   selector:
-    run: my-website
+    app: my-website
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: my-website-https
   labels:
-    run: my-website
+    app: my-website
     cis.f5.com/as3-tenant: AS3
     cis.f5.com/as3-app: MyApps
     cis.f5.com/as3-pool: websitetls_pool
@@ -32,4 +32,4 @@ spec:
     targetPort: 443
   type: LoadBalancer
   selector:
-    run: my-website
+    app: my-website
