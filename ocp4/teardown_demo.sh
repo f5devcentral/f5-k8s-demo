@@ -69,6 +69,7 @@ oc delete secret -n nginx-ingress tls-secret -n nginx-ingress
 oc delete -f nginx-operator.yaml -n nginx-ingress
 oc delete -f nginx-subscription.yaml -n nginx-ingress
 oc delete namespace nginx-ingress
+oc label ns default use_cis-
 sleep 3
 
 

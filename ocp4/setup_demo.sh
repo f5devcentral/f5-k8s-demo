@@ -23,6 +23,7 @@ sleep 3
 
 curl -k -u admin:admin  -H 'Content-Type: application/json' -X POST -d '{"name": "openshift_vxlan","partition": "Common","key": 0,"localAddress": "10.1.20.240","profile": "/Common/ose-vxlan" }' https://10.1.20.240/mgmt/tm/net/tunnels/tunnel
 #
+oc label ns default use_cis=true
 oc create -f host.yaml
 sleep 30
 SUBNET=$(oc get hostsubnet bigip1 -o template --template={{.subnet}})
@@ -62,6 +63,7 @@ oc create -f f5-server.yaml
 ## Deploy NGINX Ingress Controller
 ##
 oc create ns nginx-ingress
+oc label ns nginx-ingress use_cis=true
 oc create -f nginx-operator.yaml
 safesub=$(echo $SUBNET |sed -e 's/\//\\\//g')
 cat nginx-ingress-controller.yaml| sed -e 's/10\.130\.0\.0\/23/'"$safesub"'/g' | oc create -f -
