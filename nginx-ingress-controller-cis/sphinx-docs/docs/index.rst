@@ -39,14 +39,8 @@ to the following infrastructure:
    .. image:: /_static/NISguide.png
       :width: 300
  
-During the lab you will:
-
-#. Deploy a simple Kubernetes application
-#. Deploy an NGINX+ Ingress Controller
-#. Deploy an F5 BIG-IP Controller for Kubernetes
-
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :glob:
 
    class*/class*

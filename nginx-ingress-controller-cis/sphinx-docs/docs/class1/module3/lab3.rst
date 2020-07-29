@@ -21,14 +21,15 @@ outside the Kubernetes cluster.
 
 .. code:: shell
 
-  $ kubectl apply -f ~/f5-cis/cis-better-together-configmap.yaml
+   $ kubectl apply -f ~/f5-cis/cis-better-together-configmap.yaml
 ..
 
-Now you should be able to trigger the WAF policy by sending a contrived attack to steal coffee.
+Now you should be able to trigger the WAF policy by sending a contrived attack
+to steal coffee.
 
 .. code:: shell
   
-  curl -k https://cafe.example.com/coffee -v -H "X-Hacker: cat /etc/paswd"
+   curl -k https://cafe.example.com/coffee -v -H "X-Hacker: cat /etc/paswd"
   
 On the BIG-IP go to Security -> Event Logs and you should see the blocked request.
 
