@@ -71,7 +71,7 @@ Deploy the Ingress resource:
   $ kubectl create -f cafe-ingress.yaml
 
 Verify Service
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 Retrieve the port that is used for 443 traffic to NGINX+ using steps similar to :ref:`retrieve_nodeport` to test
 that the service is up. On the K8S Master node run the following ``curl``

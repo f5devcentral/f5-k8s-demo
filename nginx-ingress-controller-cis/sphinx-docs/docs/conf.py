@@ -83,9 +83,12 @@ print "on_snops = %s" % on_snops
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-  'sphinxjp.themes.basicstrap',
   'sphinx.ext.todo',
-  'sphinx.ext.autosectionlabel'
+  'sphinx.ext.extlinks',
+  'sphinx.ext.graphviz',
+  'sphinxcontrib.nwdiag',
+  'sphinxcontrib.blockdiag'
+  #'sphinx.ext.autosectionlabel'
 ]
 
 if 'googleanalytics_id' in locals() and len(googleanalytics_id) > 0:

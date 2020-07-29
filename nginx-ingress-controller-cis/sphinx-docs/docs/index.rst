@@ -4,10 +4,6 @@ NGINX Ingress Controller Walkthrough - Index
 Welcome
 -------
 
-.. Welcome to the |classbold| lab at F5 / NGINX Training |year|
-
-.. |repoinfo|
-
 The goal of this lab is to introduce you to NGINX+ as a Kubernetes Ingress Controller and F5 Container Ingress Services.
 The BIG-IP can act as the "front door" to the Kubernetes cluster and bring services to NGINX+ that is running inside the cluster.
 
@@ -46,5 +42,3 @@ The UDF Blueprint called **NGINX Ingress Controller Walkthrough** will give you 
    :glob:
 
    class*/class*
-..   examples
-..   markdown

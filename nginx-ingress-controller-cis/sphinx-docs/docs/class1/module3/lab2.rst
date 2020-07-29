@@ -130,6 +130,7 @@ Browse to the "Virtual Server List" under the "Local Traffic" menu.
 
 .. image:: /_static/newvs.png
    :width: 400pt
+
 Also take a look at the pool.  Observe that the BIG-IP is sending traffic 
 directly to NGINX+ over the CNI overlay (Flannel VXLAN).
 
