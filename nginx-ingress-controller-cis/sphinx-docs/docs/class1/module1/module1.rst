@@ -1,5 +1,5 @@
-Module - Deploying and Exposing a Kubernetes Service using NodePort
-=====================================================================
+Module 1: Deploying and Exposing a Kubernetes Service using NodePort
+====================================================================
 
 In this module you will learn how to deploy and expose an application
 service in Kubernetes.

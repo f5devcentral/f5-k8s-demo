@@ -1,13 +1,13 @@
-Deploy the NGINX Ingress Controller
-------------------------------------
+Lab 2.1 - Deploy the NGINX Ingress Controller
+=============================================
 
 This lab will deploy an NGINX Ingress Controller.
 
 .. WARNING:: The Kubernetes project also has an "NGINX Ingress Controller"
-             that is **DIFFERENT** than the "NGINX Ingress Controller" that
-             is being used in this lab.  The Kubernetes `project`_ "NGINX Ingress
-             Controller" is **NOT** supported/developed by NGINX (F5).  The
-             "`NGINX Ingress Controller`_" from NGINX (F5) is.
+   that is **DIFFERENT** than the "NGINX Ingress Controller" that
+   is being used in this lab.  The Kubernetes `project`_ "NGINX Ingress
+   Controller" is **NOT** supported/developed by NGINX (F5).  The
+   "`NGINX Ingress Controller`_" from NGINX (F5) is.
 
 In the lab environment NGINX+ has been already built into an image and is
 available in a private repository.  The deployment files have also been modified
@@ -27,7 +27,7 @@ or NGINX+ process.
 The following steps are adapted from "`Installing the Ingress Controller`_".
 
 Change directory into the "deployments" directory
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------------
 
 On the K8S Master host you will need to change into the ``~/kubernetes-ingress/deployments/``
 directory.
@@ -37,7 +37,7 @@ directory.
   $ cd ~/kubernetes-ingress/deployments/
 
 Create NameSpace and Service Account
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------
 
 The NGINX Ingress Controller runs in an isolated NameSpace and uses a separate 
 ServiceAccount for accessing the Kubernetes API.  Run this command to create the "nginx-ingress" namespace and
@@ -48,7 +48,7 @@ service account:
   $ kubectl apply -f common/ns-and-sa.yaml
   
 Create "regcred" for Private Docker Repo
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------
 
 You will need to create a Kubernetes secret that will be used to access the private 
 repo in the lab environment.  Run this command to create the secret:
@@ -59,7 +59,7 @@ repo in the lab environment.  Run this command to create the secret:
 
 
 Install Default SSL Cert/Key
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------
   
 The Ingress Controller will use a "default" SSL certificate for requests that 
 are not configured to use an explicit certificate.  The following loads the 
@@ -72,7 +72,7 @@ default certificate into Kubernetes:
 .. NOTE:: NGINX docs state "For testing purposes we include a self-signed certificate and key that we generated. However, we recommend that you use your own certificate and key."
 
 Create a NGINX ConfigMap
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
 NGINX Ingress Controller makes use of a Kubernetes ConfigMap to store 
 customizations to the NGINX+ configuration. Configuration snippets/directives 
@@ -83,7 +83,7 @@ can be passed into the ``data`` section or a set of NGINX and NGINX+ annotations
   $ kubectl apply -f common/nginx-config.yaml
 
 Configure RBAC
-~~~~~~~~~~~~~~
+--------------
 
 In this lab environment RBAC is enabled and you will need to enable access
 from the NGINX Service Account to the Kubernetes API.
@@ -96,7 +96,7 @@ from the NGINX Service Account to the Kubernetes API.
           to apply RBAC permissions.
 
 Create a Deployment
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 We will be deploying NGINX+ as a deployment.  It is also possible to deploy as 
 a "daemonset" on every node (or subset).  
@@ -116,7 +116,7 @@ Advantages of daemonset: fixed allocation (better if you want to expose port 80/
           this file before deploying.
 
 Verify your deployment
-~~~~~~~~~~~~~~~~~~~~~~
+----------------------
 
 Make sure that everything is running.  Add ``-n`` to specify the correct
 namespace.
@@ -133,7 +133,7 @@ You should see output similar to:
   nginx-ingress-56454fb6d-c5hl6   1/1     Running   0          44m
   
 Expose NGINX+ via NodePort
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------
 
 Finally we need to enable external access to the Kubernetes cluster by defining a ``service``.
 
@@ -150,7 +150,7 @@ Controller.
 .. _retrieve_nodeport:
   
 Retrieve Node Port 
-~~~~~~~~~~~~~~~~~~
+------------------
 
 We will next retrieve the port number that NGINX+ port 80 is exposed at.
 
@@ -172,7 +172,7 @@ In the example above port 32148 maps to port 80 on NGINX+.
           next lab exercise.
 
 Access NGINX+ From Outside the Cluster
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------------
 
 From the Windows JumpHost open up the Chrome browser and browse to the "kmaster" host IP and the previously recorded port:
 

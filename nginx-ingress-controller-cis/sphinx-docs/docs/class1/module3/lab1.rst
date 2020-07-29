@@ -1,5 +1,5 @@
-Lab – Deploy Container Ingress Services
------------------------------------------
+Lab 3.1 – Deploy Container Ingress Services
+===========================================
 
 During this excercise we will deploy the `F5 BIG-IP Controller`_ for 
 Kubernetes.  This is part of the Container Ingress Services that is
@@ -13,7 +13,7 @@ This is different than the NGINX Ingress Controller that is both a management
 plane **AND** data plane process.
 
 Create kubernetes partition on BIG-IP
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------
 
 The F5 BIG-IP Controller for Kubernetes makes use of an administrative
 partition to store its configuration.  You need to create this partition
@@ -37,7 +37,7 @@ Create a partition named "kubernetes" and click finish.
   :scale: 50%
 
 Create a Secret for BIG-IP
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------
 
 The user credentials for the BIG-IP need to be stored in a Kubernetes
 secret.  On the K8S Master node run the following:
@@ -48,7 +48,7 @@ secret.  On the K8S Master node run the following:
   
 
 Service Account
-~~~~~~~~~~~~~~~
+---------------
 
 You will also need a Service Account that the controller will run as.
 
@@ -57,7 +57,7 @@ You will also need a Service Account that the controller will run as.
   $ kubectl apply -f ~/f5-cis/cis-sa.yaml -n kube-system
   
 RBAC Permissions
-~~~~~~~~~~~~~~~~
+----------------
 
 Grant appropriate permissions to the Service Account.
 
@@ -67,7 +67,7 @@ Grant appropriate permissions to the Service Account.
   
 
 Deploy the Controller
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
 The following command will deploy the controller.
 
@@ -77,7 +77,7 @@ The following command will deploy the controller.
   
 
 Update Services
-~~~~~~~~~~~~~~~
+---------------
 
 To enable the controller to "discover" the NGINX+ Ingress we need to 
 add ``labels`` to the existing NodePort service that we created previously.

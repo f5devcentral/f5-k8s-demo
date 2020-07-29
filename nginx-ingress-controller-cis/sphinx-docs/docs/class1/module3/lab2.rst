@@ -1,17 +1,17 @@
-Deploy L4 TCP LB for NGINX+
-----------------------------
+Lab 3.2 - Deploy L4 TCP LB for NGINX+
+=====================================
 
 This lab will deploy basic L4 TCP services for NGINX+.
 
 About Application Services 3 (AS3)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------
 
 Container Ingress Services makes use of AS3 for configuring the BIG-IP.
 This provides a declarative interface to deploying basic and advanced
 L4-L7 services.
 
 A Basic L4 Services
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 First we will deploy a rudimentary L4 TCP reverse proxy to NGINX+ from
 the BIG-IP.  This configuration is in the form of a JSON file that is 
@@ -94,7 +94,7 @@ Create the ConfigMap for the basic service by applying the following command.
   $ kubectl apply -f ~/f5-cis/cis-configmap.yaml
   
 Verify the Service
-~~~~~~~~~~~~~~~~~~~
+------------------
 
 You can verify that the service is available by running the following ``curl``
 command.
@@ -118,7 +118,7 @@ Example Output:
   Request ID: 626fe1f0e2067d602971af1529c884f0
   
 Inspect BIG-IP Configuration
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------
 
 Back on the BIG-IP GUI verify that the AS3 declaration has been deployed.
 

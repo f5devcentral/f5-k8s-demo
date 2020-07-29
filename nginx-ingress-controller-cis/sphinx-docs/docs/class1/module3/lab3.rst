@@ -1,5 +1,5 @@
-Deploy Better L7 WAF Policies
------------------------------
+Lab 3.3 - Deploy Better L7 WAF Policies
+=======================================
 
 This lab will deploy L7 WAF policies to protect NGINX+ and the applications
 that are running behind it.
@@ -11,7 +11,7 @@ The BIG-IP is capable of providing advanced DDoS and  Web
 Application Firewall (WAF) protection.
 
 Deploying a WAF Policy
-~~~~~~~~~~~~~~~~~~~~~~~
+----------------------
 
 On the K8S Master Node run the specified ``kubectl`` command.
 

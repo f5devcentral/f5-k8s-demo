@@ -1,10 +1,10 @@
-Deploying an Application in Kubernetes
---------------------------------------
+Lab 1.1 - Deploying an Application in Kubernetes
+================================================
 
 This exercise will cover the basics of deploying an application in Kubernetes.
 
 Deploy an application
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
 Deploy an application to the Kubernetes cluster. The YAML represents a ``Deployment`` which tell Kubernetes to deploy a pod.
 The ``name`` of this ``Deployment`` is ``coffee``. There should be 2 ``replicas`` of the pod at the time of deployment. 
@@ -38,7 +38,7 @@ Port ``80`` inside the container should be exposed to the cluster.
   EOF
   
 Verify your application is running
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------
 
 Run the following command to see a list of pods that are running.
 

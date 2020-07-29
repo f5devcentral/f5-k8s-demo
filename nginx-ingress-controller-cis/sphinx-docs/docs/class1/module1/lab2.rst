@@ -1,11 +1,11 @@
-Exposing an Application Service in Kubernetes
-------------------------------------------------
+Lab 1.2 - Exposing an Application Service in Kubernetes
+=======================================================
 
 In the previous lab we deployed an application (with ``kind: Deployment``).  In this lab we will walk
 through how to expose the services outside the Kubernetes cluster.
 
 Expose a Cluster Service
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
 In the last lab exercise we were able to reach a service by connecting to
 the Pod IP address (in the overlay network).  We will first look at using "kube-proxy", the built-in
@@ -73,7 +73,7 @@ For example:
 .. NOTE:: The error returned by nslookup is due to an Alpine configuration problem and is not related to this lab.
 
 Verify access to coffee
-~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------
 
 Verify that you can access the coffee service via the Cluster IP.
 
@@ -104,7 +104,7 @@ Example output (Your Cluster IP will be a different value):
           changes between requests. Traffic is being proxied to both pods.
 
 Coffee and Tea Service
-~~~~~~~~~~~~~~~~~~~~~~
+----------------------
 
 In the previous steps we've replicated part of the examples from nginxinc/kubernetes-ingress "`cafe`_" example.
 

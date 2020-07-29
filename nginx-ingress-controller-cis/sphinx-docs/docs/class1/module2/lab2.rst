@@ -1,5 +1,5 @@
-Deploy the "Cafe" Application
------------------------------
+Lab 2.1 - Deploy the "Cafe" Application
+=======================================
 
 In this lab we will deploy the "Cafe" application behind the NGINX+ ingress controller.
 This is adapted from the nginxinc/kubernetes "`complete example`_".
@@ -8,7 +8,7 @@ Once the application is deployed we will be able to observe how NGINX+ is being
 used to load balance the traffic.
 
 Deployment
-~~~~~~~~~~
+----------
 
 On the K8S Master host go to the ``~/kubernetes-ingress/examples/complete-example/`` 
 directory.
@@ -25,7 +25,7 @@ to make sure that everything is all set.
   $ kubectl apply -f cafe.yaml
   
 Load Certs and Keys
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 NGINX Ingress Controller can load certificates and keys that are stored in a 
 Kubernetes Secret.  To load the cert/key:
@@ -35,7 +35,7 @@ Kubernetes Secret.  To load the cert/key:
   $ kubectl create -f cafe-secret.yaml
 
 Load Ingress Resource
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
 Kubernetes has a standard "Ingress" resource that is used to describe content
 routing rules like "cafe.example.com/tea" goes to the "tea-svc".
@@ -71,7 +71,7 @@ Deploy the Ingress resource:
   $ kubectl create -f cafe-ingress.yaml
 
 Verify Service
-~~~~~~~~~~~~~~
+--------------
 
 Retrieve the port that is used for 443 traffic to NGINX+ using steps similar to :ref:`retrieve_nodeport` to test
 that the service is up. On the K8S Master node run the following ``curl``
