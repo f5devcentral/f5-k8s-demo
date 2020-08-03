@@ -1,0 +1,10 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: my-nginx-ingress-controller
+data:
+  proxy-protocol: "True"
+  real-ip-header: "proxy_protocol"
+  set-real-ip-from: "10.130.0.0/23"
+#  main-snippets: |
+#    load_module modules/ngx_http_js_module.so;

@@ -1,5 +1,5 @@
-Deploy Better L7 WAF Policies
------------------------------
+Lab 3.3 - Deploy Better L7 WAF Policies
+=======================================
 
 This lab will deploy L7 WAF policies to protect NGINX+ and the applications
 that are running behind it.
@@ -11,7 +11,7 @@ The BIG-IP is capable of providing advanced DDoS and  Web
 Application Firewall (WAF) protection.
 
 Deploying a WAF Policy
-~~~~~~~~~~~~~~~~~~~~~~~
+----------------------
 
 On the K8S Master Node run the specified ``kubectl`` command.
 
@@ -21,14 +21,15 @@ outside the Kubernetes cluster.
 
 .. code:: shell
 
-  $ kubectl apply -f ~/f5-cis/cis-better-together-configmap.yaml
+   kubectl apply -f ~/f5-cis/cis-better-together-configmap.yaml
 ..
 
-Now you should be able to trigger the WAF policy by sending a contrived attack to steal coffee.
+Now you should be able to trigger the WAF policy by sending a contrived attack
+to steal coffee.
 
 .. code:: shell
   
-  curl -k https://cafe.example.com/coffee -v -H "X-Hacker: cat /etc/paswd"
+   curl -k https://cafe.example.com/coffee -v -H "X-Hacker: cat /etc/paswd"
   
 On the BIG-IP go to Security -> Event Logs and you should see the blocked request.
 

@@ -1,0 +1,47 @@
+---
+# Source: F5Demo/templates/configmap.yaml
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: f5demo-as3-configmap
+  labels:
+    f5type: virtual-server
+    as3: "false"
+data:
+  template: |
+    {
+      "class": "AS3",
+      "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.1.0",
+        "id": "f5demo",
+        "label": "CIS AS3 Example",
+        "remark": "Example of using CIS ConfigMap",
+        "ConfigMap": {
+          "class": "Tenant",
+          "MyApps": {
+             "class": "Application",
+             "template": "generic",
+             "frontend": {
+                "class": "Service_TCP",
+                "virtualAddresses": ["10.1.10.101"],
+               "remark":"frontend: f5demo.tcp.v1",
+               "persistenceMethods":[],
+               "virtualPort": 80,
+                "pool": "frontend2_pool"
+             },
+             "frontend2_pool": {
+                "class": "Pool",
+                "monitors": [ "tcp" ],
+                "members": [{
+                   "servicePort": 8080,
+                   "serverAddresses": [],
+                   "shareNodes": true
+                }]
+             }
+       }
+       }
+    }
+    }
+    
+

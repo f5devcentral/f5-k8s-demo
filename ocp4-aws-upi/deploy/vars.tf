@@ -1,0 +1,12 @@
+variable bigip1_ip {}
+variable prefix {}
+variable ssh_key {}
+variable aws_region {}
+variable rhcos_ami {}
+variable subnet_id {}
+variable security_group {}
+variable iam_instance_profile_bootstrap {}
+variable iam_instance_profile_control-plane {}
+variable iam_instance_profile_worker {}
+variable s3_bucket {}
+variable cluster_id {}

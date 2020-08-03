@@ -1,0 +1,6 @@
+create /auth partition ocp
+create net tunnels vxlan ose-vxlan flooding-type multipoint
+create net tunnels tunnel openshift_vxlan key 0 profile ose-vxlan local-address 192.168.131.240
+create net self 10.128.0.3/14 allow-service none vlan openshift_vxlan
+create net self 10.128.0.4/14 allow-service none vlan openshift_vxlan traffic-group traffic-group-1
+

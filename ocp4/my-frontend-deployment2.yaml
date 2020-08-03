@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-frontend2
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: my-frontend2
+    spec:
+      containers:
+      - image: "f5devcentral/f5-demo-httpd:openshift"
+        env:
+        - name: F5DEMO_APP
+          value: "website"
+        - name: F5DEMO_NODENAME
+          value: "CIS ConfigMap"
+        imagePullPolicy: IfNotPresent
+        name: my-frontend2
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+
