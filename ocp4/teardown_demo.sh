@@ -37,6 +37,8 @@ oc delete -f blue-ingress-nginx.yaml -n nginx-ingress
 oc delete -f green-ingress-nginx.yaml -n nginx-ingress
 oc delete -f node-blue.yaml -n nginx-ingress
 oc delete -f node-green.yaml -n nginx-ingress
+oc delete -f appprotect-basic.yaml -n nginx-ingress
+oc delete -f appprotect-log.yaml -n nginx-ingress
 
 oc apply -f as3-configmap-empty.yaml
 oc delete -f as3-configmap-override-route.yaml

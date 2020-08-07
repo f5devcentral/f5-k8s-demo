@@ -79,3 +79,18 @@ load balancing to the NGINX Ingress Controller.
 
 The resource is using a certificate that is loaded on NGINX, but NGINX is able to insert the 
 proper XFF because the BIG-IP is providing the original client IP address via proxy protocol.
+
+You can also verify that NGINX App Protect is running by sending the following curl command
+from the web host.
+
+.. code-block:: shell
+  
+  $ curl https://blue.ingress.dc1.example.com -H "X-Hacker: cat /etc/passwd"
+
+You can grep /var/log/messages on the web host to see the syslog output from NAP.
+
+.. code-block:: shell
+  
+  $ sudo grep "ASM: " /var/log/messages
+  ...
+  Aug  6 20:29:02 my-nginx-ingress-controller-7fc9646655-jjlmg ASM: attack_type="Non-browser Client,Predictable Resource Location,Command Execution",blocking_exception_reason="N/A",date_time="2020-08-06 20:29:01",dest_port="443",ip_client="10.1.1.4",is_truncated="false",method="GET",policy_name="basic-block",protocol="HTTPS",request_status="blocked",response_code="0",severity="Critical",sig_cves="N/A",sig_ids="200003898,200003910",sig_names="""cat"" execution attempt (2) (Header),""/etc/passwd"" access (Header)",sig_set_names="{Command Execution Signatures;OS Command Injection Signatures},{Predictable Resource Location Signatures}",src_port="47212",sub_violations="N/A",support_id="7555337960057516705",threat_campaign_names="N/A",unit_hostname="N/A",uri="/",violation_rating="4",vs_name="13-blue.ingress.dc1.example.com:8-/",x_forwarded_for_header_value="N/A",outcome="REJECTED",outcome_reason="SECURITY_WAF_VIOLATION",violations="Attack signature detected,Violation Rating Threat detected",violation_details="<?xml version='1.0' encoding='UTF-8'?><BAD_MSG><violation_masks><block>10000000000c00-3030cc0000000</block><alarm>477f0ed09200fa8-8003434cc0000000</alarm><learn>0-0</learn><staging>0-0</staging></violation_masks><request-violations><violation><viol_index>42</viol_index><viol_name>VIOL_ATTACK_SIGNATURE</viol_name><context>header</context><header><header_name>WC1IYWNrZXI=</header_name><header_value>Y2F0IC9ldGMvcGFzc3dk</header_value><header_pattern>*</header_pattern><staging>0</staging></header><staging>0</staging><sig_data><sig_id>200003898</sig_id><blocking_mask>2</blocking_mask><kw_data><buffer>LjYxLjENCkFjY2VwdDogKi8qDQpYLUhhY2tlcjogY2F0IC9ldGMvcGFzc3dkDQoNCg==</buffer><offset>28</offset><length>8</length></kw_data></sig_data><sig_data><sig_id>200003910</sig_id><blocking_mask>2</blocking_mask><kw_data><buffer>QWNjZXB0OiAqLyoNClgtSGFja2VyOiBjYXQgL2V0Yy9wYXNzd2QNCg0K</buffer><offset>27</offset><length>11</length></kw_data></sig_data></violation></request-violations></BAD_MSG>",request="GET / HTTP/1.1\r\nHost: blue.ingress.dc1.example.com\r\nUser-Agent: curl/7.61.1\r\nAccept: */*\r\nX-Hacker: cat /etc/passwd\r\n\r\n"#015 

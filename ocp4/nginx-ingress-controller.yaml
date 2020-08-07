@@ -9,6 +9,8 @@ spec:
     repository: registry.dc1.example.com/nginx-plus-ingress
     tag: 1.8.0
   nginxPlus: true
+  appProtect: 
+    enable: true
   replicas: 1
   serviceType: NodePort
   type: deployment
