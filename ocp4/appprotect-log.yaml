@@ -1,0 +1,11 @@
+apiVersion: appprotect.f5.com/v1beta1
+kind: APLogConf
+metadata: 
+  name: logconf
+spec:
+  filter: 
+    request_type: all
+  content: 
+    format: default
+    max_request_size: any
+    max_message_size: 5k
