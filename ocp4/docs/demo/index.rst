@@ -20,6 +20,7 @@ Once you login you can explore the environment.
 
    routes/*
    configmap/*
+   waf/*
    dns/*
    oidc/*
    nginx/*
