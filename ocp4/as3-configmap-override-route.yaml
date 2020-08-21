@@ -10,7 +10,7 @@ data:
   template: |
     {
         "declaration": {
-            "ocp_AS3": {
+            "ocp": {
                 "Shared": {
                     "ose_vserver": {
                         "securityLogProfiles": [
