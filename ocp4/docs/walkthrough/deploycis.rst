@@ -154,10 +154,10 @@ The following is what you should use.
     apiVersion: cis.f5.com/v1
     kind: F5BigIpCtlr
     metadata:
-    name: f5-server
-    namespace: default
+      name: f5-server
+      namespace: default
     spec:
-    args:
+      args:
         log_as3_response: true
         manage_routes: true
         manage_ingress: true
@@ -167,24 +167,25 @@ The following is what you should use.
         route_vserver_addr: 10.1.10.100
         bigip_partition: ocp
         openshift_sdn_name: /Common/openshift_vxlan
-        bigip_url:  10.1.20.240
+        bigip_url: 	10.1.20.240
         insecure: true
         pool-member-type: cluster
-        namespace: default
+        #namespace: default
+        namespace-label: use_cis=true
         override-as3-declaration: default/f5-as3-override
-    bigip_login_secret: bigip-login
-    image:
+      bigip_login_secret: bigip-login
+      image:
         pullPolicy: IfNotPresent
         repo: k8s-bigip-ctlr
         user: f5networks
-    namespace: kube-system
-    rbac:
+      namespace: kube-system
+      rbac:
         create: true
-    resources: {}
-    serviceAccount:
+      resources: {}
+      serviceAccount:
         create: true
         name: null
-    version:  2.0.0
+      version:  2.1.1
 
 The Pod
 -------
@@ -212,15 +213,15 @@ We will next deploy the following Route.
     apiVersion: route.openshift.io/v1
     kind: Route
     metadata:
-    name: cisroute
-    namespace: default
+      name: cisroute
+      namespace: default
     spec:
-    host: my-frontend.cisroutes.dc1.example.com
-    path: /
-    to:
+      host: my-frontend.cisroutes.dc1.example.com
+      path: /
+      to:
         kind: Service
         name: my-frontend
-    port:
+      port:
         targetPort: 80
 
 Under the "default" project go to Networking -> Routes.
