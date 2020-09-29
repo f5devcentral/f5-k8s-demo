@@ -102,7 +102,7 @@ curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.
 ##
 ## Delete AS3 declaration
 ##
-curl -k -u admin:admin -H "Content-Type: application/json" -X POST https://10.1.20.240/mgmt/shared/appsvcs/declare -H expect: -d '{ "class": "AS3", "declaration": { "class": "ADC", "schemaVersion": "3.1.0", "id": "f5demo", "ocp_AS3": { "class": "Tenant"   }  }  }'
+curl -k -u admin:admin -H "Content-Type: application/json" -X POST https://10.1.20.240/mgmt/shared/appsvcs/declare -H expect: -d '{ "class": "AS3", "declaration": { "class": "ADC", "schemaVersion": "3.1.0", "id": "f5demo", "ocp": { "class": "Tenant"   }  }  }'
 
 
 # delete ARP entries
@@ -111,6 +111,7 @@ curl -k -u admin:admin -H "Content-Type: application/json" https://10.1.20.240/m
 # delete vxlan profile
 
 curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.20.240/mgmt/tm/net/self/~Common~10.130.0.4~14
+sleep 10
 curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.20.240/mgmt/tm/net/self/~Common~10.130.0.3~14
 curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.20.240/mgmt/tm/net/self/~Common~vxlan-float
 curl -k -u admin:admin -H "Content-Type: application/json" -X DELETE https://10.1.20.240/mgmt/tm/net/self/~Common~vxlan-local
