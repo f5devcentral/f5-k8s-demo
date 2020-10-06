@@ -15,6 +15,17 @@ NGINX is using the BIG-IP as the edge load balancer.
 
 NGINX is also using "proxy protocol" to preserve the source IP address of the connection.
 
+Restarting NGINX
+~~~~~~~~~~~~~~~~
+
+You may need to restart the NGINX Ingress Controller prior to your demo.  To restart the pod
+you can either delete the pod via the GUI or run the following script from the "web" host.
+
+.. code-block:: shell
+    
+    $ ~/restart-nginx.sh
+    pod "my-nginx-ingress-controller-6bd7f89688-78z9l" deleted
+
 Demo
 ~~~~
 
@@ -27,21 +38,38 @@ under "Networking".
 If you click on the blue-ingress example you can click on YAML to see what the Ingress resource looks like.
 
 .. code-block:: YAML
-
+    
+    apiVersion: extensions/v1beta1
+    kind: Ingress
+    metadata:
+      name: blue-ingress
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+        nginx.org/server-snippets: |
+          add_header x-nginx-ingress $hostname;
+        appprotect.f5.com/app-protect-policy: "nginx-ingress/basic-block"
+        appprotect.f5.com/app-protect-enable: "True"
+        appprotect.f5.com/app-protect-security-log-enable: "True"
+        appprotect.f5.com/app-protect-security-log: "nginx-ingress/logconf"
+        appprotect.f5.com/app-protect-security-log-destination: "syslog:server=10.1.1.4:514"
     spec:
-    tls:
+      tls:
         - hosts:
-            - blue.ingress.dc1.example.com
-        secretName: tls-secret
-    rules:
-        - host: blue.ingress.dc1.example.com
+          - blue.ingress.dc1.example.com
+          # This assumes tls-secret exists and the SSL
+          # certificate contains a CN for foo.bar.com
+          secretName: tls-secret
+      rules:
+      - host: blue.ingress.dc1.example.com
         http:
-            paths:
-            - backend:
-                serviceName: node-blue
-                servicePort: 80
+          paths:
+          - backend:
+              serviceName: node-blue
+              servicePort: 80
 
 In this example NGINX is performing TLS termination of the connection and SSL offload.
+
+You can also see that it is configured to use NGINX App Protect as well.
 
 Next click on ConfigMaps under Workloads.  Find the "my-nginx-ingress-controller" resource.
 
