@@ -17,9 +17,9 @@ printf "##############################################\n"
 printf "Delete BACKEND\n"
 printf "##############################################\n\n\n"
 
-kubectl delete -f my-backend-deployment.yaml
+#kubectl delete -f my-backend-deployment.yaml
 
-kubectl delete -f my-backend-service.yaml
+#kubectl delete -f my-backend-service.yaml
 
 ##
 ## Replace kube-proxy with original kube-proxy
@@ -96,19 +96,10 @@ kubectl delete -f f5-cc-deployment2.yaml -n kube-system
 kubectl delete -f nginx/ingress-nginx-service.yaml
 kubectl delete -f nginx/ingress-nginx-service-tls.yaml
 
-kubectl delete -f nginx/nginx-ingress.yaml
+kubectl delete -f nginx/nginx-ingress-helm.yaml
 sleep 30
-kubectl delete -f nginx/nginx-configuration-configmap.yaml
-kubectl delete -f nginx/nginx-config.yaml
 kubectl delete -f nginx/default-server-secret.yaml
-kubectl delete -f nginx/custom-resource-definitions.yaml
-
-kubectl delete -f nginx/rbac.yaml
-kubectl delete -f nginx/ns-and-sa.yaml
-
-
-
-
+kubectl delete -f nginx/crds
 
 ##
 ## Delete BIG-IP kubectl secret

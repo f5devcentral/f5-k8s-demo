@@ -18,7 +18,7 @@ spec:
     spec:
       serviceAccountName: nginx-ingress
       containers:
-      - image: myregistry.example.com/nginx-plus-ingress:1.7.2
+      - image: myregistry.example.com/nginx-plus-ingress:1.8.1
         imagePullPolicy: IfNotPresent
         name: nginx-plus-ingress
         ports:

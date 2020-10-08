@@ -89,12 +89,10 @@ kubectl create -f f5-cc-deployment2.yaml -n kube-system
 ## Deploy NGINX Ingress Controller
 ##
 
-kubectl apply -f nginx/ns-and-sa.yaml
 kubectl apply -f nginx/default-server-secret.yaml
 kubectl apply -f nginx/nginx-config.yaml
-kubectl apply -f nginx/custom-resource-definitions.yaml
-kubectl apply -f nginx/rbac.yaml
-kubectl apply -f nginx/nginx-ingress.yaml
+kubectl create -f nginx/crds
+kubectl apply -f nginx/nginx-ingress-helm.yaml
 kubectl apply -f nginx/nginx-configuration-configmap.yaml -n nginx-ingress
 kubectl apply -f nginx/ingress-nginx-service.yaml
 kubectl apply -f nginx/ingress-nginx-service-tls.yaml
@@ -153,9 +151,9 @@ printf "##############################################\n"
 printf "Deploy BACKEND\n"
 printf "##############################################\n\n\n"
 
-kubectl create -f my-backend-deployment.yaml
+#kubectl create -f my-backend-deployment.yaml
 
-kubectl create -f my-backend-service.yaml
+#kubectl create -f my-backend-service.yaml
 
 curl -k -u admin:admin -H 'Content-Type: application/json' -X POST -d '{"command":"run","options":[{"to-group":"Sync"}]}' "https://10.1.10.240/mgmt/tm/cm/config-sync"
 sleep 3

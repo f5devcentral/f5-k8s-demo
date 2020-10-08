@@ -1,0 +1,270 @@
+---
+# Source: nginx-ingress/templates/controller-serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: my-release-nginx-ingress
+  namespace: nginx-ingress
+  labels:
+    app.kubernetes.io/name: my-release-nginx-ingress
+    helm.sh/chart: nginx-ingress-0.6.1
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: my-release
+---
+# Source: nginx-ingress/templates/controller-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: nginx-ingress
+  labels:
+    app.kubernetes.io/name: my-release-nginx-ingress
+    helm.sh/chart: nginx-ingress-0.6.1
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: my-release
+data:
+---
+# Source: nginx-ingress/templates/controller-leader-election-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-release-nginx-ingress-leader-election
+  namespace: nginx-ingress
+  labels:
+    app.kubernetes.io/name: my-release-nginx-ingress
+    helm.sh/chart: nginx-ingress-0.6.1
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: my-release
+---
+# Source: nginx-ingress/templates/rbac.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: my-release-nginx-ingress
+  labels:
+    app.kubernetes.io/name: my-release-nginx-ingress
+    helm.sh/chart: nginx-ingress-0.6.1
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: my-release
+rules:
+- apiGroups: 
+  - appprotect.f5.com
+  resources: 
+  - appolicies
+  - aplogconfs
+  verbs: 
+  - get 
+  - watch
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - services
+  - endpoints
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+  - list
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses/status
+  verbs:
+  - update
+- apiGroups:
+  - k8s.nginx.org
+  resources:
+  - virtualservers
+  - virtualserverroutes
+  - globalconfigurations
+  - transportservers
+  - policies
+  verbs:
+  - list
+  - watch
+  - get
+- apiGroups:
+  - k8s.nginx.org
+  resources:
+  - virtualservers/status
+  - virtualserverroutes/status
+  verbs:
+  - update
+---
+# Source: nginx-ingress/templates/rbac.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: my-release-nginx-ingress
+  labels:
+    app.kubernetes.io/name: my-release-nginx-ingress
+    helm.sh/chart: nginx-ingress-0.6.1
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: my-release
+subjects:
+- kind: ServiceAccount
+  name: my-release-nginx-ingress
+  namespace: nginx-ingress
+roleRef:
+  kind: ClusterRole
+  name: my-release-nginx-ingress
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: nginx-ingress/templates/controller-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-release-nginx-ingress
+  namespace: nginx-ingress
+  labels:
+    app.kubernetes.io/name: my-release-nginx-ingress
+    helm.sh/chart: nginx-ingress-0.6.1
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: my-release
+spec:
+  externalTrafficPolicy: Local
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  - port: 443
+    targetPort: 443
+    protocol: TCP
+    name: https
+  selector:
+    app:  my-release-nginx-ingress
+---
+# Source: nginx-ingress/templates/controller-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-release-nginx-ingress
+  namespace: nginx-ingress
+  labels:
+    app.kubernetes.io/name: my-release-nginx-ingress
+    helm.sh/chart: nginx-ingress-0.6.1
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: my-release
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-release-nginx-ingress
+  template:
+    metadata:
+      labels:
+        app: my-release-nginx-ingress
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9113"
+    spec:
+      serviceAccountName: my-release-nginx-ingress
+      hostNetwork: false
+      containers:
+      - image: "myregistry.example.com/nginx-plus-ingress:1.8.1"
+        name: my-release-nginx-ingress
+        imagePullPolicy: "IfNotPresent"
+        ports:
+        - name: http
+          containerPort: 80
+        - name: https
+          containerPort: 443
+
+        - name: prometheus
+          containerPort: 9113
+        - name: readiness-port
+          containerPort: 8081
+        readinessProbe:
+          httpGet:
+            path: /nginx-ready
+            port: readiness-port
+          periodSeconds: 1
+        resources:
+          {}
+        securityContext:
+          allowPrivilegeEscalation: true
+          runAsUser: 101 #nginx
+          capabilities:
+            drop:
+            - ALL
+            add:
+            - NET_BIND_SERVICE
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        args:
+          - -nginx-plus=true
+          - -nginx-reload-timeout=0
+          - -enable-app-protect=true
+          - -nginx-configmaps=$(POD_NAMESPACE)/nginx-config
+          - -default-server-tls-secret=$(POD_NAMESPACE)/default-server-secret
+
+          - -ingress-class=nginx
+          - -use-ingress-class-only=false
+          - -health-status=false
+          - -health-status-uri=/nginx-health
+          - -nginx-debug=false
+          - -v=1
+          - -nginx-status=true
+          - -nginx-status-port=8080
+          - -nginx-status-allow-cidrs=0.0.0.0/0
+          - -report-ingress-status
+          - -external-service=my-release-nginx-ingress
+          - -enable-leader-election=true
+          - -leader-election-lock-name=my-release-nginx-ingress-leader-election
+          - -enable-prometheus-metrics=true
+          - -prometheus-metrics-listen-port=9113
+          - -enable-custom-resources=true
+          - -enable-tls-passthrough=false
+          - -enable-snippets=false
+          - -ready-status=true
+          - -ready-status-port=8081
