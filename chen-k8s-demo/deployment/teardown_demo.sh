@@ -75,8 +75,9 @@ kubectl delete -f green-ingress-nginx.yaml
 kubectl delete -f node-blue.yaml
 kubectl delete -f node-green.yaml
 
-kubectl apply -f as3-configmap-empty.yaml
-
+#kubectl apply -f as3-configmap-empty.yaml
+kubectl label cm f5demo-as3-configmap as3=false --overwrite
+kubectl label cm nginx-as3-configmap as3=false --overwrite -n nginx-ingress
 ##
 ## Delete F5 BIG-IP CC
 ##
@@ -100,6 +101,8 @@ kubectl delete -f nginx/nginx-ingress-helm.yaml
 sleep 30
 kubectl delete -f nginx/default-server-secret.yaml
 kubectl delete -f nginx/crds
+kubectl delete -f nginx/appprotect-basic.yaml -n nginx-ingress
+kubectl delete -f nginx/appprotect-log.yaml -n nginx-ingress
 
 ##
 ## Delete BIG-IP kubectl secret

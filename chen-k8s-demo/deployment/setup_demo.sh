@@ -92,6 +92,9 @@ kubectl create -f f5-cc-deployment2.yaml -n kube-system
 kubectl apply -f nginx/default-server-secret.yaml
 kubectl apply -f nginx/nginx-config.yaml
 kubectl create -f nginx/crds
+kubectl create -f nginx/appprotect-basic.yaml -n nginx-ingress
+kubectl create -f nginx/appprotect-log.yaml -n nginx-ingress
+
 kubectl apply -f nginx/nginx-ingress-helm.yaml
 kubectl apply -f nginx/nginx-configuration-configmap.yaml -n nginx-ingress
 kubectl apply -f nginx/ingress-nginx-service.yaml
