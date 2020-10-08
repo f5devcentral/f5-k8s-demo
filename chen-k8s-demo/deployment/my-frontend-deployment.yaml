@@ -17,9 +17,7 @@ spec:
       - image: "f5devcentral/f5-demo-httpd:nginx"
         env:
         - name: F5DEMO_APP
-          value: "frontend"
-        - name: F5DEMO_BACKEND_URL
-          value: "http://my-backend/"
+          value: "website"
         imagePullPolicy: IfNotPresent
         name: my-frontend
         ports:
