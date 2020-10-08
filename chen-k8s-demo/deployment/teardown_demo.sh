@@ -87,6 +87,8 @@ printf "Delete BIG-IP CC\n"
 printf "##############################################\n\n\n"
 sleep 30
 kubectl delete -f as3-configmap-empty.yaml
+kubectl delete cm f5demo-as3-configmap
+kubectl delete cm nginx-as3-configmap -n nginx-ingress
 kubectl delete -f f5-cc-deployment.yaml -n kube-system
 kubectl delete -f f5-cc-deployment2.yaml -n kube-system
 
