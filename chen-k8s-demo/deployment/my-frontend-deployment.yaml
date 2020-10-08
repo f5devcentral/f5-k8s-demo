@@ -12,6 +12,7 @@ spec:
       labels:
         app: my-frontend
     spec:
+      terminationGracePeriodSeconds: 120
       containers:
       - image: "f5devcentral/f5-demo-httpd:nginx"
         env:
@@ -24,4 +25,8 @@ spec:
         ports:
         - containerPort: 80
           protocol: TCP
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sleep","60"]
 
