@@ -29,3 +29,5 @@ It will take a few minutes to complete.
 
 After it completes you will have an "empty" OpenShift environment and a "fresh"
 BIG-IP that has not been configured to use Container Ingress Services.
+
+You may want to restart the BIG-IP at this point to ensure that it is properly reset.

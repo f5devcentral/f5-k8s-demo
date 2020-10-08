@@ -32,4 +32,4 @@ spec:
   serviceAccount:
     create: true
     name: null
-  version:  2.1.0
+  version:  2.1.1

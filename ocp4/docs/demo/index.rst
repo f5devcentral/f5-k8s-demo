@@ -23,4 +23,5 @@ Once you login you can explore the environment.
    dns/*
    oidc/*
    nginx/*
+   waf/* 
    fast/*

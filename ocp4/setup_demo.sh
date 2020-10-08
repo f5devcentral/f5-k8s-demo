@@ -103,6 +103,8 @@ oc create -f blue-ingress-nginx.yaml -n nginx-ingress
 oc create -f green-ingress-nginx.yaml -n nginx-ingress
 oc create -f node-blue.yaml -n nginx-ingress
 oc create -f node-green.yaml -n nginx-ingress
+oc create -f appprotect-basic.yaml -n nginx-ingress
+oc create -f appprotect-log.yaml -n nginx-ingress
 oc create secret tls -n nginx-ingress tls-secret --cert=/home/centos/blue-bundle.crt --key=/home/centos/blue.key
 
 oc create -f as3-configmap-basic.yaml
