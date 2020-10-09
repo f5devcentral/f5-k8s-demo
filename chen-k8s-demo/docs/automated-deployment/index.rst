@@ -170,6 +170,12 @@ In the previous example we had a TCP and HTTP service.
 The following example layers on the use of a NGINX Ingress Controller that is
 configured to use proxy-protocol and NGINX App Protect for WAF protection.
 
+Run the following command.
+
+.. code-block:: sh
+
+  $ kubectl apply -f as3-configmap-nginx.yaml
+
 To verify things are working
 
 .. code-block:: text
