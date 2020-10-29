@@ -6,9 +6,6 @@ Introduction
 
 NGINX Ingress Controller has been configured in the namespace "nginx-ingress".
 
-Note that you need to complete the "ConfigMap" step of setting `as3: "true"` to
-complete this part of the demo.
-
 There is an example of using an Ingress resource.
 
 NGINX is using the BIG-IP as the edge load balancer.
