@@ -6,7 +6,7 @@ metadata:
   namespace: nginx-ingress
   labels:
     f5type: virtual-server
-    as3: "false"
+    as3: "true"
 data:
   template: |
     {
