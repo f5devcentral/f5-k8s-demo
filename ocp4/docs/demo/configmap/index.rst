@@ -14,23 +14,12 @@ Demo
 
 Under "Workload -> ConfigMap" click on the "f5demo-as3-configmap" object.
 
-You will need to click on "YAML" and change the value of `as3: "false"` to `as3: "false"`.
-
-.. image:: ocp4-console-configmap-as3-true.png
-  :scale: 50 %
-
-This is to prevent IP conflicts when demo environment is spun-up (when the deployment is restarted all the 
-pod IP addresses change).
 
 .. image:: ocp4-console-configmap-f5demo.png
   :scale: 50%
 
 .. warning:: New step added after updating to CIS 2.1.0.  Demo video does not include this step.
 
-You will have to repeat this same step in the "nginx-ingress" namespace to modify the "nginx-as3-configmap" object.
-
-.. image:: ocp4-console-configmap-nginx.png
-  :scale: 50% 
 
 Observe the IP address and the pool that is being used.
 

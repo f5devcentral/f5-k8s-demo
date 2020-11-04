@@ -20,6 +20,7 @@ spec:
     #namespace: default
     namespace-label: use_cis=true
     override-as3-declaration: default/f5-as3-override
+    share-nodes: true
   bigip_login_secret: bigip-login
   image:
     pullPolicy: IfNotPresent
@@ -32,4 +33,4 @@ spec:
   serviceAccount:
     create: true
     name: null
-  version:  2.1.1
+  version:  2.2.0
