@@ -4,9 +4,9 @@ The following is a simple PoC of using type:LoadBalancer with
 Container Ingress Services 2.2.0 it generates TransportServer
 CRD instances to support L4 TCP services.
 
-This requires that you are running CIS in CRD mode!
+**This requires that you are running CIS in CRD mode!**
 
-The process is to assign a service that includes "loadBalancerIP"
+The process is to assign a service that includes "loadBalancerIP" OR use an IP address from a pre-allocated range (configurable via ConfigMap)
 
 This script will identify these resources and create a BIG-IP
 VirtaulServer with either the  IP address specified or pick from
@@ -34,10 +34,10 @@ An example of data.json
   "next": "10.1.10.81"
 }
 ```
--"ranges" are IP ranges that you want to use.  
--"allocated" will be updated with any IPs that are being used by this "controller".
--"conflict" is a list of IPs that you want to exclude.
--"next" refers to the IP that you would like to use next.
+* "ranges" are IP ranges that you want to use.  
+* "allocated" will be updated with any IPs that are being used by this "controller".
+* "conflict" is a list of IPs that you want to exclude.
+* "next" refers to the IP that you would like to use next.
 
 ```
 kubectl create cm chenpam --from-file=config=data.json
@@ -97,8 +97,8 @@ ltm virtual Shared/crd_10_1_10_81_443 { creation-time 2020-11-04:04:06:38 descri
 
 ## Known issues
 
--hardcodes "default" namespace and name of configmap
--does not handle any DNS 
+* hardcodes "default" namespace and name of configmap
+* does not handle any DNS 
 
 # MyTypeLB: ConfigMap
 
@@ -128,5 +128,5 @@ appropriate privileges.
 
 ## Known issues
 
--Only uses a single port from the service (workaround: create multiple services with same loadBalancerIP 
--hardcodes "default" namespace and name of configmap
+* Only uses a single port from the service (workaround: create multiple services with same loadBalancerIP 
+* hardcodes "default" namespace and name of configmap
