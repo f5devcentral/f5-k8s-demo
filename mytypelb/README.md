@@ -23,6 +23,22 @@ Modify 'data.json' to match your network and create a configuration file.
 The script is hardcoded to look for a configmap "chenpam" in the namespace
 "default"
 
+An example of data.json
+```
+{
+  "ranges": [
+    "10.1.10.0/24"
+  ],
+  "allocated": [],
+  "conflict": ["10.1.10.1"],
+  "next": "10.1.10.81"
+}
+```
+-"ranges" are IP ranges that you want to use.  
+-"allocated" will be updated with any IPs that are being used by this "controller".
+-"conflict" is a list of IPs that you want to exclude.
+-"next" refers to the IP that you would like to use next.
+
 ```
 kubectl create cm chenpam --from-file=config=data.json
 ```
@@ -34,6 +50,10 @@ appropriate privileges.
 
 ```
 python ./crdtypelb.py
+2020-11-05 17:00:27,488 - chen_pam - INFO - creating default_my-crd-80 with IP 10.1.10.81
+2020-11-05 17:00:27,509 - chen_pam - INFO - creating default_my-crd-443 with IP 10.1.10.81
+2020-11-05 17:00:27,535 - chen_pam - INFO - creating nginx-ingress_nginx-ingress-crd-80 with IP 10.1.10.82
+2020-11-05 17:00:27,557 - chen_pam - INFO - creating nginx-ingress_nginx-ingress-crd-443 with IP 10.1.10.82
 ```
 
 ## expected output.
