@@ -156,6 +156,8 @@ class ChenPam(object):
 
         for key,val in crd_output.items():
             crd_namespace = val['metadata']['namespace']
+            ip_addr = val['spec']['virtualServerAddress']
+
             if key in existing_crds:
                 old_crd = existing_crds[key]
                 if 'labels' not in old_crd['metadata'] or 'chenpam' not in old_crd['metadata']['labels'] or old_crd['metadata']['labels']['chenpam'] != 'true':
@@ -163,17 +165,17 @@ class ChenPam(object):
                 # updating existing CRD
                 for i in val['spec']:
                     old_crd['spec'][i] = val['spec'][i]
-                logger.info('updating %s' %key)
+                logger.info('updating %s with IP %s' %(key, ip_addr))
                 self.api.replace_namespaced_custom_object(group, version, crd_namespace, 'transportservers', val['metadata']['name'], old_crd)
                 del existing_crds[key]
             else:
-                logger.info('creating %s' %key)
+                logger.info('creating %s with IP %s' %(key, ip_addr))
                 self.api.create_namespaced_custom_object(group, version, crd_namespace, 'transportservers', val)
             # update service with labels and status
             body = client.V1Service()
 
             body.metadata = {'name':val['spec']['pool']['service']}
-            ip_addr = val['spec']['virtualServerAddress']
+
             body.status = {'loadBalancer':{'ingress':[{'ip':val['spec']['virtualServerAddress'],'hostname':"%s.%s.dc1.example.com" %(val['spec']['pool']['service'],val['metadata']['namespace'])}]}}
             self.v1.replace_namespaced_service_status(val['spec']['pool']['service'],crd_namespace,body)
             if ip_addr not in self.found_ips:
@@ -197,9 +199,9 @@ class ChenPam(object):
         self.v1.replace_namespaced_config_map(self.base_configmap_name, self.base_configmap_namespace, self.my_configmap)
 
 if __name__ == "__main__":
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
+    ch.setLevel(logging.INFO)
 
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
