@@ -32,6 +32,7 @@ from kubernetes import client, config, watch
 import json
 import sys
 import logging
+import time
 from ipaddress import ip_network
 # Configs can be set in Configuration class directly or using helper utility
 
@@ -39,14 +40,18 @@ logger = logging.getLogger('chen_pam')
 
 class ChenPam(object):
 
-    def __init__(self,configname='chenpam',confignamespace='default'):
-        config.load_kube_config()
-        self.base_configmap_name = configname
-        self.base_configmap_namespace = confignamespace
+    def __init__(self,config_name='chenpam',config_namespace='default',poll_interval=60,incluster=False):
+        if incluster:
+            config.load_incluster_config()
+        else:
+            config.load_kube_config()
+        self.base_configmap_name = config_name
+        self.base_configmap_namespace = config_namespace
         self.v1 = client.CoreV1Api()
         self.api = client.CustomObjectsApi()
 
         self.crdmap = {}
+        self.poll_interval = 60
         # hardcoded values
         namespace = "default"
 
@@ -104,8 +109,30 @@ class ChenPam(object):
         self.save_config()
         # everything complete, delete cache of service to ip mapping
         ret  = self.v1.delete_namespaced_config_map(self.base_configmap_name + '.crdmap', self.base_configmap_namespace)
+    def watch_updates(self):
+        # WIP
+        w = watch.Watch()
+        lastcheck = time.time()
+        needupdate = True
+        last_seen_version = ''
+        while 1:
+#            for event in w.stream(self.v1.list_service_for_all_namespaces,timeout_seconds=10,resource_version=last_seen_version):
+#            for event in w.stream(self.v1.list_service_for_all_namespaces,timeout_seconds=10):
+            for event in w.stream(self.v1.list_service_for_all_namespaces):
+                last_seen_version = event['object'].metadata.resource_version
+                logger.debug(event['object'].metadata.name)
+                logger.debug('ping')
+                time.sleep(1)
+                continue
+                #logger.debug(event['object'].metadata.name)
+            logger.debug(last_seen_version)
+            logger.debug('ended loop')
 
-
+    def poll_updates(self):
+        while 1:
+            self.update()
+            logger.debug('sleeping for %d seconds' %(self.poll_interval))
+            time.sleep(self.poll_interval)
     # grab all services
     def list_services(self):
 
@@ -221,6 +248,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Support type LoadBalancer via F5 TransportServer CRD')
     parser.add_argument('--level', dest='level', choices=['info','debug'],default='info',
                     help='specify logging level [info|debug] (default info)')
+    parser.add_argument('--incluster', dest='incluster', action='store_true', default=False)
+    parser.add_argument('--config-name', dest='config_name', default='chenpam')
+    parser.add_argument('--config-namespace', dest='config_namespace', default='default')
 
 
     args = parser.parse_args()
@@ -237,5 +267,9 @@ if __name__ == "__main__":
 
     ch.setFormatter(formatter)
     logger.addHandler(ch)
-    chen = ChenPam()
-    chen.update()
+    chen = ChenPam(config_name=args.config_name,
+                   config_namespace=args.config_namespace,
+                   incluster=args.incluster)
+#    chen.watch_services()
+#    chen.update()
+    chen.poll_updates()
