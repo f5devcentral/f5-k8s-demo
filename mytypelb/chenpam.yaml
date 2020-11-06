@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: chenpam
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: chenpam
+    spec:
+      serviceAccountName: chenpam
+      containers:
+      - image: "registry.dc1.example.com/chenpam:0.0.5"
+        imagePullPolicy: IfNotPresent
+        name: chenpam

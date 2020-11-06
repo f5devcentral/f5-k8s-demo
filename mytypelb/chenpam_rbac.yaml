@@ -1,0 +1,32 @@
+# for reference only
+# Should be changed as per your cluster requirements
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: chenpam-clusterrole
+rules:
+  - apiGroups: ["", "extensions"]
+    resources: ["services", "namespaces"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["", "extensions"]
+    resources: ["configmaps", "events", "services/status"]
+    verbs: ["get", "list", "watch", "update", "create", "patch","delete"]
+  - apiGroups: ["cis.f5.com"]
+    resources: ["virtualservers", "tlsprofiles", "transportservers", "nginxcisconnectors"]
+    verbs: ["create", "get", "list", "watch", "update"]
+---
+
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: chenpam-clusterrole-binding
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: chenpam-clusterrole
+subjects:
+  - apiGroup: ""
+    kind: ServiceAccount
+    name: chenpam
+    namespace: default
