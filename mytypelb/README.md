@@ -12,7 +12,7 @@ This script will identify these resources and create a BIG-IP
 VirtaulServer with either the  IP address specified or pick from
 an allocated range of IPs.
 
-## Installing the script
+## Installing the script (standalone)
 
 ```
 pip install -r requirements.txt
@@ -49,6 +49,7 @@ This script assumes that you have a kubeconfig file with
 appropriate privileges.
 
 ```
+# run --help to see additional options
 python ./crdtypelb.py
 2020-11-05 17:00:27,488 - chen_pam - INFO - creating default_my-crd-80 with IP 10.1.10.81
 2020-11-05 17:00:27,509 - chen_pam - INFO - creating default_my-crd-443 with IP 10.1.10.81
@@ -97,8 +98,23 @@ ltm virtual Shared/crd_10_1_10_81_443 { creation-time 2020-11-04:04:06:38 descri
 
 ## Known issues
 
-* hardcodes "default" namespace and name of configmap
 * does not handle any DNS 
+
+## Installing as a container.
+
+First build the Dockerfile and push to a local repo.
+
+Next create a service account and provide RBAC (chenpam_rbac.yaml is an example).
+
+Deploy the container (chenpam.yaml is an example).
+
+See the output from container.
+```
+2020-11-06 21:25:19,752 - chen_pam - INFO - creating default_my-crd-80 with IP 10.1.10.11
+2020-11-06 21:25:19,780 - chen_pam - INFO - creating default_my-crd-443 with IP 10.1.10.11
+2020-11-06 21:25:19,802 - chen_pam - INFO - creating nginx-ingress_nginx-ingress-crd-80 with IP 10.1.10.12
+2020-11-06 21:25:19,857 - chen_pam - INFO - creating nginx-ingress_nginx-ingress-crd-443 with IP 10.1.10.12
+```
 
 # MyTypeLB: ConfigMap
 
