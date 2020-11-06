@@ -39,9 +39,10 @@ logger = logging.getLogger('chen_pam')
 
 class ChenPam(object):
 
-    def __init__(self):
+    def __init__(self,configname='chenpam',confignamespace='default'):
         config.load_kube_config()
-
+        self.base_configmap_name = configname
+        self.base_configmap_namespace = confignamespace
         self.v1 = client.CoreV1Api()
         self.api = client.CustomObjectsApi()
 
@@ -58,8 +59,6 @@ class ChenPam(object):
         # the end-user or from the list
         #
     def load_config(self):
-        base_configmap = 'default/chenpam'
-        (self.base_configmap_namespace,self.base_configmap_name) = base_configmap.split('/')
         ret = self.v1.read_namespaced_config_map(self.base_configmap_name, self.base_configmap_namespace)
 
         self.base_config = json.loads(ret.data['config'])
@@ -67,6 +66,7 @@ class ChenPam(object):
 
         self.all_ips = []
         self.found_ips = []
+        self.service_to_ip = {}
         for range in self.base_config['ranges']:
             logger.debug(range)
             self.all_ips.extend([str(a) for a in ip_network(range).hosts()])
@@ -89,9 +89,26 @@ class ChenPam(object):
             return ip_addr
         else:
             return self.get_next_ip()
-    # grab all services
     def update(self):
         self.load_config()
+        try:
+            # load from configmap in case of aborted process
+            ret  = self.v1.read_namespaced_config_map(self.base_configmap_name + '.crdmap', self.base_configmap_namespace)
+            self.crdmap = json.loads(ret.data['crdmap'])
+        except client.exceptions.ApiException as err:
+            logger.debug(err)
+            self.list_services()
+            self.v1.create_namespaced_config_map(self.base_configmap_namespace, {'metadata':{'name':self.base_configmap_name + '.crdmap'},
+                                                                                             'data':{'crdmap':json.dumps(self.crdmap)}})
+        self.create_ts()
+        self.save_config()
+        # everything complete, delete cache of service to ip mapping
+        ret  = self.v1.delete_namespaced_config_map(self.base_configmap_name + '.crdmap', self.base_configmap_namespace)
+
+
+    # grab all services
+    def list_services(self):
+
         all_services = self.v1.list_service_for_all_namespaces(watch=False)
 
 
@@ -120,8 +137,9 @@ class ChenPam(object):
 
             servicePorts = [(p.port,p.target_port) for p in  i.spec.ports]
             self.crdmap["%s_%s" %(i.metadata.namespace,i.metadata.name)] = (ip_addr, servicePorts, i.metadata.name, i.metadata.namespace)
+            logger.debug(self.crdmap)
 
-
+    def create_ts(self):
         crd_output = {}
         for app, dest in self.crdmap.items():
             # AS3 definition of TCP service
@@ -189,7 +207,7 @@ class ChenPam(object):
 
                 self.api.delete_namespaced_custom_object(group, version, existing_crds[key]['metadata']['namespace'], 'transportservers', existing_crds[key]['metadata']['name'])
 
-
+    def save_config(self):
         # update config
         new_next = self.get_next_ip() or self.base_config['next']
         logger.debug(new_next)
@@ -199,9 +217,21 @@ class ChenPam(object):
         self.v1.replace_namespaced_config_map(self.base_configmap_name, self.base_configmap_namespace, self.my_configmap)
 
 if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description='Support type LoadBalancer via F5 TransportServer CRD')
+    parser.add_argument('--level', dest='level', choices=['info','debug'],default='info',
+                    help='specify logging level [info|debug] (default info)')
+
+
+    args = parser.parse_args()
     logger.setLevel(logging.INFO)
+
     ch = logging.StreamHandler()
     ch.setLevel(logging.INFO)
+
+    if args.level == 'debug':
+        logger.setLevel(logging.DEBUG)
+        ch.setLevel(logging.DEBUG)
 
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
