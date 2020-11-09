@@ -51,7 +51,13 @@ class ChenPam(object):
         self.api = client.CustomObjectsApi()
 
         self.crdmap = {}
-        self.poll_interval = 60
+        self.poll_interval = poll_interval
+        self.resource_version = ''
+
+        self.all_ips = []
+        self.found_ips = []
+        self.service_to_ip = {}
+
         # hardcoded values
         namespace = "default"
 
@@ -99,6 +105,7 @@ class ChenPam(object):
         try:
             # load from configmap in case of aborted process
             ret  = self.v1.read_namespaced_config_map(self.base_configmap_name + '.crdmap', self.base_configmap_namespace)
+            logger.debug('loading crdmap from configmap')
             self.crdmap = json.loads(ret.data['crdmap'])
         except client.exceptions.ApiException as err:
             logger.debug(err)
@@ -109,36 +116,36 @@ class ChenPam(object):
         self.save_config()
         # everything complete, delete cache of service to ip mapping
         ret  = self.v1.delete_namespaced_config_map(self.base_configmap_name + '.crdmap', self.base_configmap_namespace)
+        #logger.debug(ret)
     def watch_updates(self):
-        # WIP
         w = watch.Watch()
         lastcheck = time.time()
-        needupdate = True
         last_seen_version = ''
         while 1:
-#            for event in w.stream(self.v1.list_service_for_all_namespaces,timeout_seconds=10,resource_version=last_seen_version):
-#            for event in w.stream(self.v1.list_service_for_all_namespaces,timeout_seconds=10):
-            for event in w.stream(self.v1.list_service_for_all_namespaces):
-                last_seen_version = event['object'].metadata.resource_version
-                logger.debug(event['object'].metadata.name)
-                logger.debug('ping')
-                time.sleep(1)
-                continue
-                #logger.debug(event['object'].metadata.name)
-            logger.debug(last_seen_version)
-            logger.debug('ended loop')
+            needsupdate = True
+            for event in w.stream(self.v1.list_service_for_all_namespaces,timeout_seconds=self.poll_interval,resource_version=self.resource_version):
+                if needsupdate:
+                    logger.debug('ping')
+                    self.update()
+                    time.sleep(self.poll_interval)
+                needsupdate = False
+#            logger.debug('ended loop')
 
     def poll_updates(self):
         while 1:
-            self.update()
+            try:
+                self.update()
+            except Exception as err:
+                logger.error(err)
             logger.debug('sleeping for %d seconds' %(self.poll_interval))
             time.sleep(self.poll_interval)
     # grab all services
     def list_services(self):
 
         all_services = self.v1.list_service_for_all_namespaces(watch=False)
-
-
+        logger.debug('resource_version: %s' %(all_services.metadata.resource_version))
+        self.resource_version = all_services.metadata.resource_version
+        self.crdmap = {}
         for i in all_services.items:
             # only look for type LoadBalancer
             if i.spec.type != "LoadBalancer":
@@ -202,16 +209,27 @@ class ChenPam(object):
         for key,val in crd_output.items():
             crd_namespace = val['metadata']['namespace']
             ip_addr = val['spec']['virtualServerAddress']
-
-            if key in existing_crds:
+            service_name = val['spec']['pool']['service']
+            service_namespace = crd_namespace
+            if "%s_%s" %(service_namespace, service_name) not in self.crdmap:
+                logger.info('deleting %s with IP %s (service does not exist)' %(key, ip_addr))
+                del existing_crds[key]
+                continue
+            elif key in existing_crds:
                 old_crd = existing_crds[key]
                 if 'labels' not in old_crd['metadata'] or 'chenpam' not in old_crd['metadata']['labels'] or old_crd['metadata']['labels']['chenpam'] != 'true':
                     continue
                 # updating existing CRD
+                needsupdate = False
                 for i in val['spec']:
+                    if old_crd['spec'][i] != val['spec'][i]:
+                        needsudpate = True
                     old_crd['spec'][i] = val['spec'][i]
-                logger.info('updating %s with IP %s' %(key, ip_addr))
-                self.api.replace_namespaced_custom_object(group, version, crd_namespace, 'transportservers', val['metadata']['name'], old_crd)
+                logger.debug('old_crd: %s' %(old_crd))
+                logger.debug('new_crd: %s' %(val))
+                if needsupdate:
+                    logger.info('updating %s with IP %s' %(key, ip_addr))
+                    self.api.replace_namespaced_custom_object(group, version, crd_namespace, 'transportservers', val['metadata']['name'], old_crd)
                 del existing_crds[key]
             else:
                 logger.info('creating %s with IP %s' %(key, ip_addr))
@@ -222,7 +240,11 @@ class ChenPam(object):
             body.metadata = {'name':val['spec']['pool']['service']}
 
             body.status = {'loadBalancer':{'ingress':[{'ip':val['spec']['virtualServerAddress'],'hostname':"%s.%s.dc1.example.com" %(val['spec']['pool']['service'],val['metadata']['namespace'])}]}}
-            self.v1.replace_namespaced_service_status(val['spec']['pool']['service'],crd_namespace,body)
+            try:
+                self.v1.replace_namespaced_service_status(val['spec']['pool']['service'],crd_namespace,body)
+            except Exception as err:
+                logger.error(err)
+                continue
             if ip_addr not in self.found_ips:
                 self.found_ips.append(ip_addr)
 
@@ -251,6 +273,7 @@ if __name__ == "__main__":
     parser.add_argument('--incluster', dest='incluster', action='store_true', default=False)
     parser.add_argument('--config-name', dest='config_name', default='chenpam')
     parser.add_argument('--config-namespace', dest='config_namespace', default='default')
+    parser.add_argument('--poll-interval', dest='poll_interval', default=60, type=int)
 
 
     args = parser.parse_args()
@@ -267,9 +290,16 @@ if __name__ == "__main__":
 
     ch.setFormatter(formatter)
     logger.addHandler(ch)
-    chen = ChenPam(config_name=args.config_name,
-                   config_namespace=args.config_namespace,
-                   incluster=args.incluster)
-#    chen.watch_services()
+    try:
+        chen = ChenPam(config_name=args.config_name,
+                       config_namespace=args.config_namespace,
+                       incluster=args.incluster,
+                       poll_interval=args.poll_interval)
+        #chen.poll_updates()
+        chen.watch_updates()
+    except Exception as err:
+        logger.error(err)
+
+
+
 #    chen.update()
-    chen.poll_updates()
