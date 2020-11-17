@@ -103,7 +103,7 @@ spec:
       serviceAccountName: bigip1-f5-bigip-ctlr
       containers:
       - name: f5-bigip-ctlr
-        image: "f5networks/k8s-bigip-ctlr:2.1.0"
+        image: "f5networks/k8s-bigip-ctlr:2.2.0"
         volumeMounts:
         - name: bigip-creds
           mountPath: "/tmp/creds"
