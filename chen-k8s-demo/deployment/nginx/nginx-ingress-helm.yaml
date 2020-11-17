@@ -7,7 +7,7 @@ metadata:
   namespace: nginx-ingress
   labels:
     app.kubernetes.io/name: my-release-nginx-ingress
-    helm.sh/chart: nginx-ingress-0.6.1
+    helm.sh/chart: nginx-ingress-0.7.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: my-release
 ---
@@ -19,7 +19,7 @@ metadata:
   namespace: nginx-ingress
   labels:
     app.kubernetes.io/name: my-release-nginx-ingress
-    helm.sh/chart: nginx-ingress-0.6.1
+    helm.sh/chart: nginx-ingress-0.7.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: my-release
 data:
@@ -32,18 +32,18 @@ metadata:
   namespace: nginx-ingress
   labels:
     app.kubernetes.io/name: my-release-nginx-ingress
-    helm.sh/chart: nginx-ingress-0.6.1
+    helm.sh/chart: nginx-ingress-0.7.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: my-release
 ---
 # Source: nginx-ingress/templates/rbac.yaml
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: my-release-nginx-ingress
   labels:
     app.kubernetes.io/name: my-release-nginx-ingress
-    helm.sh/chart: nginx-ingress-0.6.1
+    helm.sh/chart: nginx-ingress-0.7.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: my-release
 rules:
@@ -99,7 +99,7 @@ rules:
   - patch
   - list
 - apiGroups:
-  - extensions
+  - networking.k8s.io
   resources:
   - ingresses
   verbs:
@@ -107,7 +107,13 @@ rules:
   - list
   - watch
 - apiGroups:
-  - extensions
+  - networking.k8s.io
+  resources:
+  - ingressclasses
+  verbs:
+  - get
+- apiGroups:
+  - networking.k8s.io
   resources:
   - ingresses/status
   verbs:
@@ -134,12 +140,12 @@ rules:
 ---
 # Source: nginx-ingress/templates/rbac.yaml
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: my-release-nginx-ingress
   labels:
     app.kubernetes.io/name: my-release-nginx-ingress
-    helm.sh/chart: nginx-ingress-0.6.1
+    helm.sh/chart: nginx-ingress-0.7.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: my-release
 subjects:
@@ -159,7 +165,7 @@ metadata:
   namespace: nginx-ingress
   labels:
     app.kubernetes.io/name: my-release-nginx-ingress
-    helm.sh/chart: nginx-ingress-0.6.1
+    helm.sh/chart: nginx-ingress-0.7.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: my-release
 spec:
@@ -185,7 +191,7 @@ metadata:
   namespace: nginx-ingress
   labels:
     app.kubernetes.io/name: my-release-nginx-ingress
-    helm.sh/chart: nginx-ingress-0.6.1
+    helm.sh/chart: nginx-ingress-0.7.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: my-release
 spec:
@@ -204,7 +210,7 @@ spec:
       serviceAccountName: my-release-nginx-ingress
       hostNetwork: false
       containers:
-      - image: "myregistry.example.com/nginx-plus-ingress:1.8.1"
+      - image: "myregistry.example.com/nginx-plus-ingress:1.9.0"
         name: my-release-nginx-ingress
         imagePullPolicy: "IfNotPresent"
         ports:
@@ -249,7 +255,6 @@ spec:
           - -default-server-tls-secret=$(POD_NAMESPACE)/default-server-secret
 
           - -ingress-class=nginx
-          - -use-ingress-class-only=false
           - -health-status=false
           - -health-status-uri=/nginx-health
           - -nginx-debug=false
@@ -268,3 +273,12 @@ spec:
           - -enable-snippets=false
           - -ready-status=true
           - -ready-status-port=8081
+          - -enable-latency-metrics=false
+---
+# Source: nginx-ingress/templates/controller-ingress-class..yaml
+apiVersion: networking.k8s.io/v1beta1
+kind: IngressClass
+metadata:
+  name: nginx
+spec:
+  controller: nginx.org/ingress-controller
