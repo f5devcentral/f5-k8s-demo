@@ -1,13 +1,16 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: my-frontend2
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: my-frontend2
   template:
     metadata:
       labels:
-        run: my-frontend2
+        app: my-frontend2
     spec:
       containers:
       - image: "f5devcentral/f5-demo-httpd:openshift"
