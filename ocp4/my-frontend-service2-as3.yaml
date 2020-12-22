@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: my-frontend2
   labels:
-    run: my-frontend2
+    app: my-frontend2
     cis.f5.com/as3-tenant: ConfigMap
     cis.f5.com/as3-app: MyApps
     cis.f5.com/as3-pool: frontend2_pool
@@ -16,4 +16,4 @@ spec:
     targetPort: 8080
   type: NodePort
   selector:
-    run: my-frontend2
+    app: my-frontend2
