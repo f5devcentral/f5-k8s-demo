@@ -25,3 +25,4 @@ Once you login you can explore the environment.
    nginx/*
    waf/* 
    fast/*
+   ncc/*

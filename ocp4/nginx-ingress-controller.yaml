@@ -7,7 +7,7 @@ spec:
   image:
     pullPolicy: Always
     repository: registry.dc1.example.com/nginx-plus-ingress
-    tag: 1.8.1
+    tag: 1.9.0
   nginxPlus: true
   appProtect: 
     enable: true
