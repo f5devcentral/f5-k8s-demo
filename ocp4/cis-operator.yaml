@@ -5,9 +5,9 @@ metadata:
   namespace: default
 spec:
   channel: beta
-  installPlanApproval: Automatic
+  installPlanApproval: Manual
   name: f5-bigip-ctlr-operator
   source: certified-operators
   sourceNamespace: openshift-marketplace
-  startingCSV: f5-bigip-ctlr-operator.v1.3.0
+  startingCSV: f5-bigip-ctlr-operator.v1.4.0
 
