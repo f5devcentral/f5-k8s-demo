@@ -1,13 +1,16 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: node-green
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: node-green
   template:
     metadata:
       labels:
-        run: node-green
+        app: node-green
     spec:
       containers:
       - image: "f5devcentral/f5-demo-httpd:openshift"
@@ -35,7 +38,7 @@ kind: Service
 metadata:
   name: node-green
   labels:
-    run: node-green
+    app: node-green
 spec:
   ports:
   - port: 80
@@ -44,7 +47,7 @@ spec:
     name: http
   type: NodePort
   selector:
-    run: node-green
+    app: node-green
 
 ---
 apiVersion: v1
@@ -52,7 +55,7 @@ kind: Service
 metadata:
   name: node-green-tls
   labels:
-    run: node-green-tls
+    app: node-green-tls
     cis.f5.com/as3-tenant: AS3
     cis.f5.com/as3-app: MyApps
     cis.f5.com/as3-pool: greentls_pool    
@@ -64,4 +67,4 @@ spec:
     name: https
   type: NodePort
   selector:
-    run: node-green
+    app: node-green

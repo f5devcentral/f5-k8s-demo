@@ -63,23 +63,6 @@ data:
                    "serverAddresses": [],
                    "shareNodes": true		   
                 }]
-             },
-             "nginxplusapi": {
-                "class": "Service_TCP",
-                "virtualAddresses": ["10.1.10.102"],
-               "remark":"nginxplusapi: f5demo.tcp.v1",
-               
-               "virtualPort": 9090,
-                "pool": "nginxplusapi_pool"
-             },
-             "nginxplusapi_pool": {
-                "class": "Pool",
-                "monitors": [ "tcp" ],
-                "members": [{
-                   "servicePort": 80,
-                   "serverAddresses": [],
-                   "shareNodes": true		   
-                }]
              },	     
             "XFF_HTTP_Profile": {
               "class": "HTTP_Profile",

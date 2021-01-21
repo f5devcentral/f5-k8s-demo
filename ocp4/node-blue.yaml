@@ -1,13 +1,16 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: node-blue
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: node-blue
   template:
     metadata:
       labels:
-        run: node-blue
+        app: node-blue
     spec:
       containers:
       - image: "f5devcentral/f5-demo-httpd:openshift"
@@ -35,7 +38,7 @@ kind: Service
 metadata:
   name: node-blue
   labels:
-    run: node-blue
+    app: node-blue
 spec:
   ports:
   - port: 80
@@ -48,7 +51,7 @@ spec:
     name: https
   type: NodePort
   selector:
-    run: node-blue
+    app: node-blue
 
 ---
 apiVersion: v1
@@ -56,7 +59,7 @@ kind: Service
 metadata:
   name: node-blue-tls
   labels:
-    run: node-blue-tls
+    app: node-blue-tls
 spec:
   ports:
   - port: 443
@@ -65,4 +68,4 @@ spec:
     name: https
   type: NodePort
   selector:
-    run: node-blue
+    app: node-blue
