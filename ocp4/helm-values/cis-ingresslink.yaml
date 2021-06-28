@@ -1,0 +1,31 @@
+args:
+  log_as3_response: true
+  manage_routes: false
+  manage_ingress: false
+  manage_configmaps: false
+  custom_resource_mode: false
+  ingress-link-mode: true
+  agent: as3
+  log_level: DEBUG
+  bigip_partition: ingresslink
+  openshift_sdn_name: /Common/openshift_vxlan
+  pool-member-type: cluster
+  bigip_url: 	10.1.20.240
+  insecure: true
+  share-nodes: true
+  as3-post-delay: 30
+#  namespace-label: use_cis=true
+  node-label-selector: node-role.kubernetes.io/worker
+bigip_login_secret: bigip-login
+image:
+  pullPolicy: IfNotPresent
+  repo: k8s-bigip-ctlr
+  user: f5networks
+namespace: kube-system
+rbac:
+  create: true
+resources: {}
+serviceAccount:
+  create: true
+  name: bigip-ctlr
+version:  2.3.0

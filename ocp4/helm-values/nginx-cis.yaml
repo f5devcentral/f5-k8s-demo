@@ -1,0 +1,20 @@
+controller:
+  logLevel: 3
+  nginxplus: true
+  appprotect:
+    enable: true
+  image:
+    repository: registry.dc1.example.com/nginx-plus-ingress
+    tag: "1.10.0"
+  config:
+    entries:
+      proxy-protocol: "True"
+      real-ip-header: "proxy_protocol"
+      set-real-ip-from: "0.0.0.0/0"
+  reportIngressStatus:
+    ingressLink: nginx-ingress
+  service:
+    type: NodePort
+    externalTrafficPolicy: Local
+    extraLabels:
+      app: nginx-ingress
